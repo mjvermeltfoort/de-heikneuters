@@ -22,3 +22,8 @@ npm run build
 ```
 
 De statische site wordt gegenereerd in `dist/`.
+
+
+## Deployment
+
+Pushes naar `main` worden na een geslaagde Astro-build via SFTP naar STRATO gedeployed wanneer de `STRATO_SFTP_*` repository secrets zijn ingesteld.
