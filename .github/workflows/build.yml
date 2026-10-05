@@ -1,17 +1,79 @@
-name: Build website
+name: Build and deploy website
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
   pull_request:
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 22
-      - run: npm install
-      - run: npm run build
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build Astro site
+        run: npm run build
+
+      - name: Check STRATO deployment configuration
+        if: github.event_name != 'pull_request'
+        id: strato
+        env:
+          STRATO_SFTP_HOST: ${{ secrets.STRATO_SFTP_HOST }}
+          STRATO_SFTP_USER: ${{ secrets.STRATO_SFTP_USER }}
+          STRATO_SFTP_PASSWORD: ${{ secrets.STRATO_SFTP_PASSWORD }}
+          STRATO_SFTP_PATH: ${{ secrets.STRATO_SFTP_PATH }}
+        run: |
+          if [ -z "$STRATO_SFTP_HOST" ] ||              [ -z "$STRATO_SFTP_USER" ] ||              [ -z "$STRATO_SFTP_PASSWORD" ] ||              [ -z "$STRATO_SFTP_PATH" ]; then
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::Build succeeded, but STRATO deployment was skipped because one or more STRATO_SFTP_* secrets are missing."
+          else
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Install SFTP client
+        if: github.event_name != 'pull_request' && steps.strato.outputs.ready == 'true'
+        run: sudo apt-get update && sudo apt-get install -y lftp
+
+      - name: Trust STRATO SFTP host
+        if: github.event_name != 'pull_request' && steps.strato.outputs.ready == 'true'
+        env:
+          STRATO_SFTP_HOST: ${{ secrets.STRATO_SFTP_HOST }}
+          STRATO_SFTP_PORT: ${{ secrets.STRATO_SFTP_PORT }}
+        run: |
+          PORT="${STRATO_SFTP_PORT:-22}"
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          ssh-keyscan -p "$PORT" "$STRATO_SFTP_HOST" >> ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/known_hosts
+
+      - name: Deploy dist to STRATO via SFTP
+        if: github.event_name != 'pull_request' && steps.strato.outputs.ready == 'true'
+        env:
+          STRATO_SFTP_HOST: ${{ secrets.STRATO_SFTP_HOST }}
+          STRATO_SFTP_PORT: ${{ secrets.STRATO_SFTP_PORT }}
+          STRATO_SFTP_USER: ${{ secrets.STRATO_SFTP_USER }}
+          STRATO_SFTP_PASSWORD: ${{ secrets.STRATO_SFTP_PASSWORD }}
+          STRATO_SFTP_PATH: ${{ secrets.STRATO_SFTP_PATH }}
+        run: |
+          PORT="${STRATO_SFTP_PORT:-22}"
+
+          lftp -u "${STRATO_SFTP_USER},${STRATO_SFTP_PASSWORD}" "sftp://${STRATO_SFTP_HOST}:${PORT}" <<EOF
+          set net:max-retries 2
+          set net:timeout 20
+          set net:reconnect-interval-base 5
+          mkdir -p "${STRATO_SFTP_PATH}"
+          mirror --reverse --verbose --only-newer dist/ "${STRATO_SFTP_PATH}"
+          bye
+          EOF
