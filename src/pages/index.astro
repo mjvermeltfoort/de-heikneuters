@@ -1,0 +1,197 @@
+---
+import '../styles/global.css';
+
+const logoUrl = 'https://drive.google.com/uc?export=view&id=14GSBXGGGC1hWRIojWcwa-W8vJy8oHERd';
+
+const events = [
+  { day: '18', month: 'OKT', title: 'Kneuterkapel: Jeneverfeesten Hasselt', meta: 'Hasselt' },
+  { day: '11', month: 'NOV', title: 'Start jubileumjaar', meta: 'Nijnsel · 20:11 uur' },
+  { day: '21', month: 'NOV', title: '66 jaar De Heikneuters', meta: 'Feestavond in Nijnsel' },
+];
+
+const news = [
+  {
+    date: '8 september 2026',
+    title: 'Stem op C.V. De Heikneuters bij Rabo ClubSupport',
+    text: 'Met de opbrengst ondersteunen we onze optocht: zowel de wagenbouw als onze loopgroep.'
+  },
+  {
+    date: '27 september 2026',
+    title: 'La Dolce Dufjes zit erop',
+    text: 'Drie avonden vol Italiaanse chaos, humor, muziek, dans en een enthousiast publiek.'
+  },
+  {
+    date: '14 juni 2026',
+    title: 'We tellen af naar 66 jaar De Heikneuters',
+    text: 'Een bijzondere feestavond vol gezelligheid, muziek en natuurlijk heel veel carnaval.'
+  }
+];
+---
+
+<!doctype html>
+<html lang="nl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content="C.V. De Heikneuters uit Nijnsel – leverancier van carnavalsplezier sinds 1960." />
+    <meta name="theme-color" content="#072f63" />
+    <title>C.V. De Heikneuters | Nijnsel</title>
+  </head>
+  <body>
+    <div class="site-shell">
+      <div class="topbar">
+        <div class="topbar__inner">
+          <span>Volg ons:</span>
+          <div class="socials" aria-label="Social media">
+            <a class="social" href="https://www.facebook.com/" aria-label="Facebook">f</a>
+            <a class="social" href="#" aria-label="Instagram">◎</a>
+            <a class="social" href="#" aria-label="YouTube">▶</a>
+          </div>
+          <span>Zoeken</span>
+        </div>
+      </div>
+
+      <header class="nav">
+        <div class="nav__inner">
+          <a href="/" aria-label="C.V. De Heikneuters home">
+            <img class="logo" src={logoUrl} alt="Logo C.V. De Heikneuters Nijnsel" />
+          </a>
+          <nav class="nav__links" aria-label="Hoofdnavigatie">
+            <a href="/" aria-current="page">Home</a>
+            <a href="#vereniging">Vereniging</a>
+            <a href="#kneuterkapel">Kneuterkapel</a>
+            <a href="#activiteiten">Activiteiten</a>
+            <a href="#jubileum">66 jaar</a>
+            <a href="#steun-ons">Steun ons</a>
+            <a href="#contact">Contact</a>
+          </nav>
+          <button class="menu-button" aria-label="Menu openen">☰</button>
+        </div>
+      </header>
+
+      <main>
+        <section class="hero">
+          <div class="hero__content">
+            <div class="eyebrow">C.V. De Heikneuters · Nijnsel</div>
+            <h1>Leverancier van <span>carnavalsplezier</span></h1>
+            <p>Sinds 1960 thuis in Nijnsel. Samen maken we carnaval.</p>
+            <div class="actions">
+              <a class="button button--red" href="#jubileum">Bekijk ons jubileum →</a>
+              <a class="button button--ghost" href="#vereniging">Over De Heikneuters</a>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="vereniging">
+          <div class="section__inner section__grid">
+            <div>
+              <div class="eyebrow">C.V. De Heikneuters</div>
+              <h2>Welkom bij De Heikneuters</h2>
+              <p class="lead">
+                C.V. De Heikneuters uit Nijnsel is al sinds 1960 een bruisende carnavalsvereniging.
+                Samen zorgen we voor carnavalsplezier in Nijnsel en ver daarbuiten, met een rijk
+                verenigingsleven, de Kneuterkapel, mooie evenementen en een betrokken groep leden
+                en vrijwilligers.
+              </p>
+              <div class="actions">
+                <a class="button button--red" href="#">Meer over De Heikneuters →</a>
+                <a class="button button--outline" href="#jubileum">Ons jubileumjaar →</a>
+              </div>
+            </div>
+
+            <div id="activiteiten">
+              <div class="panel-title">
+                <h3>Eerstvolgende activiteiten</h3>
+                <a href="/agenda/">Naar de volledige agenda →</a>
+              </div>
+              <div class="events">
+                {events.map((event) => (
+                  <article class="event">
+                    <div class="event__date">
+                      <strong>{event.day}</strong>
+                      <span>{event.month}</span>
+                    </div>
+                    <div class="event__body">
+                      <strong>{event.title}</strong>
+                      <div class="event__meta">{event.meta}</div>
+                    </div>
+                    <div class="event__arrow" aria-hidden="true">›</div>
+                  </article>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section section--soft" id="nieuws">
+          <div class="section__inner">
+            <div class="news-head">
+              <div>
+                <div class="eyebrow">Van onze socials</div>
+                <h2>Laatste nieuws</h2>
+              </div>
+              <a href="https://www.facebook.com/">Volg ons op Facebook →</a>
+            </div>
+
+            <div class="news-grid">
+              {news.map((item, index) => (
+                <article class="news-card">
+                  <div class="news-card__visual" aria-hidden="true"></div>
+                  <div class="news-card__body">
+                    <time>{item.date}</time>
+                    <h3>{item.title}</h3>
+                    <p>{item.text}</p>
+                    <div class="news-card__footer">
+                      <span>Facebook</span>
+                      <span>Bekijk bericht →</span>
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+
+            <aside class="jubilee" id="jubileum">
+              <div class="eyebrow" style="color:#ff5f67">1960 — 2026</div>
+              <h3>66 jaar De Heikneuters</h3>
+              <p>
+                In 2026 vieren we 66 jaar C.V. De Heikneuters. Een jubileumjaar vol activiteiten,
+                herinneringen en natuurlijk heel veel carnaval. Op deze plek komt het volledige
+                jubileumprogramma.
+              </p>
+              <a class="button button--red" href="#">Bekijk het jubileumprogramma →</a>
+            </aside>
+          </div>
+        </section>
+      </main>
+
+      <footer class="footer" id="contact">
+        <div class="footer__inner">
+          <div class="footer__grid">
+            <div>
+              <h4>C.V. De Heikneuters</h4>
+              <p>Leverancier van carnavalsplezier in Nijnsel sinds 1960.</p>
+            </div>
+            <div>
+              <h4>Snel naar</h4>
+              <ul>
+                <li><a href="#vereniging">Vereniging</a></li>
+                <li><a href="#activiteiten">Agenda</a></li>
+                <li><a href="#jubileum">66 jaar</a></li>
+              </ul>
+            </div>
+            <div id="steun-ons">
+              <h4>Contact</h4>
+              <ul>
+                <li><a href="mailto:info@de-heikneuters.nl">info@de-heikneuters.nl</a></li>
+                <li>Nijnsel</li>
+              </ul>
+            </div>
+          </div>
+          <div class="footer__bottom">
+            © 2026 C.V. De Heikneuters · Eerste versie nieuwe website
+          </div>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>
