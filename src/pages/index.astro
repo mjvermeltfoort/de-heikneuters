@@ -1,13 +1,14 @@
 ---
 import '../styles/global.css';
+import {
+  formatDay,
+  formatEventMeta,
+  formatMonth,
+  getUpcomingEvents,
+} from '../lib/calendar';
 
 const logoUrl = '/assets/logo-heikneuters-2026.png';
-
-const events = [
-  { day: '18', month: 'OKT', title: 'Kneuterkapel: Jeneverfeesten Hasselt', meta: 'Hasselt' },
-  { day: '11', month: 'NOV', title: 'Start jubileumjaar', meta: 'Nijnsel · 20:11 uur' },
-  { day: '21', month: 'NOV', title: '66 jaar De Heikneuters', meta: 'Feestavond in Nijnsel' },
-];
+const events = (await getUpcomingEvents()).slice(0, 3);
 
 const news = [
   {
@@ -69,6 +70,16 @@ const news = [
         </div>
       </header>
 
+      <nav class="mobile-nav" id="mobile-nav" aria-label="Mobiele navigatie">
+        <a href="/">Home</a>
+        <a href="#vereniging">Vereniging</a>
+        <a href="#kneuterkapel">Kneuterkapel</a>
+        <a href="#activiteiten">Activiteiten</a>
+        <a href="#jubileum">66 jaar</a>
+        <a href="#steun-ons">Steun ons</a>
+        <a href="#contact">Contact</a>
+      </nav>
+
       <main>
         <section class="hero">
           <div class="hero__content">
@@ -104,21 +115,26 @@ const news = [
                 <h3>Eerstvolgende activiteiten</h3>
                 <a href="/agenda/">Naar de volledige agenda →</a>
               </div>
-              <div class="events">
-                {events.map((event) => (
-                  <article class="event">
-                    <div class="event__date">
-                      <strong>{event.day}</strong>
-                      <span>{event.month}</span>
-                    </div>
-                    <div class="event__body">
-                      <strong>{event.title}</strong>
-                      <div class="event__meta">{event.meta}</div>
-                    </div>
-                    <div class="event__arrow" aria-hidden="true">›</div>
-                  </article>
-                ))}
-              </div>
+
+              {events.length > 0 ? (
+                <div class="events">
+                  {events.map((event) => (
+                    <article class="event">
+                      <div class="event__date">
+                        <strong>{formatDay(event)}</strong>
+                        <span>{formatMonth(event)}</span>
+                      </div>
+                      <div class="event__body">
+                        <strong>{event.title}</strong>
+                        <div class="event__meta">{formatEventMeta(event)}</div>
+                      </div>
+                      <div class="event__arrow" aria-hidden="true">›</div>
+                    </article>
+                  ))}
+                </div>
+              ) : (
+                <p class="lead">Er staan op dit moment geen komende activiteiten in de agenda.</p>
+              )}
             </div>
           </div>
         </section>
@@ -134,7 +150,7 @@ const news = [
             </div>
 
             <div class="news-grid">
-              {news.map((item, index) => (
+              {news.map((item) => (
                 <article class="news-card">
                   <div class="news-card__visual" aria-hidden="true"></div>
                   <div class="news-card__body">
@@ -175,7 +191,7 @@ const news = [
               <h4>Snel naar</h4>
               <ul>
                 <li><a href="#vereniging">Vereniging</a></li>
-                <li><a href="#activiteiten">Agenda</a></li>
+                <li><a href="/agenda/">Agenda</a></li>
                 <li><a href="#jubileum">66 jaar</a></li>
               </ul>
             </div>
@@ -187,19 +203,20 @@ const news = [
               </ul>
             </div>
           </div>
-          <div class="footer__bottom">
-            © 2026 C.V. De Heikneuters · Eerste versie nieuwe website
-          </div>
+          <div class="footer__bottom">© 2026 C.V. De Heikneuters</div>
         </div>
       </footer>
     </div>
-  <script>
+
+    <script>
       const menuButton = document.querySelector('.menu-button');
       const mobileNav = document.querySelector('.mobile-nav');
+
       menuButton?.addEventListener('click', () => {
         const open = mobileNav?.classList.toggle('is-open') ?? false;
         menuButton.setAttribute('aria-expanded', String(open));
       });
+
       mobileNav?.querySelectorAll('a').forEach((link) => {
         link.addEventListener('click', () => {
           mobileNav.classList.remove('is-open');
