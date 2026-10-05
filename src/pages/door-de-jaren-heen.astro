@@ -1,0 +1,141 @@
+---
+import '../styles/global.css';
+import { formatYouTubeDate, getLatestYouTubeVideos } from '../lib/youtube';
+
+const logoUrl = '/assets/logo-heikneuters-2026.png';
+const channelUrl = 'https://www.youtube.com/channel/UCTRbf6GaQNeR43AiWMnprlg';
+const featuredVideoId = 'Gm5clQOzu04';
+const videos = await getLatestYouTubeVideos(6);
+---
+
+<!doctype html>
+<html lang="nl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta
+      name="description"
+      content="Bekijk C.V. De Heikneuters door de jaren heen in foto's en video's."
+    />
+    <meta name="theme-color" content="#072f63" />
+    <title>Door de jaren heen | C.V. De Heikneuters</title>
+  </head>
+  <body>
+    <div class="site-shell">
+      <header class="nav nav--standalone">
+        <div class="nav__inner">
+          <a href="/" aria-label="C.V. De Heikneuters home">
+            <img class="logo" src={logoUrl} alt="Logo C.V. De Heikneuters Nijnsel" />
+          </a>
+          <nav class="nav__links" aria-label="Hoofdnavigatie">
+            <a href="/">Home</a>
+            <a href="/agenda/">Agenda</a>
+            <a href="/door-de-jaren-heen/" aria-current="page">Door de jaren heen</a>
+          </nav>
+          <button class="menu-button" aria-label="Menu openen" aria-expanded="false" aria-controls="mobile-nav">☰</button>
+        </div>
+      </header>
+
+      <nav class="mobile-nav" id="mobile-nav" aria-label="Mobiele navigatie">
+        <a href="/">Home</a>
+        <a href="/agenda/">Agenda</a>
+        <a href="/door-de-jaren-heen/">Door de jaren heen</a>
+      </nav>
+
+      <main>
+        <section class="section">
+          <div class="section__inner">
+            <div class="eyebrow">Sinds 1960</div>
+            <h2>Door de jaren heen</h2>
+            <p class="lead history-intro">
+              Al sinds 1960 maken De Heikneuters samen carnaval. In al die jaren zijn er
+              talloze mooie momenten, optochten, feesten en muzikale herinneringen ontstaan.
+              Op deze pagina verzamelen we een stukje van die geschiedenis in beeld.
+            </p>
+
+            <div class="featured-video">
+              <iframe
+                src={`https://www.youtube-nocookie.com/embed/${featuredVideoId}`}
+                title="Heikneuters Door de jaren heen"
+                loading="lazy"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen
+              ></iframe>
+            </div>
+          </div>
+        </section>
+
+        <section class="section section--soft">
+          <div class="section__inner">
+            <div class="news-head">
+              <div>
+                <div class="eyebrow">Beeld uit het archief</div>
+                <h2>Meer op YouTube</h2>
+              </div>
+              <a href={channelUrl} target="_blank" rel="noreferrer">Bekijk ons YouTube-kanaal →</a>
+            </div>
+
+            {videos.length > 0 ? (
+              <div class="youtube-grid">
+                {videos.map((video) => (
+                  <article class="youtube-card">
+                    <a
+                      class="youtube-card__image"
+                      href={video.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      aria-label={`Bekijk ${video.title} op YouTube`}
+                    >
+                      <img src={video.thumbnail} alt="" loading="lazy" />
+                      <span class="youtube-card__play" aria-hidden="true">▶</span>
+                    </a>
+                    <div class="youtube-card__body">
+                      <time datetime={video.published.toISOString()}>
+                        {formatYouTubeDate(video.published)}
+                      </time>
+                      <h3>{video.title}</h3>
+                      <a href={video.url} target="_blank" rel="noreferrer">Bekijk video →</a>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            ) : (
+              <div class="feed-fallback">
+                <p>
+                  De nieuwste video's konden op dit moment niet automatisch worden geladen.
+                  Op ons YouTube-kanaal vind je het volledige videoarchief.
+                </p>
+                <a class="button button--red" href={channelUrl} target="_blank" rel="noreferrer">
+                  Naar YouTube →
+                </a>
+              </div>
+            )}
+          </div>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <div class="footer__inner">
+          <div class="footer__bottom">© 2026 C.V. De Heikneuters · Nijnsel</div>
+        </div>
+      </footer>
+    </div>
+
+    <script>
+      const menuButton = document.querySelector('.menu-button');
+      const mobileNav = document.querySelector('.mobile-nav');
+
+      menuButton?.addEventListener('click', () => {
+        const open = mobileNav?.classList.toggle('is-open') ?? false;
+        menuButton.setAttribute('aria-expanded', String(open));
+      });
+
+      mobileNav?.querySelectorAll('a').forEach((link) => {
+        link.addEventListener('click', () => {
+          mobileNav.classList.remove('is-open');
+          menuButton?.setAttribute('aria-expanded', 'false');
+        });
+      });
+    </script>
+  </body>
+</html>
