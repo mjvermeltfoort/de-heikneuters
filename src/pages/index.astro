@@ -65,7 +65,7 @@ const news = [
             <a href="#steun-ons">Steun ons</a>
             <a href="#contact">Contact</a>
           </nav>
-          <button class="menu-button" aria-label="Menu openen">☰</button>
+          <button class="menu-button" aria-label="Menu openen" aria-expanded="false" aria-controls="mobile-nav">☰</button>
         </div>
       </header>
 
@@ -193,5 +193,19 @@ const news = [
         </div>
       </footer>
     </div>
+  <script>
+      const menuButton = document.querySelector('.menu-button');
+      const mobileNav = document.querySelector('.mobile-nav');
+      menuButton?.addEventListener('click', () => {
+        const open = mobileNav?.classList.toggle('is-open') ?? false;
+        menuButton.setAttribute('aria-expanded', String(open));
+      });
+      mobileNav?.querySelectorAll('a').forEach((link) => {
+        link.addEventListener('click', () => {
+          mobileNav.classList.remove('is-open');
+          menuButton?.setAttribute('aria-expanded', 'false');
+        });
+      });
+    </script>
   </body>
 </html>
