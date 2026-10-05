@@ -10,23 +10,8 @@ import {
 const logoUrl = '/assets/logo-heikneuters-2026.png';
 const events = (await getUpcomingEvents()).slice(0, 3);
 
-const news = [
-  {
-    date: '8 september 2026',
-    title: 'Stem op C.V. De Heikneuters bij Rabo ClubSupport',
-    text: 'Met de opbrengst ondersteunen we onze optocht: zowel de wagenbouw als onze loopgroep.'
-  },
-  {
-    date: '27 september 2026',
-    title: 'La Dolce Dufjes zit erop',
-    text: 'Drie avonden vol Italiaanse chaos, humor, muziek, dans en een enthousiast publiek.'
-  },
-  {
-    date: '14 juni 2026',
-    title: 'We tellen af naar 66 jaar De Heikneuters',
-    text: 'Een bijzondere feestavond vol gezelligheid, muziek en natuurlijk heel veel carnaval.'
-  }
-];
+const instagramUrl = 'https://www.instagram.com/c.v.de.heikneuters.nijnsel/';
+const facebookUrl = 'https://www.facebook.com/share/19JosouTXi/';
 ---
 
 <!doctype html>
@@ -34,21 +19,22 @@ const news = [
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
-    <meta name="description" content="C.V. De Heikneuters uit Nijnsel – leverancier van carnavalsplezier sinds 1960." />
+    <meta
+      name="description"
+      content="C.V. De Heikneuters uit Nijnsel. Sinds 1960 leverancier van carnavalsplezier, met de Kneuterkapel, activiteiten, optochten en feest."
+    />
     <meta name="theme-color" content="#072f63" />
-    <title>C.V. De Heikneuters | Nijnsel</title>
+    <title>C.V. De Heikneuters | Carnaval in Nijnsel sinds 1960</title>
   </head>
   <body>
     <div class="site-shell">
       <div class="topbar">
         <div class="topbar__inner">
-          <span>Volg ons:</span>
+          <span>Volg De Heikneuters:</span>
           <div class="socials" aria-label="Social media">
-            <a class="social" href="https://www.facebook.com/" aria-label="Facebook">f</a>
-            <a class="social" href="#" aria-label="Instagram">◎</a>
-            <a class="social" href="#" aria-label="YouTube">▶</a>
+            <a class="social" href={facebookUrl} target="_blank" rel="noreferrer" aria-label="Facebook">f</a>
+            <a class="social" href={instagramUrl} target="_blank" rel="noreferrer" aria-label="Instagram">◎</a>
           </div>
-          <span>Zoeken</span>
         </div>
       </div>
 
@@ -61,7 +47,7 @@ const news = [
             <a href="/" aria-current="page">Home</a>
             <a href="#vereniging">Vereniging</a>
             <a href="#kneuterkapel">Kneuterkapel</a>
-            <a href="#activiteiten">Activiteiten</a>
+            <a href="/agenda/">Agenda</a>
             <a href="#jubileum">66 jaar</a>
             <a href="#steun-ons">Steun ons</a>
             <a href="#contact">Contact</a>
@@ -74,7 +60,7 @@ const news = [
         <a href="/">Home</a>
         <a href="#vereniging">Vereniging</a>
         <a href="#kneuterkapel">Kneuterkapel</a>
-        <a href="#activiteiten">Activiteiten</a>
+        <a href="/agenda/">Agenda</a>
         <a href="#jubileum">66 jaar</a>
         <a href="#steun-ons">Steun ons</a>
         <a href="#contact">Contact</a>
@@ -83,12 +69,15 @@ const news = [
       <main>
         <section class="hero">
           <div class="hero__content">
-            <div class="eyebrow">C.V. De Heikneuters · Nijnsel</div>
-            <h1>Leverancier van <span>carnavalsplezier</span></h1>
-            <p>Sinds 1960 thuis in Nijnsel. Samen maken we carnaval.</p>
+            <div class="eyebrow">Sinds 1960 · Nijnsel</div>
+            <h1>Carnaval maken we <span>samen</span></h1>
+            <p>
+              Vereniging, muziek, optochten en feest. Al 66 jaar zorgen De Heikneuters
+              voor carnavalsplezier in Nijnsel en ver daarbuiten.
+            </p>
             <div class="actions">
-              <a class="button button--red" href="#jubileum">Bekijk ons jubileum →</a>
-              <a class="button button--ghost" href="#vereniging">Over De Heikneuters</a>
+              <a class="button button--red" href="/agenda/">Bekijk de agenda →</a>
+              <a class="button button--ghost" href="#jubileum">66 jaar De Heikneuters</a>
             </div>
           </div>
         </section>
@@ -97,23 +86,44 @@ const news = [
           <div class="section__inner section__grid">
             <div>
               <div class="eyebrow">C.V. De Heikneuters</div>
-              <h2>Welkom bij De Heikneuters</h2>
+              <h2>Al 66 jaar een begrip in Nijnsel</h2>
               <p class="lead">
-                C.V. De Heikneuters uit Nijnsel is al sinds 1960 een bruisende carnavalsvereniging.
-                Samen zorgen we voor carnavalsplezier in Nijnsel en ver daarbuiten, met een rijk
-                verenigingsleven, de Kneuterkapel, mooie evenementen en een betrokken groep leden
-                en vrijwilligers.
+                Wat in 1960 begon met een groep feestvierders uit Nijnsel groeide uit tot
+                een actieve carnavalsvereniging waar plezier, traditie en samen dingen
+                ondernemen centraal staan.
               </p>
+              <p class="body-copy">
+                Tijdens carnaval zijn we volop te vinden in Nijnsel en Papgat: van de
+                kinderoptocht en carnavalsmaandag tot onze creaties in de grote optocht.
+                Maar ook buiten carnaval zitten we niet stil. Met activiteiten voor jong
+                en oud blijft De Heikneuters het hele jaar door een gezellige club.
+              </p>
+
+              <div class="fact-row" aria-label="De Heikneuters in het kort">
+                <div class="fact">
+                  <strong>1960</strong>
+                  <span>opgericht</span>
+                </div>
+                <div class="fact">
+                  <strong>26</strong>
+                  <span>muzikanten in de Kneuterkapel</span>
+                </div>
+                <div class="fact">
+                  <strong>€ 11,11</strong>
+                  <span>vanaf per jaar als vriend</span>
+                </div>
+              </div>
+
               <div class="actions">
-                <a class="button button--red" href="#">Meer over De Heikneuters →</a>
-                <a class="button button--outline" href="#jubileum">Ons jubileumjaar →</a>
+                <a class="button button--red" href="#kneuterkapel">Ontdek de Kneuterkapel →</a>
+                <a class="button button--outline" href="#steun-ons">Steun De Heikneuters</a>
               </div>
             </div>
 
             <div id="activiteiten">
               <div class="panel-title">
                 <h3>Eerstvolgende activiteiten</h3>
-                <a href="/agenda/">Naar de volledige agenda →</a>
+                <a href="/agenda/">Volledige agenda →</a>
               </div>
 
               {events.length > 0 ? (
@@ -133,49 +143,125 @@ const news = [
                   ))}
                 </div>
               ) : (
-                <p class="lead">Er staan op dit moment geen komende activiteiten in de agenda.</p>
+                <p class="body-copy">Er staan op dit moment geen komende activiteiten in de agenda.</p>
               )}
             </div>
           </div>
         </section>
 
-        <section class="section section--soft" id="nieuws">
-          <div class="section__inner">
-            <div class="news-head">
-              <div>
-                <div class="eyebrow">Van onze socials</div>
-                <h2>Laatste nieuws</h2>
+        <section class="section section--blue" id="kneuterkapel">
+          <div class="section__inner spotlight">
+            <div>
+              <div class="eyebrow eyebrow--light">De Kneuterkapel</div>
+              <h2>Feest vanaf de eerste noot</h2>
+              <p class="lead lead--light">
+                Wat ooit begon als een kleine groep muzikanten binnen De Heikneuters is
+                uitgegroeid tot een kapel van 26 muzikanten. Van traditionele blaasmuziek
+                tot moderne meezingers: plezier en samen muziek maken staan voorop.
+              </p>
+              <div class="actions">
+                <a
+                  class="button button--red"
+                  href="mailto:dekneuterkapel@gmail.com?subject=Optreden%20Kneuterkapel"
+                >
+                  Boek de Kneuterkapel →
+                </a>
+                <a class="button button--ghost" href="/agenda/">Bekijk optredens</a>
               </div>
-              <a href="https://www.facebook.com/">Volg ons op Facebook →</a>
             </div>
 
-            <div class="news-grid">
-              {news.map((item) => (
-                <article class="news-card">
-                  <div class="news-card__visual" aria-hidden="true"></div>
-                  <div class="news-card__body">
-                    <time>{item.date}</time>
-                    <h3>{item.title}</h3>
-                    <p>{item.text}</p>
-                    <div class="news-card__footer">
-                      <span>Facebook</span>
-                      <span>Bekijk bericht →</span>
-                    </div>
-                  </div>
-                </article>
-              ))}
+            <div class="spotlight__badge" aria-label="Kneuterkapel">
+              <span>Muziek uit</span>
+              <strong>Nijnsel</strong>
+              <small>voor ieder feest</small>
+            </div>
+          </div>
+        </section>
+
+        <section class="section section--soft">
+          <div class="section__inner">
+            <div class="section-heading">
+              <div class="eyebrow">Meer dan carnaval alleen</div>
+              <h2>Dit zijn De Heikneuters</h2>
+            </div>
+
+            <div class="feature-grid">
+              <article class="feature-card" id="vurproefke">
+                <span class="feature-card__kicker">Sinds 2015</span>
+                <h3>Ut Vurproefke</h3>
+                <p>
+                  Het muzikale voorproefje op carnaval. Blaaskapellen, twee podia,
+                  een avondvullend programma en vooral heel veel gezelligheid bij
+                  De Beckart in Nijnsel.
+                </p>
+                <a href="/agenda/">Bekijk wanneer Ut Vurproefke is →</a>
+              </article>
+
+              <article class="feature-card" id="steun-ons">
+                <span class="feature-card__kicker">Word vriend</span>
+                <h3>Vrienden van de Heikneuters</h3>
+                <p>
+                  Draag je onze vereniging een warm hart toe? Vanaf € 11,11 per jaar
+                  help je mee om carnaval in Nijnsel kleurrijk, gezellig en toegankelijk
+                  te houden voor jong en oud.
+                </p>
+                <a href="mailto:info@de-heikneuters.nl?subject=Vriend%20van%20de%20Heikneuters">
+                  Ik wil vriend worden →
+                </a>
+              </article>
+
+              <article class="feature-card">
+                <span class="feature-card__kicker">Het hele jaar door</span>
+                <h3>Samen dingen doen</h3>
+                <p>
+                  Spelavonden, familiedagen, activiteiten voor de jeugd en natuurlijk
+                  carnaval. De vereniging draait om samen bouwen, organiseren, vieren
+                  en herinneringen maken.
+                </p>
+                <a href="#contact">Meer weten over de vereniging →</a>
+              </article>
             </div>
 
             <aside class="jubilee" id="jubileum">
-              <div class="eyebrow" style="color:#ff5f67">1960 — 2026</div>
+              <div class="eyebrow" style="color:#ff6b73">1960 — 2026</div>
               <h3>66 jaar De Heikneuters</h3>
               <p>
-                In 2026 vieren we 66 jaar C.V. De Heikneuters. Een jubileumjaar vol activiteiten,
-                herinneringen en natuurlijk heel veel carnaval. Op deze plek komt het volledige
-                jubileumprogramma.
+                Een jubileum dat we niet stilletjes voorbij laten gaan. In ons 66e jaar
+                kijken we terug op mooie herinneringen én vooruit naar nieuwe feesten,
+                activiteiten en carnavalsmomenten. Iedereen is welkom om met ons mee te vieren.
               </p>
-              <a class="button button--red" href="#">Bekijk het jubileumprogramma →</a>
+              <div class="actions">
+                <a class="button button--red" href="/agenda/">Bekijk jubileumactiviteiten →</a>
+                <a class="button button--ghost" href={instagramUrl} target="_blank" rel="noreferrer">
+                  Volg het jubileum
+                </a>
+              </div>
             </aside>
+          </div>
+        </section>
+
+        <section class="section social-section" id="nieuws">
+          <div class="section__inner social-panel">
+            <div>
+              <div class="eyebrow">Nieuws, foto's & feest</div>
+              <h2>Volg ons op onze nieuwe socials</h2>
+              <p class="lead">
+                Voor het laatste nieuws, foto's, aankondigingen en alles rondom ons
+                66-jarig jubileum vind je De Heikneuters op Instagram en Facebook.
+              </p>
+            </div>
+            <div class="social-actions">
+              <a class="social-button" href={instagramUrl} target="_blank" rel="noreferrer">
+                <span>◎</span>
+                <strong>Instagram</strong>
+                <small>@c.v.de.heikneuters.nijnsel</small>
+              </a>
+              <a class="social-button" href={facebookUrl} target="_blank" rel="noreferrer">
+                <span>f</span>
+                <strong>Facebook</strong>
+                <small>C.V. De Heikneuters Nijnsel</small>
+              </a>
+            </div>
           </div>
         </section>
       </main>
@@ -185,25 +271,32 @@ const news = [
           <div class="footer__grid">
             <div>
               <h4>C.V. De Heikneuters</h4>
-              <p>Leverancier van carnavalsplezier in Nijnsel sinds 1960.</p>
+              <p>
+                Leverancier van carnavalsplezier in Nijnsel sinds 1960.
+                Samen maken we carnaval.
+              </p>
             </div>
             <div>
               <h4>Snel naar</h4>
               <ul>
                 <li><a href="#vereniging">Vereniging</a></li>
+                <li><a href="#kneuterkapel">Kneuterkapel</a></li>
                 <li><a href="/agenda/">Agenda</a></li>
                 <li><a href="#jubileum">66 jaar</a></li>
               </ul>
             </div>
-            <div id="steun-ons">
+            <div>
               <h4>Contact</h4>
               <ul>
                 <li><a href="mailto:info@de-heikneuters.nl">info@de-heikneuters.nl</a></li>
-                <li>Nijnsel</li>
+                <li><a href="tel:+31630237107">06 30237107</a></li>
+                <li>Nijnsel · Sint-Oedenrode</li>
               </ul>
             </div>
           </div>
-          <div class="footer__bottom">© 2026 C.V. De Heikneuters</div>
+          <div class="footer__bottom">
+            © 2026 C.V. De Heikneuters · Nijnsel
+          </div>
         </div>
       </footer>
     </div>
