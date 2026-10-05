@@ -1,0 +1,49 @@
+name: Import website assets
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/import-assets.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  import-assets:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download logo and banner
+        run: |
+          set -euo pipefail
+          mkdir -p public/assets
+
+          curl --fail --location --retry 3             "https://drive.usercontent.google.com/download?id=14GSBXGGGC1hWRIojWcwa-W8vJy8oHERd&export=download&confirm=t"             --output public/assets/logo-heikneuters-2026.png
+
+          curl --fail --location --retry 3             "https://de-heikneuters.nl/wp-content/uploads/2025/06/Groepsfoto-Heikneuters-1024x399.jpeg"             --output public/assets/banner-heikneuters.jpg
+
+          test -s public/assets/logo-heikneuters-2026.png
+          test -s public/assets/banner-heikneuters.jpg
+
+          file public/assets/logo-heikneuters-2026.png
+          file public/assets/banner-heikneuters.jpg
+
+      - name: Commit assets
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/assets/logo-heikneuters-2026.png public/assets/banner-heikneuters.jpg
+
+          if git diff --cached --quiet; then
+            echo "Assets are already up to date."
+            exit 0
+          fi
+
+          git commit -m "chore: add logo and banner assets"
+          git push
