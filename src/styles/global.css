@@ -67,6 +67,15 @@ button { font: inherit; }
   flex: 0 0 auto;
   filter: drop-shadow(0 8px 10px rgba(0,0,0,.08));
 }
+
+.nav--standalone .nav__inner {
+  min-height: 112px;
+}
+
+.nav--standalone .logo {
+  width: 88px;
+  margin: 12px 0;
+}
 .nav__links { margin-left: auto; display: flex; gap: 28px; align-items: center; font-weight: 700; font-size: 15px; }
 .nav__links a { padding: 29px 0 25px; border-bottom: 3px solid transparent; }
 .nav__links a:hover, .nav__links a[aria-current="page"] { color: var(--red); border-color: var(--red); }
@@ -435,8 +444,21 @@ h2 { margin:8px 0 16px; font-size:clamp(34px,5vw,52px); line-height:1; letter-sp
 @media (max-width: 900px) {
   .site-shell { width:100%; margin:0; border-radius:0; }
   .topbar { display:none; }
-  .nav__inner { min-height:74px; }
-  .logo { width:72px; margin:0; }
+  .nav__inner {
+    min-height: 88px;
+    padding-block: 8px;
+  }
+  .logo {
+    width: 68px;
+    margin: 0;
+  }
+  .nav--standalone .nav__inner {
+    min-height: 88px;
+  }
+  .nav--standalone .logo {
+    width: 68px;
+    margin: 0;
+  }
   .nav__links { display:none; }
   .menu-button { display:block; }
   .mobile-nav.is-open { display:block; }
@@ -455,11 +477,25 @@ h2 { margin:8px 0 16px; font-size:clamp(34px,5vw,52px); line-height:1; letter-sp
 }
 
 @media (max-width: 600px) {
-  .topbar__inner, .nav__inner, .section__inner, .footer__inner, .hero__content {
+  .topbar__inner, .section__inner, .footer__inner, .hero__content {
     width:min(calc(100% - 28px), var(--max));
   }
-  .nav__inner { min-height:68px; }
-  .logo { width:62px; }
+  .nav__inner {
+    width:min(calc(100% - 40px), var(--max));
+    min-height:88px;
+    padding-block:10px;
+  }
+  .logo {
+    width:66px;
+    margin:0;
+  }
+  .nav--standalone .nav__inner {
+    min-height:88px;
+  }
+  .nav--standalone .logo {
+    width:66px;
+    margin:0;
+  }
   .hero { min-height:460px; align-items:end; }
   .hero::before { content:""; position:absolute; inset:0; background:linear-gradient(0deg, rgba(4,26,57,.95), rgba(4,26,57,.1)); }
   .hero h1 { font-size:46px; }
