@@ -1,19 +1,24 @@
 ---
 import '../styles/global.css';
+import {
+  formatDate,
+  formatDay,
+  formatEventMeta,
+  formatMonth,
+  getUpcomingEvents,
+} from '../lib/calendar';
 
 const logoUrl = '/assets/logo-heikneuters-2026.png';
-const events = [
-  { date: '18 oktober 2026', title: 'Kneuterkapel: Jeneverfeesten Hasselt', location: 'Hasselt' },
-  { date: '11 november 2026', title: 'Start jubileumjaar', location: 'Nijnsel' },
-  { date: '21 november 2026', title: '66 jaar De Heikneuters', location: 'Nijnsel' },
-];
+const events = await getUpcomingEvents();
 ---
+
 <!doctype html>
 <html lang="nl">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <meta name="description" content="Agenda van C.V. De Heikneuters uit Nijnsel." />
+    <meta name="theme-color" content="#072f63" />
     <title>Agenda | C.V. De Heikneuters</title>
   </head>
   <body>
@@ -29,33 +34,46 @@ const events = [
           </nav>
         </div>
       </header>
+
       <main>
         <section class="section section--soft">
           <div class="section__inner">
-            <div class="eyebrow">Activiteiten</div>
+            <div class="eyebrow">Google Calendar</div>
             <h2>Agenda</h2>
-            <p class="lead">De eerste versie gebruikt nog vaste agenda-items. In de volgende stap koppelen we dit rechtstreeks aan Google Calendar.</p>
-            <div class="events">
-              {events.map((event) => (
-                <article class="event">
-                  <div class="event__date" style="aspect-ratio:auto; min-height:72px; padding:8px;">
-                    <strong style="font-size:18px;">{event.date.split(' ')[0]}</strong>
-                    <span>{event.date.split(' ')[1].slice(0,3).toUpperCase()}</span>
-                  </div>
-                  <div class="event__body">
-                    <strong>{event.title}</strong>
-                    <div class="event__meta">{event.date} · {event.location}</div>
-                  </div>
-                  <div class="event__arrow" aria-hidden="true">›</div>
-                </article>
-              ))}
-            </div>
+            <p class="lead">
+              Bekijk de komende activiteiten van C.V. De Heikneuters. Deze agenda wordt automatisch
+              bijgewerkt vanuit onze Google Calendar.
+            </p>
+
+            {events.length > 0 ? (
+              <div class="events">
+                {events.map((event) => (
+                  <article class="event">
+                    <div class="event__date">
+                      <strong>{formatDay(event)}</strong>
+                      <span>{formatMonth(event)}</span>
+                    </div>
+                    <div class="event__body">
+                      <strong>{event.title}</strong>
+                      <div class="event__meta">
+                        {formatDate(event)} · {formatEventMeta(event)}
+                      </div>
+                    </div>
+                    <div class="event__arrow" aria-hidden="true">›</div>
+                  </article>
+                ))}
+              </div>
+            ) : (
+              <p class="lead">Er staan op dit moment geen komende activiteiten in de agenda.</p>
+            )}
+
             <div class="actions" style="margin-top:28px;">
               <a class="button button--outline" href="/">← Terug naar home</a>
             </div>
           </div>
         </section>
       </main>
+
       <footer class="footer">
         <div class="footer__inner">
           <div class="footer__bottom">© 2026 C.V. De Heikneuters</div>
