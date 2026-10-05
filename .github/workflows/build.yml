@@ -6,6 +6,13 @@ on:
       - main
   pull_request:
   workflow_dispatch:
+  schedule:
+    # Dagelijkse verversing van Google Calendar-data (GitHub cron gebruikt UTC).
+    - cron: '17 4 * * *'
+
+concurrency:
+  group: website-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
