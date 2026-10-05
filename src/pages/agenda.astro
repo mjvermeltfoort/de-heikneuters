@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import Favicons from '../components/Favicons.astro';
 import {
   formatDate,
   formatDay,
@@ -19,6 +20,7 @@ const events = await getUpcomingEvents();
     <meta name="viewport" content="width=device-width" />
     <meta name="description" content="Agenda van C.V. De Heikneuters uit Nijnsel." />
     <meta name="theme-color" content="#072f63" />
+    <Favicons />
     <title>Agenda | C.V. De Heikneuters</title>
   </head>
   <body>
