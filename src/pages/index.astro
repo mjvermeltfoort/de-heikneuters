@@ -6,9 +6,15 @@ import {
   formatMonth,
   getUpcomingEvents,
 } from '../lib/calendar';
+import {
+  facebookExcerpt,
+  formatFacebookDate,
+  getLatestFacebookPosts,
+} from '../lib/facebook';
 
 const logoUrl = '/assets/logo-heikneuters-2026.png';
 const events = (await getUpcomingEvents()).slice(0, 3);
+const facebookPosts = await getLatestFacebookPosts(3);
 
 const instagramUrl = 'https://www.instagram.com/c.v.de.heikneuters.nijnsel/';
 const facebookUrl = 'https://www.facebook.com/share/19JosouTXi/';
@@ -211,27 +217,65 @@ const facebookUrl = 'https://www.facebook.com/share/19JosouTXi/';
         </section>
 
         <section class="section social-section" id="nieuws">
-          <div class="section__inner social-panel">
-            <div>
-              <div class="eyebrow">Nieuws, foto's & feest</div>
-              <h2>Volg ons op onze nieuwe socials</h2>
-              <p class="lead">
-                Voor het laatste nieuws, foto's, aankondigingen en alles rondom ons
-                66-jarig jubileum vind je De Heikneuters op Instagram en Facebook.
-              </p>
+          <div class="section__inner">
+            <div class="news-head">
+              <div>
+                <div class="eyebrow">Laatste nieuws</div>
+                <h2>Van Facebook</h2>
+              </div>
+              <a href={facebookUrl} target="_blank" rel="noreferrer">Bekijk onze Facebookpagina →</a>
             </div>
-            <div class="social-actions">
-              <a class="social-button" href={instagramUrl} target="_blank" rel="noreferrer">
-                <span>◎</span>
-                <strong>Instagram</strong>
-                <small>@c.v.de.heikneuters.nijnsel</small>
-              </a>
-              <a class="social-button" href={facebookUrl} target="_blank" rel="noreferrer">
-                <span>f</span>
-                <strong>Facebook</strong>
-                <small>C.V. De Heikneuters Nijnsel</small>
-              </a>
-            </div>
+
+            {facebookPosts.length > 0 ? (
+              <div class="facebook-grid">
+                {facebookPosts.map((post) => (
+                  <article class="facebook-card">
+                    {post.imageUrl && (
+                      <a
+                        class="facebook-card__image"
+                        href={post.permalinkUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        aria-label="Bekijk Facebookbericht"
+                      >
+                        <img src={post.imageUrl} alt="" loading="lazy" />
+                      </a>
+                    )}
+                    <div class="facebook-card__body">
+                      <time datetime={post.createdTime.toISOString()}>
+                        {formatFacebookDate(post.createdTime)}
+                      </time>
+                      <p>{facebookExcerpt(post.message)}</p>
+                      <a href={post.permalinkUrl} target="_blank" rel="noreferrer">
+                        Bekijk bericht op Facebook →
+                      </a>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            ) : (
+              <div class="social-panel">
+                <div>
+                  <h2>Volg ons op onze socials</h2>
+                  <p class="lead">
+                    Voor het laatste nieuws, foto's, aankondigingen en alles rondom ons
+                    66-jarig jubileum vind je De Heikneuters op Instagram en Facebook.
+                  </p>
+                </div>
+                <div class="social-actions">
+                  <a class="social-button" href={instagramUrl} target="_blank" rel="noreferrer">
+                    <span>◎</span>
+                    <strong>Instagram</strong>
+                    <small>@c.v.de.heikneuters.nijnsel</small>
+                  </a>
+                  <a class="social-button" href={facebookUrl} target="_blank" rel="noreferrer">
+                    <span>f</span>
+                    <strong>Facebook</strong>
+                    <small>C.V. De Heikneuters Nijnsel</small>
+                  </a>
+                </div>
+              </div>
+            )}
           </div>
         </section>
       </main>
