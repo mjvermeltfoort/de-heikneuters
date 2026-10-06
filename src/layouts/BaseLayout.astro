@@ -3,6 +3,7 @@ import '../styles/global.css';
 import Favicons from '../components/Favicons.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
+import GoogleAnalytics from '../components/GoogleAnalytics.astro';
 
 interface Props {
   title: string;
@@ -60,6 +61,7 @@ const socialImageUrl = new URL(socialImage, site);
       </main>
       <SiteFooter />
     </div>
+    <GoogleAnalytics />
     <slot name="scripts" />
   </body>
 </html>
