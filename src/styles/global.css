@@ -170,7 +170,7 @@ h2,
 
 .events { display:grid; gap:12px; }
 .event {
-  display:grid; grid-template-columns:72px 1fr 36px; gap:16px; align-items:center;
+  display:grid; grid-template-columns:72px 1fr; gap:16px; align-items:center;
   background:#fff; border:1px solid var(--line); border-radius:12px;
   padding:12px 14px 12px 12px;
   box-shadow:0 7px 20px rgba(14,47,87,.06);
@@ -185,11 +185,6 @@ h2,
 .event__date span { font-size:12px; margin-top:5px; }
 .event__body strong { display:block; margin-bottom:4px; color:var(--blue-dark); }
 .event__meta { color:var(--muted); font-size:13px; }
-.event__arrow {
-  width:32px; height:32px; border-radius:999px; background:var(--blue-dark); color:#fff;
-  display:grid; place-items:center; font-weight:900;
-}
-
 .news-head { display:flex; justify-content:space-between; gap:20px; align-items:end; margin-bottom:24px; }
 .news-head h2 { margin-bottom:0; }
 .news-head a { color:var(--red-dark); font-weight:900; }
@@ -928,7 +923,7 @@ h2,
   .youtube-grid { grid-template-columns:1fr; }
   h2, .page-title { font-size:38px; }
   .lead { font-size:16px; }
-  .event { grid-template-columns:58px 1fr 30px; gap:10px; }
+  .event { grid-template-columns:58px 1fr; gap:10px; }
   .event__date strong { font-size:22px; }
   .news-head { align-items:start; flex-direction:column; gap:8px; }
   .news-card { display:block; }
