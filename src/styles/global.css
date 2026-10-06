@@ -719,6 +719,26 @@ h2 { margin:8px 0 16px; font-size:clamp(34px,5vw,52px); line-height:1; letter-sp
   box-shadow: 0 0 0 3px rgba(25,90,171,.12);
 }
 
+
+.google-form-embed {
+  overflow: hidden;
+  border-radius: 12px;
+  background: var(--soft);
+}
+
+.google-form-embed iframe {
+  display: block;
+  width: 100%;
+  min-height: 1180px;
+  border: 0;
+  background: #fff;
+}
+
+.contact-form-card .form-note a {
+  color: var(--red);
+  font-weight: 800;
+}
+
 .form-note {
   margin: -4px 0 0;
   color: var(--muted);
@@ -844,4 +864,5 @@ h2 { margin:8px 0 16px; font-size:clamp(34px,5vw,52px); line-height:1; letter-sp
   .jubilee { padding:26px; }
   .jubilee h3 { font-size:28px; }
   .contact-form-card, .contact-card, .info-card, .highlight-card { padding:22px; }
+  .google-form-embed iframe { min-height:1320px; }
 }
