@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import SocialIcon from '../components/SocialIcon.astro';
 import {
   formatDay,
   formatEventMeta,
@@ -17,6 +18,7 @@ const facebookPosts = await getLatestFacebookPosts(3);
 
 const instagramUrl = 'https://www.instagram.com/c.v.de.heikneuters.nijnsel/';
 const facebookUrl = 'https://www.facebook.com/share/19JosouTXi/';
+const youtubeUrl = 'https://www.youtube.com/channel/UCTRbf6GaQNeR43AiWMnprlg';
 ---
 
 <BaseLayout
@@ -147,20 +149,25 @@ const facebookUrl = 'https://www.facebook.com/share/19JosouTXi/';
         <div>
           <h2>Volg ons op onze socials</h2>
           <p class="lead">
-            Voor het laatste nieuws, foto's, aankondigingen en alles rondom ons
-            66-jarig jubileum vind je De Heikneuters op Instagram en Facebook.
+            Voor het laatste nieuws, foto's, video's, aankondigingen en alles rondom ons
+            66-jarig jubileum vind je De Heikneuters op Facebook, Instagram en YouTube.
           </p>
         </div>
         <div class="social-actions">
+          <a class="social-button" href={facebookUrl} target="_blank" rel="noreferrer">
+            <span class="social-button__icon"><SocialIcon name="facebook" size={20} /></span>
+            <strong>Facebook</strong>
+            <small>C.V. De Heikneuters Nijnsel</small>
+          </a>
           <a class="social-button" href={instagramUrl} target="_blank" rel="noreferrer">
-            <span>◎</span>
+            <span class="social-button__icon"><SocialIcon name="instagram" size={20} /></span>
             <strong>Instagram</strong>
             <small>@c.v.de.heikneuters.nijnsel</small>
           </a>
-          <a class="social-button" href={facebookUrl} target="_blank" rel="noreferrer">
-            <span>f</span>
-            <strong>Facebook</strong>
-            <small>C.V. De Heikneuters Nijnsel</small>
+          <a class="social-button" href={youtubeUrl} target="_blank" rel="noreferrer">
+            <span class="social-button__icon"><SocialIcon name="youtube" size={22} /></span>
+            <strong>YouTube</strong>
+            <small>Video's van De Heikneuters</small>
           </a>
         </div>
       </div>
