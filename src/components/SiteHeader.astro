@@ -1,0 +1,108 @@
+---
+interface Props {
+  current?: string;
+  home?: boolean;
+}
+
+const { current = '', home = false } = Astro.props;
+
+const logoUrl = '/assets/logo-heikneuters-2026.png';
+const instagramUrl = 'https://www.instagram.com/c.v.de.heikneuters.nijnsel/';
+const facebookUrl = 'https://www.facebook.com/share/19JosouTXi/';
+
+const mainItems = [
+  { key: 'home', label: 'Home', href: '/' },
+  { key: 'vereniging', label: 'Vereniging', href: '/#vereniging' },
+  { key: 'kneuterkapel', label: 'Kneuterkapel', href: '/de-kneuterkapel/' },
+  { key: 'agenda', label: 'Agenda', href: '/agenda/' },
+  { key: 'jubileum', label: '66 jaar', href: '/#jubileum' },
+  { key: 'contact', label: 'Contact', href: '/contact/' },
+];
+
+const moreItems = [
+  { key: 'vurproefke', label: 'Ut Vurproefke', href: '/ut-vurproefke/' },
+  { key: 'vrienden', label: 'Vrienden van de Heikneuters', href: '/vrienden-van-de-heikneuters/' },
+  { key: 'history', label: 'Door de jaren heen', href: '/door-de-jaren-heen/' },
+];
+
+const moreIsCurrent = moreItems.some((item) => item.key === current);
+---
+
+{home && (
+  <div class="topbar">
+    <div class="topbar__inner">
+      <span>Volg De Heikneuters:</span>
+      <div class="socials" aria-label="Social media">
+        <a class="social" href={facebookUrl} target="_blank" rel="noreferrer" aria-label="Facebook">f</a>
+        <a class="social" href={instagramUrl} target="_blank" rel="noreferrer" aria-label="Instagram">◎</a>
+      </div>
+    </div>
+  </div>
+)}
+
+<header class:list={['nav', !home && 'nav--standalone']}>
+  <div class="nav__inner">
+    <a href="/" aria-label="C.V. De Heikneuters home">
+      <img
+        class="logo"
+        src={logoUrl}
+        width="240"
+        height="375"
+        alt="Logo C.V. De Heikneuters Nijnsel"
+      />
+    </a>
+
+    <nav class="nav__links" aria-label="Hoofdnavigatie">
+      {mainItems.map((item) => (
+        <a href={item.href} aria-current={current === item.key ? 'page' : undefined}>
+          {item.label}
+        </a>
+      ))}
+
+      <details class:list={['nav-more', moreIsCurrent && 'is-current']}>
+        <summary>Meer <span aria-hidden="true">▾</span></summary>
+        <div class="nav-more__menu">
+          {moreItems.map((item) => (
+            <a href={item.href} aria-current={current === item.key ? 'page' : undefined}>
+              {item.label}
+            </a>
+          ))}
+        </div>
+      </details>
+    </nav>
+
+    <button class="menu-button" aria-label="Menu openen" aria-expanded="false" aria-controls="mobile-nav">
+      ☰
+    </button>
+  </div>
+</header>
+
+<nav class="mobile-nav" id="mobile-nav" aria-label="Mobiele navigatie">
+  {mainItems.map((item) => (
+    <a href={item.href} aria-current={current === item.key ? 'page' : undefined}>
+      {item.label}
+    </a>
+  ))}
+  {moreItems.map((item) => (
+    <a href={item.href} aria-current={current === item.key ? 'page' : undefined}>
+      {item.label}
+    </a>
+  ))}
+</nav>
+
+<script>
+  const menuButton = document.querySelector('.menu-button');
+  const mobileNav = document.querySelector('.mobile-nav');
+
+  menuButton?.addEventListener('click', () => {
+    const open = mobileNav?.classList.toggle('is-open') ?? false;
+    menuButton.setAttribute('aria-expanded', String(open));
+  });
+
+  mobileNav?.querySelectorAll('a').forEach((link) => {
+    link.addEventListener('click', () => {
+      mobileNav.classList.remove('is-open');
+      menuButton?.setAttribute('aria-expanded', 'false');
+    });
+  });
+</script>
