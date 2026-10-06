@@ -1,0 +1,48 @@
+name: Inspect Google Form
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/inspect-google-form.yml
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch and inspect form
+        run: |
+          python3 - <<'PY'
+          import re
+          import urllib.request
+          from html import unescape
+
+          url = "https://docs.google.com/forms/d/e/1FAIpQLSdQKqZbDT8ACClFDrf-zxwpt2mzrPb0CvkYVLAxvkibWUgn1A/viewform?embedded=true"
+          req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+          html = urllib.request.urlopen(req, timeout=20).read().decode("utf-8", "replace")
+
+          print("HTTP fetch OK; bytes:", len(html))
+
+          ids = sorted(set(re.findall(r'entry\.(\d+)', html)), key=int)
+          print("ENTRY_IDS:", ",".join(ids))
+
+          # Print short surrounding snippets for each discovered entry id.
+          for entry_id in ids:
+              token = "entry." + entry_id
+              pos = html.find(token)
+              start = max(0, pos - 500)
+              end = min(len(html), pos + 500)
+              snippet = re.sub(r'\s+', ' ', unescape(html[start:end]))
+              print(f"ENTRY {entry_id}: {snippet}")
+
+          # Google Forms stores its question model in FB_PUBLIC_LOAD_DATA_.
+          marker = "FB_PUBLIC_LOAD_DATA_"
+          pos = html.find(marker)
+          if pos >= 0:
+              snippet = html[pos:pos + 50000]
+              print("PUBLIC_LOAD_DATA_START")
+              print(snippet)
+              print("PUBLIC_LOAD_DATA_END")
+          PY
