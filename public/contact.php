@@ -1,9 +1,8 @@
 <?php
-declare(strict_types=1);
 
-function redirect_to_contact(string $status): never
+function redirect_to_contact($status)
 {
-    header('Location: /contact/?status=' . rawurlencode($status) . '#contactformulier', true, 303);
+    header('Location: contact/?status=' . rawurlencode($status) . '#contactformulier', true, 303);
     exit;
 }
 
@@ -30,13 +29,13 @@ $subject = str_replace(["\r", "\n"], ' ', $subject);
 
 if (
     $name === '' ||
-    mb_strlen($name) > 120 ||
+    strlen($name) > 240 ||
     !filter_var($email, FILTER_VALIDATE_EMAIL) ||
-    mb_strlen($email) > 180 ||
+    strlen($email) > 180 ||
     $subject === '' ||
-    mb_strlen($subject) > 160 ||
+    strlen($subject) > 320 ||
     $message === '' ||
-    mb_strlen($message) > 5000
+    strlen($message) > 10000
 ) {
     redirect_to_contact('error');
 }
