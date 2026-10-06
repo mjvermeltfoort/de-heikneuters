@@ -1,121 +1,56 @@
 ---
-import '../styles/global.css';
-import Favicons from '../components/Favicons.astro';
-const logoUrl = '/assets/logo-heikneuters-2026.png';
+import BaseLayout from '../layouts/BaseLayout.astro';
 const channelUrl = 'https://www.youtube.com/channel/UCTRbf6GaQNeR43AiWMnprlg';
 const featuredVideoId = 'Gm5clQOzu04';
 const uploadsPlaylistId = 'UUTRbf6GaQNeR43AiWMnprlg';
 ---
 
-<!doctype html>
-<html lang="nl">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
-    <meta
-      name="description"
-      content="Bekijk C.V. De Heikneuters door de jaren heen in foto's en video's."
-    />
-    <meta name="theme-color" content="#072f63" />
-    <Favicons />
-    <title>Door de jaren heen | C.V. De Heikneuters</title>
-  </head>
-  <body>
-    <div class="site-shell">
-      <header class="nav nav--standalone">
-        <div class="nav__inner">
-          <a href="/" aria-label="C.V. De Heikneuters home">
-            <img class="logo" src={logoUrl} alt="Logo C.V. De Heikneuters Nijnsel" />
-          </a>
-          <nav class="nav__links" aria-label="Hoofdnavigatie">
-            <a href="/">Home</a>
-            <a href="/de-kneuterkapel/">Kneuterkapel</a>
-            <a href="/agenda/">Agenda</a>
-            <a href="/door-de-jaren-heen/" aria-current="page">Door de jaren heen</a>
-            <a href="/contact/">Contact</a>
-          </nav>
-          <button class="menu-button" aria-label="Menu openen" aria-expanded="false" aria-controls="mobile-nav">☰</button>
-        </div>
-      </header>
+<BaseLayout
+  title="Door de jaren heen | C.V. De Heikneuters"
+  description="Bekijk C.V. De Heikneuters door de jaren heen in foto's en video's."
+  current="history"
+>
+<section class="section">
+  <div class="section__inner">
+    <div class="eyebrow">Sinds 1960</div>
+    <h1 class="page-title">Door de jaren heen</h1>
+    <p class="lead history-intro">
+      Al sinds 1960 maken De Heikneuters samen carnaval. In al die jaren zijn er
+      talloze mooie momenten, optochten, feesten en muzikale herinneringen ontstaan.
+      Op deze pagina verzamelen we een stukje van die geschiedenis in beeld.
+    </p>
 
-      <nav class="mobile-nav" id="mobile-nav" aria-label="Mobiele navigatie">
-        <a href="/">Home</a>
-        <a href="/de-kneuterkapel/">Kneuterkapel</a>
-        <a href="/agenda/">Agenda</a>
-        <a href="/ut-vurproefke/">Ut Vurproefke</a>
-        <a href="/vrienden-van-de-heikneuters/">Vrienden</a>
-        <a href="/door-de-jaren-heen/">Door de jaren heen</a>
-        <a href="/contact/">Contact</a>
-      </nav>
+    <div class="featured-video">
+      <iframe
+        src={`https://www.youtube-nocookie.com/embed/${featuredVideoId}`}
+        title="Heikneuters Door de jaren heen"
+        loading="lazy"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen
+      ></iframe>
+    </div>
+  </div>
+</section>
 
-      <main>
-        <section class="section">
-          <div class="section__inner">
-            <div class="eyebrow">Sinds 1960</div>
-            <h2>Door de jaren heen</h2>
-            <p class="lead history-intro">
-              Al sinds 1960 maken De Heikneuters samen carnaval. In al die jaren zijn er
-              talloze mooie momenten, optochten, feesten en muzikale herinneringen ontstaan.
-              Op deze pagina verzamelen we een stukje van die geschiedenis in beeld.
-            </p>
-
-            <div class="featured-video">
-              <iframe
-                src={`https://www.youtube-nocookie.com/embed/${featuredVideoId}`}
-                title="Heikneuters Door de jaren heen"
-                loading="lazy"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowfullscreen
-              ></iframe>
-            </div>
-          </div>
-        </section>
-
-        <section class="section section--soft">
-          <div class="section__inner">
-            <div class="news-head">
-              <div>
-                <div class="eyebrow">Beeld uit het archief</div>
-                <h2>Meer op YouTube</h2>
-              </div>
-              <a href={channelUrl} target="_blank" rel="noreferrer">Bekijk ons YouTube-kanaal →</a>
-            </div>
-
-            <div class="featured-video youtube-playlist">
-              <iframe
-                src={`https://www.youtube-nocookie.com/embed/videoseries?list=${uploadsPlaylistId}`}
-                title="Nieuwste video's van C.V. De Heikneuters"
-                loading="lazy"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowfullscreen
-              ></iframe>
-            </div>
-          </div>
-        </section>
-      </main>
-
-      <footer class="footer">
-        <div class="footer__inner">
-          <div class="footer__bottom">© 2026 C.V. De Heikneuters · Nijnsel</div>
-        </div>
-      </footer>
+<section class="section section--soft">
+  <div class="section__inner">
+    <div class="news-head">
+      <div>
+        <div class="eyebrow">Beeld uit het archief</div>
+        <h2>Meer op YouTube</h2>
+      </div>
+      <a href={channelUrl} target="_blank" rel="noreferrer">Bekijk ons YouTube-kanaal →</a>
     </div>
 
-    <script>
-      const menuButton = document.querySelector('.menu-button');
-      const mobileNav = document.querySelector('.mobile-nav');
-
-      menuButton?.addEventListener('click', () => {
-        const open = mobileNav?.classList.toggle('is-open') ?? false;
-        menuButton.setAttribute('aria-expanded', String(open));
-      });
-
-      mobileNav?.querySelectorAll('a').forEach((link) => {
-        link.addEventListener('click', () => {
-          mobileNav.classList.remove('is-open');
-          menuButton?.setAttribute('aria-expanded', 'false');
-        });
-      });
-    </script>
-  </body>
-</html>
+    <div class="featured-video youtube-playlist">
+      <iframe
+        src={`https://www.youtube-nocookie.com/embed/videoseries?list=${uploadsPlaylistId}`}
+        title="Nieuwste video's van C.V. De Heikneuters"
+        loading="lazy"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen
+      ></iframe>
+    </div>
+  </div>
+</section>
+</BaseLayout>
