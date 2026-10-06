@@ -62,6 +62,7 @@ button { font: inherit; }
 .nav__inner { min-height: 84px; display: flex; align-items: center; gap: 36px; }
 .logo {
   width: 94px;
+  height: auto;
   margin-top: -24px;
   margin-bottom: -24px;
   flex: 0 0 auto;
