@@ -1,6 +1,8 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 
+const googleFormAction =
+  'https://docs.google.com/forms/d/e/1FAIpQLSeu1iuHXbT969Nlc_ps89rSt-Oyu6kRawdWi3rthSfAMGbXJw/formResponse';
 ---
 
 <BaseLayout
@@ -49,16 +51,140 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       activiteiten en bezigheden sturen.
     </p>
 
-    <aside class="highlight-card">
+    <div class="contact-form-card" id="vriend-worden">
       <span class="feature-card__kicker">Enthousiast geworden?</span>
       <h3>Word nu vriend van CV de Heikneuters!</h3>
-      <p>
-        Laat het ons weten via het contactformulier, dan nemen we contact met je op.
+      <p class="form-intro">
+        Vul hieronder je gegevens in. Je aanmelding wordt rechtstreeks verwerkt in
+        ons bestaande formulier, zonder dat je onze website hoeft te verlaten.
       </p>
-      <a class="button button--red" href="/contact/?categorie=Vrienden%20van%20c.v.%20de%20Heikneuters#contactformulier">
-        Ik wil vriend worden →
-      </a>
-    </aside>
+
+      <div class="form-status form-status--success" data-friend-success hidden>
+        <strong>Bedankt voor je aanmelding!</strong><br />
+        We nemen contact met je op over je bijdrage als vriend van De Heikneuters.
+      </div>
+
+      <div class="form-status form-status--error" data-friend-error hidden>
+        Het verzenden is niet gelukt. Probeer het opnieuw of mail naar
+        <a href="mailto:info@de-heikneuters.nl">info@de-heikneuters.nl</a>.
+      </div>
+
+      <form
+        class="contact-form"
+        action={googleFormAction}
+        method="post"
+        data-friend-form
+      >
+        <div class="form-field">
+          <label for="friend-name">Naam *</label>
+          <input
+            id="friend-name"
+            name="entry.88467631"
+            type="text"
+            autocomplete="name"
+            maxlength="120"
+            required
+          />
+        </div>
+
+        <div class="form-field">
+          <label for="friend-email">E-mailadres *</label>
+          <input
+            id="friend-email"
+            name="entry.1710876788"
+            type="email"
+            autocomplete="email"
+            maxlength="180"
+            required
+          />
+        </div>
+
+        <div class="form-field">
+          <label for="friend-amount">Jaarlijkse bijdrage *</label>
+          <select id="friend-amount" name="entry.1631100819" required>
+            <option value="">Kies een bedrag</option>
+            <option value="€ 11,11">€ 11,11</option>
+            <option value="€ 22,22">€ 22,22</option>
+            <option value="€ 33,33">€ 33,33</option>
+            <option value="€ 44,44">€ 44,44</option>
+            <option value="€ 55,55">€ 55,55</option>
+            <option value="€ 66,66">€ 66,66</option>
+            <option value="€ 77,77">€ 77,77</option>
+            <option value="€ 88,88">€ 88,88</option>
+          </select>
+        </div>
+
+        <div class="form-field">
+          <label for="friend-notes">Opmerkingen</label>
+          <textarea
+            id="friend-notes"
+            name="entry.2137376407"
+            rows="5"
+            maxlength="3000"
+          ></textarea>
+        </div>
+
+        <input type="hidden" name="fvv" value="1" />
+        <input type="hidden" name="pageHistory" value="0" />
+        <input type="hidden" name="submissionTimestamp" value="-1" />
+
+        <button class="button button--red" type="submit" data-friend-submit>
+          Aanmelden als vriend →
+        </button>
+
+        <p class="form-note">
+          We gebruiken je gegevens alleen voor je aanmelding als vriend van De Heikneuters.
+        </p>
+      </form>
+    </div>
   </div>
 </section>
+
+<script slot="scripts">
+  const friendForm = document.querySelector('[data-friend-form]');
+  const friendSuccess = document.querySelector('[data-friend-success]');
+  const friendError = document.querySelector('[data-friend-error]');
+  const friendSubmit = document.querySelector('[data-friend-submit]');
+
+  friendForm?.addEventListener('submit', async (event) => {
+    if (!(friendForm instanceof HTMLFormElement)) return;
+
+    event.preventDefault();
+    friendSuccess?.setAttribute('hidden', '');
+    friendError?.setAttribute('hidden', '');
+
+    if (!friendForm.reportValidity()) return;
+
+    if (friendSubmit instanceof HTMLButtonElement) {
+      friendSubmit.disabled = true;
+      friendSubmit.textContent = 'Bezig met versturen…';
+    }
+
+    try {
+      await fetch(friendForm.action, {
+        method: 'POST',
+        mode: 'no-cors',
+        body: new FormData(friendForm),
+      });
+
+      friendForm.reset();
+
+      if (friendSuccess instanceof HTMLElement) {
+        friendSuccess.hidden = false;
+        friendSuccess.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    } catch (error) {
+      console.error('Vriendenformulier verzenden mislukt:', error);
+
+      if (friendError instanceof HTMLElement) {
+        friendError.hidden = false;
+      }
+    } finally {
+      if (friendSubmit instanceof HTMLButtonElement) {
+        friendSubmit.disabled = false;
+        friendSubmit.textContent = 'Aanmelden als vriend →';
+      }
+    }
+  });
+</script>
 </BaseLayout>
