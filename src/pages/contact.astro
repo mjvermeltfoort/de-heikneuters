@@ -1,200 +1,145 @@
 ---
-import '../styles/global.css';
-import Favicons from '../components/Favicons.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
 
-const logoUrl = '/assets/logo-heikneuters-2026.png';
 const googleFormAction =
   'https://docs.google.com/forms/d/e/1FAIpQLSdQKqZbDT8ACClFDrf-zxwpt2mzrPb0CvkYVLAxvkibWUgn1A/formResponse';
 ---
 
-<!doctype html>
-<html lang="nl">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
-    <meta
-      name="description"
-      content="Neem contact op met C.V. De Heikneuters uit Nijnsel."
-    />
-    <meta name="theme-color" content="#072f63" />
-    <Favicons />
-    <title>Contact | C.V. De Heikneuters</title>
-  </head>
-  <body>
-    <div class="site-shell">
-      <header class="nav nav--standalone">
-        <div class="nav__inner">
-          <a href="/" aria-label="C.V. De Heikneuters home">
-            <img class="logo" src={logoUrl} alt="Logo C.V. De Heikneuters Nijnsel" />
-          </a>
-          <nav class="nav__links" aria-label="Hoofdnavigatie">
-            <a href="/">Home</a>
-            <a href="/de-kneuterkapel/">Kneuterkapel</a>
-            <a href="/agenda/">Agenda</a>
-            <a href="/door-de-jaren-heen/">Door de jaren heen</a>
-            <a href="/contact/" aria-current="page">Contact</a>
-          </nav>
-          <button class="menu-button" aria-label="Menu openen" aria-expanded="false" aria-controls="mobile-nav">☰</button>
-        </div>
-      </header>
+<BaseLayout
+  title="Contact | C.V. De Heikneuters"
+  description="Neem contact op met C.V. De Heikneuters uit Nijnsel."
+  current="contact"
+>
+<section class="section section--soft">
+  <div class="section__inner contact-layout">
+    <div class="contact-copy">
+      <div class="eyebrow">Neem contact op</div>
+      <h1 class="page-title">Contact</h1>
+      <p class="lead">
+        Heb je een vraag voor C.V. De Heikneuters? Stuur ons een bericht via het
+        formulier of neem rechtstreeks contact met ons op.
+      </p>
 
-      <nav class="mobile-nav" id="mobile-nav" aria-label="Mobiele navigatie">
-        <a href="/">Home</a>
-        <a href="/de-kneuterkapel/">Kneuterkapel</a>
-        <a href="/agenda/">Agenda</a>
-        <a href="/ut-vurproefke/">Ut Vurproefke</a>
-        <a href="/vrienden-van-de-heikneuters/">Vrienden</a>
-        <a href="/door-de-jaren-heen/">Door de jaren heen</a>
-        <a href="/contact/">Contact</a>
-      </nav>
-
-      <main>
-        <section class="section section--soft">
-          <div class="section__inner contact-layout">
-            <div class="contact-copy">
-              <div class="eyebrow">Neem contact op</div>
-              <h2>Contact</h2>
-              <p class="lead">
-                Heb je een vraag voor C.V. De Heikneuters? Stuur ons een bericht via het
-                formulier of neem rechtstreeks contact met ons op.
-              </p>
-
-              <div class="contact-card">
-                <h3>C.V. De Heikneuters</h3>
-                <address>
-                  p/a Johan Frisostraat 12<br />
-                  5491 HX Sint-Oedenrode
-                </address>
-                <p>
-                  <a href="tel:+31630237107">06 30237107</a><br />
-                  <a href="mailto:info@de-heikneuters.nl">info@de-heikneuters.nl</a>
-                </p>
-              </div>
-            </div>
-
-            <div class="contact-form-card" id="contactformulier">
-              <h3>Stuur een bericht</h3>
-              <p class="form-intro">
-                Vul het formulier hieronder in. Je bericht wordt in hetzelfde Google Form
-                verwerkt als voorheen, maar je blijft gewoon op onze website.
-              </p>
-
-              <div class="form-status form-status--success" data-form-success hidden>
-                <strong>Bedankt voor je bericht!</strong><br />
-                We proberen zo snel mogelijk op je vraag te reageren.
-              </div>
-
-              <div class="form-status form-status--error" data-form-error hidden>
-                Het verzenden is niet gelukt. Probeer het opnieuw of mail naar
-                <a href="mailto:info@de-heikneuters.nl">info@de-heikneuters.nl</a>.
-              </div>
-
-              <form
-                class="contact-form"
-                action={googleFormAction}
-                method="post"
-                data-google-form
-              >
-                <div class="form-field">
-                  <label for="contact-name">Naam *</label>
-                  <input
-                    id="contact-name"
-                    name="entry.88467631"
-                    type="text"
-                    autocomplete="name"
-                    maxlength="120"
-                    required
-                  />
-                </div>
-
-                <div class="form-field">
-                  <label for="contact-email">E-mailadres *</label>
-                  <input
-                    id="contact-email"
-                    name="entry.1710876788"
-                    type="email"
-                    autocomplete="email"
-                    maxlength="180"
-                    required
-                  />
-                </div>
-
-                <div class="form-field">
-                  <label for="contact-category">Vraag met betrekking tot *</label>
-                  <select
-                    id="contact-category"
-                    name="entry.1631100819"
-                    required
-                    data-category
-                  >
-                    <option value="">Kies een onderwerp</option>
-                    <option value="Algemeen">Algemeen</option>
-                    <option value="De Kneuterkapel">De Kneuterkapel</option>
-                    <option value="Lidmaatschap">Lidmaatschap</option>
-                    <option value="Vrienden van c.v. de Heikneuters">
-                      Vrienden van c.v. de Heikneuters
-                    </option>
-                    <option value="Carnaval proeven">Carnaval proeven</option>
-                    <option value="__other_option__">Anders</option>
-                  </select>
-                </div>
-
-                <div class="form-field" data-other-field hidden>
-                  <label for="contact-category-other">Anders, namelijk *</label>
-                  <input
-                    id="contact-category-other"
-                    name="entry.1631100819.other_option_response"
-                    type="text"
-                    maxlength="160"
-                    data-other-input
-                  />
-                </div>
-
-                <div class="form-field">
-                  <label for="contact-question">Vraag *</label>
-                  <textarea
-                    id="contact-question"
-                    name="entry.2137376407"
-                    rows="7"
-                    maxlength="5000"
-                    required
-                  ></textarea>
-                </div>
-
-                <input type="hidden" name="fvv" value="1" />
-                <input type="hidden" name="pageHistory" value="0" />
-                <input type="hidden" name="submissionTimestamp" value="-1" />
-
-                <button class="button button--red" type="submit" data-submit>
-                  Verstuur bericht →
-                </button>
-
-                <p class="form-note">
-                  We gebruiken je gegevens alleen om op je bericht te reageren.
-                </p>
-              </form>
-            </div>
-          </div>
-        </section>
-      </main>
-
-      <footer class="footer">
-        <div class="footer__inner">
-          <div class="footer__bottom">© 2026 C.V. De Heikneuters · Nijnsel</div>
-        </div>
-      </footer>
+      <div class="contact-card">
+        <h3>C.V. De Heikneuters</h3>
+        <address>
+          p/a Johan Frisostraat 12<br />
+          5491 HX Sint-Oedenrode
+        </address>
+        <p>
+          <a href="tel:+31630237107">06 30237107</a><br />
+          <a href="mailto:info@de-heikneuters.nl">info@de-heikneuters.nl</a>
+        </p>
+      </div>
     </div>
 
-    <script>
-      const menuButton = document.querySelector('.menu-button');
-      const mobileNav = document.querySelector('.mobile-nav');
+    <div class="contact-form-card" id="contactformulier">
+      <h3>Stuur een bericht</h3>
+      <p class="form-intro">
+        Vul het formulier hieronder in. Je bericht wordt in hetzelfde Google Form
+        verwerkt als voorheen, maar je blijft gewoon op onze website.
+      </p>
 
-      menuButton?.addEventListener('click', () => {
-        const open = mobileNav?.classList.toggle('is-open') ?? false;
-        menuButton.setAttribute('aria-expanded', String(open));
-      });
+      <div class="form-status form-status--success" data-form-success hidden>
+        <strong>Bedankt voor je bericht!</strong><br />
+        We proberen zo snel mogelijk op je vraag te reageren.
+      </div>
 
-      const form = document.querySelector('[data-google-form]');
+      <div class="form-status form-status--error" data-form-error hidden>
+        Het verzenden is niet gelukt. Probeer het opnieuw of mail naar
+        <a href="mailto:info@de-heikneuters.nl">info@de-heikneuters.nl</a>.
+      </div>
+
+      <form
+        class="contact-form"
+        action={googleFormAction}
+        method="post"
+        data-google-form
+      >
+        <div class="form-field">
+          <label for="contact-name">Naam *</label>
+          <input
+            id="contact-name"
+            name="entry.88467631"
+            type="text"
+            autocomplete="name"
+            maxlength="120"
+            required
+          />
+        </div>
+
+        <div class="form-field">
+          <label for="contact-email">E-mailadres *</label>
+          <input
+            id="contact-email"
+            name="entry.1710876788"
+            type="email"
+            autocomplete="email"
+            maxlength="180"
+            required
+          />
+        </div>
+
+        <div class="form-field">
+          <label for="contact-category">Vraag met betrekking tot *</label>
+          <select
+            id="contact-category"
+            name="entry.1631100819"
+            required
+            data-category
+          >
+            <option value="">Kies een onderwerp</option>
+            <option value="Algemeen">Algemeen</option>
+            <option value="De Kneuterkapel">De Kneuterkapel</option>
+            <option value="Lidmaatschap">Lidmaatschap</option>
+            <option value="Vrienden van c.v. de Heikneuters">
+              Vrienden van c.v. de Heikneuters
+            </option>
+            <option value="Carnaval proeven">Carnaval proeven</option>
+            <option value="__other_option__">Anders</option>
+          </select>
+        </div>
+
+        <div class="form-field" data-other-field hidden>
+          <label for="contact-category-other">Anders, namelijk *</label>
+          <input
+            id="contact-category-other"
+            name="entry.1631100819.other_option_response"
+            type="text"
+            maxlength="160"
+            data-other-input
+          />
+        </div>
+
+        <div class="form-field">
+          <label for="contact-question">Vraag *</label>
+          <textarea
+            id="contact-question"
+            name="entry.2137376407"
+            rows="7"
+            maxlength="5000"
+            required
+          ></textarea>
+        </div>
+
+        <input type="hidden" name="fvv" value="1" />
+        <input type="hidden" name="pageHistory" value="0" />
+        <input type="hidden" name="submissionTimestamp" value="-1" />
+
+        <button class="button button--red" type="submit" data-submit>
+          Verstuur bericht →
+        </button>
+
+        <p class="form-note">
+          We gebruiken je gegevens alleen om op je bericht te reageren.
+        </p>
+      </form>
+    </div>
+  </div>
+</section>
+
+  <script slot="scripts">
+const form = document.querySelector('[data-google-form]');
       const category = document.querySelector('[data-category]');
       const otherField = document.querySelector('[data-other-field]');
       const otherInput = document.querySelector('[data-other-input]');
@@ -272,6 +217,5 @@ const googleFormAction =
           }
         }
       });
-    </script>
-  </body>
-</html>
+  </script>
+</BaseLayout>
