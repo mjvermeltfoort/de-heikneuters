@@ -9,6 +9,7 @@ interface Props {
   description: string;
   current?: string;
   home?: boolean;
+  socialImage?: string;
 }
 
 const {
@@ -16,7 +17,12 @@ const {
   description,
   current = '',
   home = false,
+  socialImage = '/assets/banner-heikneuters.jpg',
 } = Astro.props;
+
+const site = Astro.site ?? new URL('https://www.de-heikneuters.nl');
+const canonicalUrl = new URL(Astro.url.pathname, site);
+const socialImageUrl = new URL(socialImage, site);
 ---
 
 <!doctype html>
@@ -26,6 +32,23 @@ const {
     <meta name="viewport" content="width=device-width" />
     <meta name="description" content={description} />
     <meta name="theme-color" content="#072f63" />
+
+    <link rel="canonical" href={canonicalUrl} />
+
+    <meta property="og:locale" content="nl_NL" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="C.V. De Heikneuters" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={socialImageUrl} />
+    <meta property="og:image:alt" content="C.V. De Heikneuters uit Nijnsel" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={socialImageUrl} />
+
     <Favicons />
     <title>{title}</title>
   </head>
