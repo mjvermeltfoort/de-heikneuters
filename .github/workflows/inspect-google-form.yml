@@ -28,6 +28,12 @@ jobs:
           ids = sorted(set(re.findall(r'entry\.(\d+)', html)), key=int)
           print("ENTRY_IDS:", ",".join(ids))
 
+          form_match = re.search(r'<form[^>]+action="([^"]+)"[^>]*>', html)
+          print("FORM_ACTION:", unescape(form_match.group(1)) if form_match else "NOT_FOUND")
+
+          for name, value in re.findall(r'<input[^>]+type="hidden"[^>]+name="([^"]+)"[^>]*value="([^"]*)"', html):
+              print("HIDDEN:", name, "=", unescape(value))
+
           # Print short surrounding snippets for each discovered entry id.
           for entry_id in ids:
               token = "entry." + entry_id
