@@ -26,6 +26,15 @@ const facebookUrl = 'https://www.facebook.com/share/19JosouTXi/';
   home
 >
 <section class="hero">
+  <img
+    class="hero__image"
+    src="/assets/banner-heikneuters.jpg"
+    width="1024"
+    height="399"
+    alt=""
+    fetchpriority="high"
+    decoding="async"
+  />
   <div class="hero__content">
     <div class="eyebrow">Sinds 1960 · Nijnsel</div>
     <h1>Carnaval maken we <span>samen</span></h1>
@@ -188,7 +197,14 @@ const facebookUrl = 'https://www.facebook.com/share/19JosouTXi/';
                 rel="noreferrer"
                 aria-label="Bekijk Facebookbericht"
               >
-                <img src={post.imageUrl} alt="" loading="lazy" />
+                <img
+                  src={post.imageUrl}
+                  alt=""
+                  width="1200"
+                  height="675"
+                  loading="lazy"
+                  decoding="async"
+                />
               </a>
             )}
             <div class="facebook-card__body">
