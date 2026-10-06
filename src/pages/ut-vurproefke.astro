@@ -1,109 +1,53 @@
 ---
-import '../styles/global.css';
-import Favicons from '../components/Favicons.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
 
 const logoUrl = '/assets/logo-heikneuters-2026.png';
 ---
 
-<!doctype html>
-<html lang="nl">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
-    <meta
-      name="description"
-      content="Ut Vurproefke: het muzikale voorproefje op carnaval van C.V. De Heikneuters in Nijnsel."
-    />
-    <meta name="theme-color" content="#072f63" />
-    <Favicons />
-    <title>Ut Vurproefke | C.V. De Heikneuters</title>
-  </head>
-  <body>
-    <div class="site-shell">
-      <header class="nav nav--standalone">
-        <div class="nav__inner">
-          <a href="/" aria-label="C.V. De Heikneuters home">
-            <img class="logo" src={logoUrl} alt="Logo C.V. De Heikneuters Nijnsel" />
-          </a>
-          <nav class="nav__links" aria-label="Hoofdnavigatie">
-            <a href="/">Home</a>
-            <a href="/de-kneuterkapel/">Kneuterkapel</a>
-            <a href="/agenda/">Agenda</a>
-            <a href="/ut-vurproefke/" aria-current="page">Ut Vurproefke</a>
-            <a href="/contact/">Contact</a>
-          </nav>
-          <button class="menu-button" aria-label="Menu openen" aria-expanded="false" aria-controls="mobile-nav">☰</button>
-        </div>
-      </header>
+<BaseLayout
+  title="Ut Vurproefke | C.V. De Heikneuters"
+  description="Ut Vurproefke: het muzikale voorproefje op carnaval van C.V. De Heikneuters in Nijnsel."
+  current="vurproefke"
+>
+<section class="section section--soft">
+  <div class="section__inner content-page">
+    <div class="eyebrow">Sinds 2015</div>
+    <h1 class="page-title">Ut Vurproefke</h1>
+    <p class="lead">Het muzikale voorproefje op carnaval.</p>
+    <p class="body-copy">
+      Op zaterdagavond van het laatste weekend van oktober vindt traditioneel
+      Ut Vurproefke plaats: een blaaskapellenfestival waar gezelligheid bovenaan
+      staat. Iedere kapel speelt twee keer twintig minuten, verdeeld over twee zalen.
+    </p>
 
-      <nav class="mobile-nav" id="mobile-nav" aria-label="Mobiele navigatie">
-        <a href="/">Home</a>
-        <a href="/de-kneuterkapel/">Kneuterkapel</a>
-        <a href="/agenda/">Agenda</a>
-        <a href="/ut-vurproefke/">Ut Vurproefke</a>
-        <a href="/vrienden-van-de-heikneuters/">Vrienden</a>
-        <a href="/door-de-jaren-heen/">Door de jaren heen</a>
-        <a href="/contact/">Contact</a>
-      </nav>
+    <div class="info-grid">
+      <article class="info-card">
+        <span class="feature-card__kicker">Wat kun je verwachten?</span>
+        <ul class="content-list">
+          <li>Twee optredens per kapel van 20 minuten</li>
+          <li>Een warm welkom en een heerlijk “Vurproefke” voor iedere muzikant</li>
+          <li>Een aparte ruimte voor instrumenten</li>
+          <li>Een avondvullend programma van 20:00 uur tot in de late uurtjes</li>
+        </ul>
+      </article>
 
-      <main>
-        <section class="section section--soft">
-          <div class="section__inner content-page">
-            <div class="eyebrow">Sinds 2015</div>
-            <h2>Ut Vurproefke</h2>
-            <p class="lead">Het muzikale voorproefje op carnaval.</p>
-            <p class="body-copy">
-              Op zaterdagavond van het laatste weekend van oktober vindt traditioneel
-              Ut Vurproefke plaats: een blaaskapellenfestival waar gezelligheid bovenaan
-              staat. Iedere kapel speelt twee keer twintig minuten, verdeeld over twee zalen.
-            </p>
-
-            <div class="info-grid">
-              <article class="info-card">
-                <span class="feature-card__kicker">Wat kun je verwachten?</span>
-                <ul class="content-list">
-                  <li>Twee optredens per kapel van 20 minuten</li>
-                  <li>Een warm welkom en een heerlijk “Vurproefke” voor iedere muzikant</li>
-                  <li>Een aparte ruimte voor instrumenten</li>
-                  <li>Een avondvullend programma van 20:00 uur tot in de late uurtjes</li>
-                </ul>
-              </article>
-
-              <article class="info-card">
-                <span class="feature-card__kicker">Locatie & informatie</span>
-                <h3>Zalencentrum De Beckart</h3>
-                <p>
-                  Oude Lieshoutseweg 7<br />
-                  5492 HT Sint-Oedenrode
-                </p>
-                <p>
-                  Info en aanmelden:<br />
-                  <a href="mailto:dekneuterkapel@gmail.com">dekneuterkapel@gmail.com</a>
-                </p>
-              </article>
-            </div>
-
-            <div class="actions page-actions">
-              <a class="button button--red" href="/agenda/">Bekijk de agenda →</a>
-            </div>
-          </div>
-        </section>
-      </main>
-
-      <footer class="footer">
-        <div class="footer__inner">
-          <div class="footer__bottom">© 2026 C.V. De Heikneuters · Nijnsel</div>
-        </div>
-      </footer>
+      <article class="info-card">
+        <span class="feature-card__kicker">Locatie & informatie</span>
+        <h3>Zalencentrum De Beckart</h3>
+        <p>
+          Oude Lieshoutseweg 7<br />
+          5492 HT Sint-Oedenrode
+        </p>
+        <p>
+          Info en aanmelden:<br />
+          <a href="mailto:dekneuterkapel@gmail.com">dekneuterkapel@gmail.com</a>
+        </p>
+      </article>
     </div>
 
-    <script>
-      const menuButton = document.querySelector('.menu-button');
-      const mobileNav = document.querySelector('.mobile-nav');
-      menuButton?.addEventListener('click', () => {
-        const open = mobileNav?.classList.toggle('is-open') ?? false;
-        menuButton.setAttribute('aria-expanded', String(open));
-      });
-    </script>
-  </body>
-</html>
+    <div class="actions page-actions">
+      <a class="button button--red" href="/agenda/">Bekijk de agenda →</a>
+    </div>
+  </div>
+</section>
+</BaseLayout>
