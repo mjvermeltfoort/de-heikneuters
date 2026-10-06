@@ -7,8 +7,12 @@ on:
   pull_request:
   workflow_dispatch:
   schedule:
-    # Dagelijkse verversing van Google Calendar-data (GitHub cron gebruikt UTC).
-    - cron: '17 4 * * *'
+    # Primaire dagelijkse verversing, expliciet in Nederlandse tijd.
+    - cron: '17 6 * * *'
+      timezone: 'Europe/Amsterdam'
+    # Vangnet: GitHub kan scheduled events incidenteel vertragen of overslaan.
+    - cron: '47 7 * * *'
+      timezone: 'Europe/Amsterdam'
 
 concurrency:
   group: website-${{ github.ref }}
@@ -19,6 +23,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Show workflow trigger
+        run: |
+          echo "event=${{ github.event_name }}"
+          echo "schedule=${{ github.event.schedule }}"
+          echo "started_at=$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+
       - name: Checkout
         uses: actions/checkout@v4
 
