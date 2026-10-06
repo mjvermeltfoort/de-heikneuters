@@ -1,0 +1,33 @@
+---
+import { siFacebook, siInstagram, siYoutube } from 'simple-icons/icons';
+
+interface Props {
+  name: 'facebook' | 'instagram' | 'youtube';
+  size?: number;
+  title?: string;
+}
+
+const { name, size = 20, title } = Astro.props;
+
+const icons = {
+  facebook: siFacebook,
+  instagram: siInstagram,
+  youtube: siYoutube,
+};
+
+const icon = icons[name];
+---
+
+<svg
+  class="social-icon"
+  width={size}
+  height={size}
+  viewBox="0 0 24 24"
+  role={title ? 'img' : undefined}
+  aria-hidden={title ? undefined : 'true'}
+  aria-label={title}
+  fill="currentColor"
+>
+  {title && <title>{title}</title>}
+  <path d={icon.path}></path>
+</svg>
