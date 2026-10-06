@@ -10,22 +10,15 @@ const logoUrl = '/assets/logo-heikneuters-2026.png';
 const instagramUrl = 'https://www.instagram.com/c.v.de.heikneuters.nijnsel/';
 const facebookUrl = 'https://www.facebook.com/share/19JosouTXi/';
 
-const mainItems = [
+const menuItems = [
   { key: 'home', label: 'Home', href: '/' },
-  { key: 'vereniging', label: 'Vereniging', href: '/#vereniging' },
   { key: 'kneuterkapel', label: 'Kneuterkapel', href: '/de-kneuterkapel/' },
+  { key: 'vurproefke', label: 'Ut Vurproefke', href: '/ut-vurproefke/' },
+  { key: 'vrienden', label: 'Vrienden', href: '/vrienden-van-de-heikneuters/' },
+  { key: 'history', label: 'Door de jaren heen', href: '/door-de-jaren-heen/' },
   { key: 'agenda', label: 'Agenda', href: '/agenda/' },
-  { key: 'jubileum', label: '66 jaar', href: '/#jubileum' },
   { key: 'contact', label: 'Contact', href: '/contact/' },
 ];
-
-const moreItems = [
-  { key: 'vurproefke', label: 'Ut Vurproefke', href: '/ut-vurproefke/' },
-  { key: 'vrienden', label: 'Vrienden van de Heikneuters', href: '/vrienden-van-de-heikneuters/' },
-  { key: 'history', label: 'Door de jaren heen', href: '/door-de-jaren-heen/' },
-];
-
-const moreIsCurrent = moreItems.some((item) => item.key === current);
 ---
 
 {home && (
@@ -53,22 +46,11 @@ const moreIsCurrent = moreItems.some((item) => item.key === current);
     </a>
 
     <nav class="nav__links" aria-label="Hoofdnavigatie">
-      {mainItems.map((item) => (
+      {menuItems.map((item) => (
         <a href={item.href} aria-current={current === item.key ? 'page' : undefined}>
           {item.label}
         </a>
       ))}
-
-      <details class:list={['nav-more', moreIsCurrent && 'is-current']}>
-        <summary>Meer <span aria-hidden="true">▾</span></summary>
-        <div class="nav-more__menu">
-          {moreItems.map((item) => (
-            <a href={item.href} aria-current={current === item.key ? 'page' : undefined}>
-              {item.label}
-            </a>
-          ))}
-        </div>
-      </details>
     </nav>
 
     <button class="menu-button" aria-label="Menu openen" aria-expanded="false" aria-controls="mobile-nav">
@@ -78,12 +60,7 @@ const moreIsCurrent = moreItems.some((item) => item.key === current);
 </header>
 
 <nav class="mobile-nav" id="mobile-nav" aria-label="Mobiele navigatie">
-  {mainItems.map((item) => (
-    <a href={item.href} aria-current={current === item.key ? 'page' : undefined}>
-      {item.label}
-    </a>
-  ))}
-  {moreItems.map((item) => (
+  {menuItems.map((item) => (
     <a href={item.href} aria-current={current === item.key ? 'page' : undefined}>
       {item.label}
     </a>
