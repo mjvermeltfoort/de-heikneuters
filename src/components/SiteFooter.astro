@@ -1,4 +1,10 @@
 ---
+import SocialIcon from './SocialIcon.astro';
+
+const facebookUrl = 'https://www.facebook.com/share/19JosouTXi/';
+const instagramUrl = 'https://www.instagram.com/c.v.de.heikneuters.nijnsel/';
+const youtubeUrl = 'https://www.youtube.com/channel/UCTRbf6GaQNeR43AiWMnprlg';
+
 const quickLinks = [
   { label: 'Vereniging', href: '/#vereniging' },
   { label: 'Kneuterkapel', href: '/de-kneuterkapel/' },
@@ -22,6 +28,17 @@ const moreLinks = [
           Leverancier van carnavalsplezier in Nijnsel sinds 1960.
           Samen maken we carnaval.
         </p>
+        <div class="footer-socials" aria-label="Social media">
+          <a href={facebookUrl} target="_blank" rel="noreferrer" aria-label="Facebook">
+            <SocialIcon name="facebook" size={18} />
+          </a>
+          <a href={instagramUrl} target="_blank" rel="noreferrer" aria-label="Instagram">
+            <SocialIcon name="instagram" size={18} />
+          </a>
+          <a href={youtubeUrl} target="_blank" rel="noreferrer" aria-label="YouTube">
+            <SocialIcon name="youtube" size={19} />
+          </a>
+        </div>
       </div>
 
       <div>
