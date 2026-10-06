@@ -236,6 +236,13 @@ h2,
   line-height: 1.72;
 }
 
+.home-signoff {
+  margin: 4px 0 0;
+  color: var(--blue-dark);
+  font-weight: 900;
+  line-height: 1.5;
+}
+
 .fact-row {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
