@@ -1,0 +1,60 @@
+---
+const quickLinks = [
+  { label: 'Vereniging', href: '/#vereniging' },
+  { label: 'Kneuterkapel', href: '/de-kneuterkapel/' },
+  { label: 'Agenda', href: '/agenda/' },
+  { label: '66 jaar', href: '/#jubileum' },
+];
+
+const moreLinks = [
+  { label: 'Ut Vurproefke', href: '/ut-vurproefke/' },
+  { label: 'Vrienden', href: '/vrienden-van-de-heikneuters/' },
+  { label: 'Door de jaren heen', href: '/door-de-jaren-heen/' },
+];
+---
+
+<footer class="footer">
+  <div class="footer__inner">
+    <div class="footer__grid">
+      <div>
+        <h4>C.V. De Heikneuters</h4>
+        <p>
+          Leverancier van carnavalsplezier in Nijnsel sinds 1960.
+          Samen maken we carnaval.
+        </p>
+      </div>
+
+      <div>
+        <h4>Snel naar</h4>
+        <ul>
+          {quickLinks.map((item) => (
+            <li><a href={item.href}>{item.label}</a></li>
+          ))}
+        </ul>
+      </div>
+
+      <div>
+        <h4>Meer</h4>
+        <ul>
+          {moreLinks.map((item) => (
+            <li><a href={item.href}>{item.label}</a></li>
+          ))}
+        </ul>
+      </div>
+
+      <div>
+        <h4>Contact</h4>
+        <ul>
+          <li><a href="/contact/">Contactformulier</a></li>
+          <li><a href="mailto:info@de-heikneuters.nl">info@de-heikneuters.nl</a></li>
+          <li><a href="tel:+31630237107">06 30237107</a></li>
+          <li>Nijnsel · Sint-Oedenrode</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer__bottom">
+      © 2026 C.V. De Heikneuters · Nijnsel
+    </div>
+  </div>
+</footer>
