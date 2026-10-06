@@ -1,0 +1,151 @@
+---
+import '../styles/global.css';
+import Favicons from '../components/Favicons.astro';
+
+const logoUrl = '/assets/logo-heikneuters-2026.png';
+---
+
+<!doctype html>
+<html lang="nl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta
+      name="description"
+      content="Neem contact op met C.V. De Heikneuters uit Nijnsel."
+    />
+    <meta name="theme-color" content="#072f63" />
+    <Favicons />
+    <title>Contact | C.V. De Heikneuters</title>
+  </head>
+  <body>
+    <div class="site-shell">
+      <header class="nav nav--standalone">
+        <div class="nav__inner">
+          <a href="/" aria-label="C.V. De Heikneuters home">
+            <img class="logo" src={logoUrl} alt="Logo C.V. De Heikneuters Nijnsel" />
+          </a>
+          <nav class="nav__links" aria-label="Hoofdnavigatie">
+            <a href="/">Home</a>
+            <a href="/de-kneuterkapel/">Kneuterkapel</a>
+            <a href="/agenda/">Agenda</a>
+            <a href="/door-de-jaren-heen/">Door de jaren heen</a>
+            <a href="/contact/" aria-current="page">Contact</a>
+          </nav>
+          <button class="menu-button" aria-label="Menu openen" aria-expanded="false" aria-controls="mobile-nav">☰</button>
+        </div>
+      </header>
+
+      <nav class="mobile-nav" id="mobile-nav" aria-label="Mobiele navigatie">
+        <a href="/">Home</a>
+        <a href="/de-kneuterkapel/">Kneuterkapel</a>
+        <a href="/agenda/">Agenda</a>
+        <a href="/ut-vurproefke/">Ut Vurproefke</a>
+        <a href="/vrienden-van-de-heikneuters/">Vrienden</a>
+        <a href="/door-de-jaren-heen/">Door de jaren heen</a>
+        <a href="/contact/">Contact</a>
+      </nav>
+
+      <main>
+        <section class="section section--soft">
+          <div class="section__inner contact-layout">
+            <div class="contact-copy">
+              <div class="eyebrow">Neem contact op</div>
+              <h2>Contact</h2>
+              <p class="lead">
+                Heb je een vraag voor C.V. De Heikneuters? Stuur ons een bericht via het
+                formulier of neem rechtstreeks contact met ons op.
+              </p>
+
+              <div class="contact-card">
+                <h3>C.V. De Heikneuters</h3>
+                <address>
+                  p/a Johan Frisostraat 12<br />
+                  5491 HX Sint-Oedenrode
+                </address>
+                <p>
+                  <a href="tel:+31630237107">06 30237107</a><br />
+                  <a href="mailto:info@de-heikneuters.nl">info@de-heikneuters.nl</a>
+                </p>
+              </div>
+            </div>
+
+            <div class="contact-form-card" id="contactformulier">
+              <h3>Stuur een bericht</h3>
+
+              <div class="form-status form-status--success" data-form-status="success" hidden>
+                Bedankt! Je bericht is verzonden. We nemen zo snel mogelijk contact met je op.
+              </div>
+              <div class="form-status form-status--error" data-form-status="error" hidden>
+                Het verzenden is niet gelukt. Probeer het opnieuw of mail naar
+                <a href="mailto:info@de-heikneuters.nl">info@de-heikneuters.nl</a>.
+              </div>
+
+              <form class="contact-form" action="/contact.php" method="post" accept-charset="UTF-8">
+                <div class="form-field">
+                  <label for="name">Naam *</label>
+                  <input id="name" name="name" type="text" autocomplete="name" maxlength="120" required />
+                </div>
+
+                <div class="form-field">
+                  <label for="email">E-mailadres *</label>
+                  <input id="email" name="email" type="email" autocomplete="email" maxlength="180" required />
+                </div>
+
+                <div class="form-field">
+                  <label for="subject">Onderwerp *</label>
+                  <input id="subject" name="subject" type="text" maxlength="160" required />
+                </div>
+
+                <div class="form-field">
+                  <label for="message">Bericht *</label>
+                  <textarea id="message" name="message" rows="7" maxlength="5000" required></textarea>
+                </div>
+
+                <div class="form-honeypot" aria-hidden="true">
+                  <label for="website">Website</label>
+                  <input id="website" name="website" type="text" tabindex="-1" autocomplete="off" />
+                </div>
+
+                <input type="hidden" name="form_started" id="form-started" value="" />
+
+                <button class="button button--red" type="submit">Verstuur bericht →</button>
+                <p class="form-note">
+                  We gebruiken je gegevens alleen om op je bericht te reageren.
+                </p>
+              </form>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <div class="footer__inner">
+          <div class="footer__bottom">© 2026 C.V. De Heikneuters · Nijnsel</div>
+        </div>
+      </footer>
+    </div>
+
+    <script>
+      const menuButton = document.querySelector('.menu-button');
+      const mobileNav = document.querySelector('.mobile-nav');
+      menuButton?.addEventListener('click', () => {
+        const open = mobileNav?.classList.toggle('is-open') ?? false;
+        menuButton.setAttribute('aria-expanded', String(open));
+      });
+
+      const started = document.querySelector('#form-started');
+      if (started instanceof HTMLInputElement) {
+        started.value = String(Math.floor(Date.now() / 1000));
+      }
+
+      const status = new URLSearchParams(window.location.search).get('status');
+      if (status === 'success' || status === 'error') {
+        const message = document.querySelector(`[data-form-status="${status}"]`);
+        if (message instanceof HTMLElement) {
+          message.hidden = false;
+        }
+      }
+    </script>
+  </body>
+</html>
