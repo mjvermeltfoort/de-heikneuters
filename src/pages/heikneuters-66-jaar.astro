@@ -1,0 +1,106 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Heikneuters 66 jaar | C.V. De Heikneuters"
+  description="De Heikneuters zijn 66 jaar jong – en dà witte! Vier ons jubileum mee op zaterdag 21 november 2026."
+  current="jubileum"
+  socialImage="/assets/heikneuters-66-jaar.webp"
+>
+  <section class="section">
+    <div class="section__inner content-page">
+      <div class="eyebrow">Vooraankondiging</div>
+      <h1 class="page-title">Heikneuters 66 jaar</h1>
+
+      <div class="jubilee-page">
+        <figure class="jubilee-page__poster">
+          <a
+            href="/assets/heikneuters-66-jaar.webp"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Bekijk de jubileumposter op volledig formaat in een nieuw tabblad"
+          >
+            <img
+              src="/assets/heikneuters-66-jaar.webp"
+              width="1414"
+              height="2000"
+              alt="Poster jubileumfeest C.V. de Heikneuters: 66 jaar, zaterdag 21 november 2026 bij De Beckart in Nijnsel. First Class Flamingos en afterparty met DeejayMikee. Zaal open vanaf 19:30, gratis entree."
+              loading="eager"
+              decoding="async"
+            />
+          </a>
+        </figure>
+
+        <div class="jubilee-page__copy">
+          <p class="lead"><strong>De Heikneuters zijn 66 jaar jong – en dà witte!</strong></p>
+          <p class="body-copy">
+            Op zaterdag 21 november 2026 gooien we bij de Heikneuters alle remmen los voor
+            ons 66-jarig bestaan. En omdat we niet van dat stijve gedoe zijn en de traditie
+            een beetje over boord willen gooien, doen we het deze keer lekker op z’n
+            Heikneuters: minder handjes schudden, carnavalskleding mag maar is zeker geen
+            must en nog meer lol trappen!
+          </p>
+          <p class="body-copy">
+            We kijken ernaar uit om er samen een vrolijke, losse en gezellige avond van te maken.
+          </p>
+          <p class="body-copy">
+            <strong>Zet dus alvast 21 november 2026 met stift in jullie agenda’s!</strong>
+          </p>
+          <p class="body-copy">Verdere info volgt later.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .jubilee-page {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 36px;
+    align-items: start;
+    margin-top: 30px;
+  }
+
+  .jubilee-page__poster {
+    margin: 0;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    background: #fff;
+    box-shadow: 0 14px 36px rgba(7, 47, 99, .10);
+  }
+
+  .jubilee-page__poster a {
+    display: block;
+  }
+
+  .jubilee-page__poster a:focus-visible {
+    outline: 3px solid var(--blue);
+    outline-offset: -3px;
+  }
+
+  .jubilee-page__poster img {
+    width: 100%;
+    height: auto;
+  }
+
+  .jubilee-page__copy .lead {
+    color: var(--blue-dark);
+  }
+
+  @media (max-width: 760px) {
+    .jubilee-page {
+      grid-template-columns: 1fr;
+      gap: 28px;
+    }
+
+    .jubilee-page__poster {
+      width: 100%;
+      max-width: 540px;
+      margin-inline: auto;
+      border-radius: 14px;
+    }
+  }
+</style>
