@@ -607,6 +607,37 @@ h2,
 }
 
 
+
+.page-visual {
+  margin: 30px 0 34px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 14px 36px rgba(7,47,99,.10);
+}
+
+.page-visual img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+.page-visual--group img {
+  aspect-ratio: 1024 / 399;
+  object-position: center;
+}
+
+.page-visual figcaption {
+  padding: 13px 16px 15px;
+  color: #52667c;
+  font-size: 13px;
+  line-height: 1.5;
+  background: #fff;
+}
+
 .content-page {
   max-width: 900px;
 }
@@ -885,4 +916,6 @@ h2,
   .jubilee { padding:26px; }
   .jubilee h3 { font-size:28px; }
   .contact-form-card, .contact-card, .info-card, .highlight-card { padding:22px; }
+  .page-visual { margin:24px 0 28px; border-radius:14px; }
+  .page-visual--group img { aspect-ratio: 4 / 3; }
 }
