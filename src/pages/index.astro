@@ -99,6 +99,75 @@ const facebookUrl = 'https://www.facebook.com/share/19JosouTXi/';
   </div>
 </section>
 
+<section class="section social-section" id="nieuws">
+  <div class="section__inner">
+    <div class="news-head">
+      <div>
+        <div class="eyebrow">Laatste nieuws</div>
+      </div>
+      <a href={facebookUrl} target="_blank" rel="noreferrer">Bekijk onze Facebookpagina →</a>
+    </div>
+
+    {facebookPosts.length > 0 ? (
+      <div class="facebook-grid">
+        {facebookPosts.map((post) => (
+          <article class="facebook-card">
+            {post.imageUrl && (
+              <a
+                class="facebook-card__image"
+                href={post.permalinkUrl}
+                target="_blank"
+                rel="noreferrer"
+                aria-label="Bekijk Facebookbericht"
+              >
+                <img
+                  src={post.imageUrl}
+                  alt=""
+                  width="1200"
+                  height="675"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </a>
+            )}
+            <div class="facebook-card__body">
+              <time datetime={post.createdTime.toISOString()}>
+                {formatFacebookDate(post.createdTime)}
+              </time>
+              <p>{facebookExcerpt(post.message)}</p>
+              <a href={post.permalinkUrl} target="_blank" rel="noreferrer">
+                Bekijk bericht op Facebook →
+              </a>
+            </div>
+          </article>
+        ))}
+      </div>
+    ) : (
+      <div class="social-panel">
+        <div>
+          <h2>Volg ons op onze socials</h2>
+          <p class="lead">
+            Voor het laatste nieuws, foto's, aankondigingen en alles rondom ons
+            66-jarig jubileum vind je De Heikneuters op Instagram en Facebook.
+          </p>
+        </div>
+        <div class="social-actions">
+          <a class="social-button" href={instagramUrl} target="_blank" rel="noreferrer">
+            <span>◎</span>
+            <strong>Instagram</strong>
+            <small>@c.v.de.heikneuters.nijnsel</small>
+          </a>
+          <a class="social-button" href={facebookUrl} target="_blank" rel="noreferrer">
+            <span>f</span>
+            <strong>Facebook</strong>
+            <small>C.V. De Heikneuters Nijnsel</small>
+          </a>
+        </div>
+      </div>
+    )}
+  </div>
+</section>
+
 <section class="section section--blue" id="kneuterkapel">
   <div class="section__inner spotlight">
     <div>
@@ -178,72 +247,5 @@ const facebookUrl = 'https://www.facebook.com/share/19JosouTXi/';
   </div>
 </section>
 
-<section class="section social-section" id="nieuws">
-  <div class="section__inner">
-    <div class="news-head">
-      <div>
-        <div class="eyebrow">Laatste nieuws</div>
-      </div>
-      <a href={facebookUrl} target="_blank" rel="noreferrer">Bekijk onze Facebookpagina →</a>
-    </div>
 
-    {facebookPosts.length > 0 ? (
-      <div class="facebook-grid">
-        {facebookPosts.map((post) => (
-          <article class="facebook-card">
-            {post.imageUrl && (
-              <a
-                class="facebook-card__image"
-                href={post.permalinkUrl}
-                target="_blank"
-                rel="noreferrer"
-                aria-label="Bekijk Facebookbericht"
-              >
-                <img
-                  src={post.imageUrl}
-                  alt=""
-                  width="1200"
-                  height="675"
-                  loading="lazy"
-                  decoding="async"
-                />
-              </a>
-            )}
-            <div class="facebook-card__body">
-              <time datetime={post.createdTime.toISOString()}>
-                {formatFacebookDate(post.createdTime)}
-              </time>
-              <p>{facebookExcerpt(post.message)}</p>
-              <a href={post.permalinkUrl} target="_blank" rel="noreferrer">
-                Bekijk bericht op Facebook →
-              </a>
-            </div>
-          </article>
-        ))}
-      </div>
-    ) : (
-      <div class="social-panel">
-        <div>
-          <h2>Volg ons op onze socials</h2>
-          <p class="lead">
-            Voor het laatste nieuws, foto's, aankondigingen en alles rondom ons
-            66-jarig jubileum vind je De Heikneuters op Instagram en Facebook.
-          </p>
-        </div>
-        <div class="social-actions">
-          <a class="social-button" href={instagramUrl} target="_blank" rel="noreferrer">
-            <span>◎</span>
-            <strong>Instagram</strong>
-            <small>@c.v.de.heikneuters.nijnsel</small>
-          </a>
-          <a class="social-button" href={facebookUrl} target="_blank" rel="noreferrer">
-            <span>f</span>
-            <strong>Facebook</strong>
-            <small>C.V. De Heikneuters Nijnsel</small>
-          </a>
-        </div>
-      </div>
-    )}
-  </div>
-</section>
 </BaseLayout>
