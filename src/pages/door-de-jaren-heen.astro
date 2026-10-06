@@ -1,12 +1,10 @@
 ---
 import '../styles/global.css';
 import Favicons from '../components/Favicons.astro';
-import { formatYouTubeDate, getLatestYouTubeVideos } from '../lib/youtube';
-
 const logoUrl = '/assets/logo-heikneuters-2026.png';
 const channelUrl = 'https://www.youtube.com/channel/UCTRbf6GaQNeR43AiWMnprlg';
 const featuredVideoId = 'Gm5clQOzu04';
-const videos = await getLatestYouTubeVideos(6);
+const uploadsPlaylistId = 'UUTRbf6GaQNeR43AiWMnprlg';
 ---
 
 <!doctype html>
@@ -77,41 +75,15 @@ const videos = await getLatestYouTubeVideos(6);
               <a href={channelUrl} target="_blank" rel="noreferrer">Bekijk ons YouTube-kanaal →</a>
             </div>
 
-            {videos.length > 0 ? (
-              <div class="youtube-grid">
-                {videos.map((video) => (
-                  <article class="youtube-card">
-                    <a
-                      class="youtube-card__image"
-                      href={video.url}
-                      target="_blank"
-                      rel="noreferrer"
-                      aria-label={`Bekijk ${video.title} op YouTube`}
-                    >
-                      <img src={video.thumbnail} alt="" loading="lazy" />
-                      <span class="youtube-card__play" aria-hidden="true">▶</span>
-                    </a>
-                    <div class="youtube-card__body">
-                      <time datetime={video.published.toISOString()}>
-                        {formatYouTubeDate(video.published)}
-                      </time>
-                      <h3>{video.title}</h3>
-                      <a href={video.url} target="_blank" rel="noreferrer">Bekijk video →</a>
-                    </div>
-                  </article>
-                ))}
-              </div>
-            ) : (
-              <div class="feed-fallback">
-                <p>
-                  De nieuwste video's konden op dit moment niet automatisch worden geladen.
-                  Op ons YouTube-kanaal vind je het volledige videoarchief.
-                </p>
-                <a class="button button--red" href={channelUrl} target="_blank" rel="noreferrer">
-                  Naar YouTube →
-                </a>
-              </div>
-            )}
+            <div class="featured-video youtube-playlist">
+              <iframe
+                src={`https://www.youtube-nocookie.com/embed/videoseries?list=${uploadsPlaylistId}`}
+                title="Nieuwste video's van C.V. De Heikneuters"
+                loading="lazy"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen
+              ></iframe>
+            </div>
           </div>
         </section>
       </main>
