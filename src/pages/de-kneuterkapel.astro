@@ -1,103 +1,47 @@
 ---
-import '../styles/global.css';
-import Favicons from '../components/Favicons.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
 
 const logoUrl = '/assets/logo-heikneuters-2026.png';
 ---
 
-<!doctype html>
-<html lang="nl">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
-    <meta
-      name="description"
-      content="Lees meer over De Kneuterkapel van C.V. De Heikneuters uit Nijnsel."
-    />
-    <meta name="theme-color" content="#072f63" />
-    <Favicons />
-    <title>De Kneuterkapel | C.V. De Heikneuters</title>
-  </head>
-  <body>
-    <div class="site-shell">
-      <header class="nav nav--standalone">
-        <div class="nav__inner">
-          <a href="/" aria-label="C.V. De Heikneuters home">
-            <img class="logo" src={logoUrl} alt="Logo C.V. De Heikneuters Nijnsel" />
-          </a>
-          <nav class="nav__links" aria-label="Hoofdnavigatie">
-            <a href="/">Home</a>
-            <a href="/de-kneuterkapel/" aria-current="page">Kneuterkapel</a>
-            <a href="/agenda/">Agenda</a>
-            <a href="/door-de-jaren-heen/">Door de jaren heen</a>
-            <a href="/contact/">Contact</a>
-          </nav>
-          <button class="menu-button" aria-label="Menu openen" aria-expanded="false" aria-controls="mobile-nav">☰</button>
-        </div>
-      </header>
+<BaseLayout
+  title="De Kneuterkapel | C.V. De Heikneuters"
+  description="Lees meer over De Kneuterkapel van C.V. De Heikneuters uit Nijnsel."
+  current="kneuterkapel"
+>
+<section class="section">
+  <div class="section__inner content-page">
+    <div class="eyebrow">Muziek binnen De Heikneuters</div>
+    <h1 class="page-title">De Kneuterkapel</h1>
+    <p class="lead">
+      Wat ooit begon als een kleine groep muzikanten binnen C.V. De Heikneuters
+      is uitgegroeid tot een bruisende kapel van 26 muzikanten.
+    </p>
+    <p class="body-copy">
+      Jong en oud, verschillende instrumenten en één gedeelde passie: samen muziek
+      maken en er een feest van maken. De Kneuterkapel staat bekend om feestelijke
+      klanken, swingende ritmes en een repertoire dat loopt van traditionele
+      blaasmuziek tot moderne meezingers.
+    </p>
+    <p class="body-copy">
+      De kapel is onderdeel van de vereniging en trekt gedurende het jaar samen op
+      bij carnavalsactiviteiten, kapellenavonden en andere optredens die op de agenda
+      van De Heikneuters staan.
+    </p>
 
-      <nav class="mobile-nav" id="mobile-nav" aria-label="Mobiele navigatie">
-        <a href="/">Home</a>
-        <a href="/de-kneuterkapel/">Kneuterkapel</a>
-        <a href="/agenda/">Agenda</a>
-        <a href="/ut-vurproefke/">Ut Vurproefke</a>
-        <a href="/vrienden-van-de-heikneuters/">Vrienden</a>
-        <a href="/door-de-jaren-heen/">Door de jaren heen</a>
-        <a href="/contact/">Contact</a>
-      </nav>
+    <aside class="highlight-card">
+      <span class="feature-card__kicker">Leutbokaal</span>
+      <h3>1e plek in de Leutklasse</h3>
+      <p>
+        Op Hemelvaartsdag nam De Kneuterkapel tijdens de Dweilorkestendag in Groenlo
+        de Leutbokaal mee naar huis met een eerste plek in de Leutklasse.
+      </p>
+    </aside>
 
-      <main>
-        <section class="section">
-          <div class="section__inner content-page">
-            <div class="eyebrow">Muziek binnen De Heikneuters</div>
-            <h2>De Kneuterkapel</h2>
-            <p class="lead">
-              Wat ooit begon als een kleine groep muzikanten binnen C.V. De Heikneuters
-              is uitgegroeid tot een bruisende kapel van 26 muzikanten.
-            </p>
-            <p class="body-copy">
-              Jong en oud, verschillende instrumenten en één gedeelde passie: samen muziek
-              maken en er een feest van maken. De Kneuterkapel staat bekend om feestelijke
-              klanken, swingende ritmes en een repertoire dat loopt van traditionele
-              blaasmuziek tot moderne meezingers.
-            </p>
-            <p class="body-copy">
-              De kapel is onderdeel van de vereniging en trekt gedurende het jaar samen op
-              bij carnavalsactiviteiten, kapellenavonden en andere optredens die op de agenda
-              van De Heikneuters staan.
-            </p>
-
-            <aside class="highlight-card">
-              <span class="feature-card__kicker">Leutbokaal</span>
-              <h3>1e plek in de Leutklasse</h3>
-              <p>
-                Op Hemelvaartsdag nam De Kneuterkapel tijdens de Dweilorkestendag in Groenlo
-                de Leutbokaal mee naar huis met een eerste plek in de Leutklasse.
-              </p>
-            </aside>
-
-            <div class="actions page-actions">
-              <a class="button button--red" href="/agenda/">Bekijk komende optredens →</a>
-              <a class="button button--outline" href="/door-de-jaren-heen/">Bekijk video's</a>
-            </div>
-          </div>
-        </section>
-      </main>
-
-      <footer class="footer">
-        <div class="footer__inner">
-          <div class="footer__bottom">© 2026 C.V. De Heikneuters · Nijnsel</div>
-        </div>
-      </footer>
+    <div class="actions page-actions">
+      <a class="button button--red" href="/agenda/">Bekijk komende optredens →</a>
+      <a class="button button--outline" href="/door-de-jaren-heen/">Bekijk video's</a>
     </div>
-
-    <script>
-      const menuButton = document.querySelector('.menu-button');
-      const mobileNav = document.querySelector('.mobile-nav');
-      menuButton?.addEventListener('click', () => {
-        const open = mobileNav?.classList.toggle('is-open') ?? false;
-        menuButton.setAttribute('aria-expanded', String(open));
-      });
-    </script>
-  </body>
-</html>
+  </div>
+</section>
+</BaseLayout>
