@@ -1,0 +1,101 @@
+---
+import '../styles/global.css';
+import Favicons from '../components/Favicons.astro';
+
+const logoUrl = '/assets/logo-heikneuters-2026.png';
+---
+
+<!doctype html>
+<html lang="nl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta
+      name="description"
+      content="Word vriend van C.V. De Heikneuters en steun carnaval in Nijnsel."
+    />
+    <meta name="theme-color" content="#072f63" />
+    <Favicons />
+    <title>Vrienden van de Heikneuters | C.V. De Heikneuters</title>
+  </head>
+  <body>
+    <div class="site-shell">
+      <header class="nav nav--standalone">
+        <div class="nav__inner">
+          <a href="/" aria-label="C.V. De Heikneuters home">
+            <img class="logo" src={logoUrl} alt="Logo C.V. De Heikneuters Nijnsel" />
+          </a>
+          <nav class="nav__links" aria-label="Hoofdnavigatie">
+            <a href="/">Home</a>
+            <a href="/de-kneuterkapel/">Kneuterkapel</a>
+            <a href="/agenda/">Agenda</a>
+            <a href="/vrienden-van-de-heikneuters/" aria-current="page">Vrienden</a>
+            <a href="/contact/">Contact</a>
+          </nav>
+          <button class="menu-button" aria-label="Menu openen" aria-expanded="false" aria-controls="mobile-nav">☰</button>
+        </div>
+      </header>
+
+      <nav class="mobile-nav" id="mobile-nav" aria-label="Mobiele navigatie">
+        <a href="/">Home</a>
+        <a href="/de-kneuterkapel/">Kneuterkapel</a>
+        <a href="/agenda/">Agenda</a>
+        <a href="/ut-vurproefke/">Ut Vurproefke</a>
+        <a href="/vrienden-van-de-heikneuters/">Vrienden</a>
+        <a href="/door-de-jaren-heen/">Door de jaren heen</a>
+        <a href="/contact/">Contact</a>
+      </nav>
+
+      <main>
+        <section class="section">
+          <div class="section__inner content-page">
+            <div class="eyebrow">Steun de vereniging</div>
+            <h2>Vrienden van de Heikneuters</h2>
+            <p class="lead">
+              Draag je C.V. De Heikneuters een warm hart toe, maar wil je geen lid worden?
+              Dan is Vrienden van de Heikneuters een mooi alternatief.
+            </p>
+            <p class="body-copy">
+              De Heikneuters zijn het hele jaar actief. Tijdens carnaval zijn we zichtbaar
+              in Nijnsel en Papgat en daarnaast organiseren we activiteiten voor onze leden,
+              jong en oud.
+            </p>
+            <p class="body-copy">
+              Vanaf € 11,11 per jaar — of een veelvoud daarvan — ben je al vriend.
+              Met die jaarlijkse bijdrage help je ons om carnaval in Nijnsel kleurrijk,
+              gezellig en toegankelijk te houden. Vrienden ontvangen jaarlijks een update
+              over onze activiteiten en bezigheden.
+            </p>
+
+            <aside class="highlight-card">
+              <span class="feature-card__kicker">Vanaf</span>
+              <h3>€ 11,11 per jaar</h3>
+              <p>
+                Wil je vriend worden? Laat het ons weten, dan nemen we contact met je op
+                over de verdere afhandeling.
+              </p>
+              <a class="button button--red" href="/contact/?onderwerp=Vriend%20van%20de%20Heikneuters#contactformulier">
+                Ik wil vriend worden →
+              </a>
+            </aside>
+          </div>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <div class="footer__inner">
+          <div class="footer__bottom">© 2026 C.V. De Heikneuters · Nijnsel</div>
+        </div>
+      </footer>
+    </div>
+
+    <script>
+      const menuButton = document.querySelector('.menu-button');
+      const mobileNav = document.querySelector('.mobile-nav');
+      menuButton?.addEventListener('click', () => {
+        const open = mobileNav?.classList.toggle('is-open') ?? false;
+        menuButton.setAttribute('aria-expanded', String(open));
+      });
+    </script>
+  </body>
+</html>
