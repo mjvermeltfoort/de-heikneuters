@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import SocialIcon from '../components/SocialIcon.astro';
 ---
 
 <BaseLayout
@@ -56,8 +57,14 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     </aside>
 
     <div class="actions page-actions">
-      <a class="button button--red" href="/agenda/">Bekijk komende optredens →</a>
-      <a class="button button--outline" href="/door-de-jaren-heen/">Bekijk video's</a>
+      <a class="button button--red" href="https://www.facebook.com/profile.php?id=61594455748062" target="_blank" rel="noopener noreferrer">
+        <SocialIcon name="facebook" size={20} />
+        Volg ons op Facebook
+      </a>
+      <a class="button button--outline" href="https://www.instagram.com/kneuterkapel.nijnsel/" target="_blank" rel="noopener noreferrer">
+        <SocialIcon name="instagram" size={20} />
+        Volg ons op Instagram
+      </a>
     </div>
   </div>
 </section>
