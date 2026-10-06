@@ -1,6 +1,7 @@
 import { defineConfig } from 'astro/config';
 
 export default defineConfig({
-  site: 'https://www.de-heikneuters.nl',
+  site: 'https://de-heikneuters.nl',
+  base: '/nieuw/',
   output: 'static',
 });

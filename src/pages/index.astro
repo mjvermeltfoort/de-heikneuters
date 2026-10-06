@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SocialIcon from '../components/SocialIcon.astro';
+import { withBase } from '../lib/site';
 import {
   formatDay,
   formatEventMeta,
@@ -30,7 +31,7 @@ const youtubeUrl = 'https://www.youtube.com/channel/UCTRbf6GaQNeR43AiWMnprlg';
 <section class="hero">
   <img
     class="hero__image"
-    src="/assets/banner-heikneuters.jpg"
+    src={withBase("/assets/banner-heikneuters.jpg")}
     width="1024"
     height="399"
     alt=""
@@ -42,8 +43,8 @@ const youtubeUrl = 'https://www.youtube.com/channel/UCTRbf6GaQNeR43AiWMnprlg';
     <h1>Carnaval maken we <span>samen</span></h1>
     <p>Leverancier van carnavalsplezier</p>
     <div class="actions">
-      <a class="button button--red" href="/agenda/">Bekijk de agenda →</a>
-      <a class="button button--ghost" href="/heikneuters-66-jaar/">66 jaar De Heikneuters</a>
+      <a class="button button--red" href={withBase("/agenda/")}>Bekijk de agenda →</a>
+      <a class="button button--ghost" href={withBase("/heikneuters-66-jaar/")}>66 jaar De Heikneuters</a>
     </div>
   </div>
 </section>
@@ -76,7 +77,7 @@ const youtubeUrl = 'https://www.youtube.com/channel/UCTRbf6GaQNeR43AiWMnprlg';
     <div id="activiteiten">
       <div class="panel-title">
         <h3>Eerstvolgende activiteiten</h3>
-        <a href="/agenda/">Volledige agenda →</a>
+        <a href={withBase("/agenda/")}>Volledige agenda →</a>
       </div>
 
       {events.length > 0 ? (
@@ -221,8 +222,8 @@ const youtubeUrl = 'https://www.youtube.com/channel/UCTRbf6GaQNeR43AiWMnprlg';
         tot moderne meezingers: plezier en samen muziek maken staan voorop.
       </p>
       <div class="actions">
-        <a class="button button--red" href="/de-kneuterkapel/">Meer over de Kneuterkapel →</a>
-        <a class="button button--outline" href="/agenda/">Bekijk agenda</a>
+        <a class="button button--red" href={withBase("/de-kneuterkapel/")}>Meer over de Kneuterkapel →</a>
+        <a class="button button--outline" href={withBase("/agenda/")}>Bekijk agenda</a>
       </div>
     </div>
 
@@ -245,7 +246,7 @@ const youtubeUrl = 'https://www.youtube.com/channel/UCTRbf6GaQNeR43AiWMnprlg';
           een avondvullend programma en vooral heel veel gezelligheid bij
           De Beckart in Nijnsel.
         </p>
-        <a href="/ut-vurproefke/">Meer over Ut Vurproefke →</a>
+        <a href={withBase("/ut-vurproefke/")}>Meer over Ut Vurproefke →</a>
       </article>
 
       <article class="feature-card" id="steun-ons">
@@ -256,7 +257,7 @@ const youtubeUrl = 'https://www.youtube.com/channel/UCTRbf6GaQNeR43AiWMnprlg';
           help je mee om carnaval in Nijnsel kleurrijk, gezellig en toegankelijk
           te houden voor jong en oud.
         </p>
-        <a href="/vrienden-van-de-heikneuters/">Meer over Vrienden →</a>
+        <a href={withBase("/vrienden-van-de-heikneuters/")}>Meer over Vrienden →</a>
       </article>
 
       <article class="feature-card">
@@ -267,7 +268,7 @@ const youtubeUrl = 'https://www.youtube.com/channel/UCTRbf6GaQNeR43AiWMnprlg';
           herinneringen. Bekijk oude en nieuwe beelden van carnaval, optochten,
           feesten en de Kneuterkapel.
         </p>
-        <a href="/door-de-jaren-heen/">Duik in het videoarchief →</a>
+        <a href={withBase("/door-de-jaren-heen/")}>Duik in het videoarchief →</a>
       </article>
     </div>
 
@@ -280,7 +281,7 @@ const youtubeUrl = 'https://www.youtube.com/channel/UCTRbf6GaQNeR43AiWMnprlg';
         activiteiten en carnavalsmomenten. Iedereen is welkom om met ons mee te vieren.
       </p>
       <div class="actions">
-        <a class="button button--red" href="/heikneuters-66-jaar/">Meer over het jubileum →</a>
+        <a class="button button--red" href={withBase("/heikneuters-66-jaar/")}>Meer over het jubileum →</a>
         <a class="button button--ghost" href={instagramUrl} target="_blank" rel="noreferrer">
           Volg het jubileum
         </a>

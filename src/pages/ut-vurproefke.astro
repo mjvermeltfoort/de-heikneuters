@@ -1,57 +1,58 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { withBase } from '../lib/site';
 
 const photos = [
   {
-    "src": "/assets/ut-vurproefke/ut-vurproefke-01.webp",
+    "src": withBase("/assets/ut-vurproefke/ut-vurproefke-01.webp"),
     "width": 1024,
     "height": 576,
     "alt": "Blaasmuzikanten met trompet en trombone tijdens Ut Vurproefke"
   },
   {
-    "src": "/assets/ut-vurproefke/ut-vurproefke-02.webp",
+    "src": withBase("/assets/ut-vurproefke/ut-vurproefke-02.webp"),
     "width": 1024,
     "height": 681,
     "alt": "Een kapel in groene shirts met slagwerk en blazers"
   },
   {
-    "src": "/assets/ut-vurproefke/ut-vurproefke-03.webp",
+    "src": withBase("/assets/ut-vurproefke/ut-vurproefke-03.webp"),
     "width": 1024,
     "height": 681,
     "alt": "Bezoekers genieten van de muziek tijdens Ut Vurproefke"
   },
   {
-    "src": "/assets/ut-vurproefke/ut-vurproefke-04.webp",
+    "src": withBase("/assets/ut-vurproefke/ut-vurproefke-04.webp"),
     "width": 1024,
     "height": 681,
     "alt": "Saxofonisten tijdens een optreden op Ut Vurproefke"
   },
   {
-    "src": "/assets/ut-vurproefke/ut-vurproefke-05.webp",
+    "src": withBase("/assets/ut-vurproefke/ut-vurproefke-05.webp"),
     "width": 1024,
     "height": 681,
     "alt": "Een kapel in paarse shirts speelt tussen het publiek"
   },
   {
-    "src": "/assets/ut-vurproefke/ut-vurproefke-06.webp",
+    "src": withBase("/assets/ut-vurproefke/ut-vurproefke-06.webp"),
     "width": 1024,
     "height": 682,
     "alt": "Een kapel in oranje shirts treedt op met trompetten en trombones"
   },
   {
-    "src": "/assets/ut-vurproefke/ut-vurproefke-07.webp",
+    "src": withBase("/assets/ut-vurproefke/ut-vurproefke-07.webp"),
     "width": 1024,
     "height": 683,
     "alt": "Een volle zaal met muzikanten en publiek bij Ut Vurproefke"
   },
   {
-    "src": "/assets/ut-vurproefke/ut-vurproefke-08.webp",
+    "src": withBase("/assets/ut-vurproefke/ut-vurproefke-08.webp"),
     "width": 1024,
     "height": 683,
     "alt": "Feestelijke drukte in de zaal tijdens Ut Vurproefke"
   },
   {
-    "src": "/assets/ut-vurproefke/ut-vurproefke-09.webp",
+    "src": withBase("/assets/ut-vurproefke/ut-vurproefke-09.webp"),
     "width": 683,
     "height": 1024,
     "alt": "Trombonisten in groene shirts tijdens een optreden"
@@ -70,7 +71,7 @@ const photos = [
 
     <figure class="page-visual page-visual--wide page-visual--logo">
       <img
-        src="/assets/ut-vurproefke-logo.webp"
+        src={withBase("/assets/ut-vurproefke-logo.webp")}
         width="500"
         height="375"
         alt="Logo van blaaskapellenfestival Ut Vurproefke in Nijnsel"

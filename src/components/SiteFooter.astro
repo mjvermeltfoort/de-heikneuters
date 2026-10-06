@@ -1,5 +1,6 @@
 ---
 import SocialIcon from './SocialIcon.astro';
+import { withBase } from '../lib/site';
 
 const facebookUrl = 'https://www.facebook.com/share/19JosouTXi/';
 const instagramUrl = 'https://www.instagram.com/c.v.de.heikneuters.nijnsel/';
@@ -45,7 +46,7 @@ const moreLinks = [
         <h4>Snel naar</h4>
         <ul>
           {quickLinks.map((item) => (
-            <li><a href={item.href}>{item.label}</a></li>
+            <li><a href={withBase(item.href)}>{item.label}</a></li>
           ))}
         </ul>
       </div>
@@ -54,7 +55,7 @@ const moreLinks = [
         <h4>Meer</h4>
         <ul>
           {moreLinks.map((item) => (
-            <li><a href={item.href}>{item.label}</a></li>
+            <li><a href={withBase(item.href)}>{item.label}</a></li>
           ))}
         </ul>
       </div>
@@ -62,7 +63,7 @@ const moreLinks = [
       <div>
         <h4>Contact</h4>
         <ul>
-          <li><a href="/contact/">Contactformulier</a></li>
+          <li><a href={withBase("/contact/")}>Contactformulier</a></li>
           <li><a href="mailto:info@de-heikneuters.nl">info@de-heikneuters.nl</a></li>
           <li><a href="tel:+31630237107">06 30237107</a></li>
           <li>Nijnsel · Sint-Oedenrode</li>
@@ -72,7 +73,7 @@ const moreLinks = [
 
     <div class="footer__bottom">
       <span>© 2026 C.V. De Heikneuters · Nijnsel</span>
-      <a href="/assets/privacybeleid-heikneuters.pdf" target="_blank" rel="noopener noreferrer">
+      <a href={withBase("/assets/privacybeleid-heikneuters.pdf")} target="_blank" rel="noopener noreferrer">
         Privacybeleid (PDF)
       </a>
       <button type="button" data-analytics-settings aria-controls="analytics-consent" aria-expanded="false" hidden>

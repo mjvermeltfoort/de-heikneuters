@@ -1,5 +1,6 @@
 ---
 import SocialIcon from './SocialIcon.astro';
+import { withBase } from '../lib/site';
 
 interface Props {
   current?: string;
@@ -8,7 +9,7 @@ interface Props {
 
 const { current = '', home = false } = Astro.props;
 
-const logoUrl = '/assets/logo-heikneuters-2026.png';
+const logoUrl = withBase('/assets/logo-heikneuters-2026.png');
 const instagramUrl = 'https://www.instagram.com/c.v.de.heikneuters.nijnsel/';
 const facebookUrl = 'https://www.facebook.com/share/19JosouTXi/';
 const youtubeUrl = 'https://www.youtube.com/channel/UCTRbf6GaQNeR43AiWMnprlg';
@@ -43,7 +44,7 @@ const menuItems = [
 
 <header class:list={['nav', !home && 'nav--standalone']}>
   <div class="nav__inner">
-    <a href="/" aria-label="C.V. De Heikneuters home">
+    <a href={withBase("/")} aria-label="C.V. De Heikneuters home">
       <img
         class="logo"
         src={logoUrl}
@@ -55,7 +56,7 @@ const menuItems = [
 
     <nav class="nav__links" aria-label="Hoofdnavigatie">
       {menuItems.map((item) => (
-        <a href={item.href} aria-current={current === item.key ? 'page' : undefined}>
+        <a href={withBase(item.href)} aria-current={current === item.key ? 'page' : undefined}>
           {item.label}
         </a>
       ))}
@@ -69,7 +70,7 @@ const menuItems = [
 
 <nav class="mobile-nav" id="mobile-nav" aria-label="Mobiele navigatie">
   {menuItems.map((item) => (
-    <a href={item.href} aria-current={current === item.key ? 'page' : undefined}>
+    <a href={withBase(item.href)} aria-current={current === item.key ? 'page' : undefined}>
       {item.label}
     </a>
   ))}

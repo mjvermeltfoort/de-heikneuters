@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { withBase } from '../lib/site';
 import {
   formatDate,
   formatDay,
@@ -46,7 +47,7 @@ const events = await getUpcomingEvents();
     )}
 
     <div class="actions" style="margin-top:28px;">
-      <a class="button button--outline" href="/">← Terug naar home</a>
+      <a class="button button--outline" href={withBase("/")}>← Terug naar home</a>
     </div>
   </div>
 </section>

@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { withBase } from '../lib/site';
 ---
 
 <BaseLayout
@@ -16,13 +17,13 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       <div class="jubilee-page">
         <figure class="jubilee-page__poster">
           <a
-            href="/assets/heikneuters-66-jaar.webp"
+            href={withBase("/assets/heikneuters-66-jaar.webp")}
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Bekijk de jubileumposter op volledig formaat in een nieuw tabblad"
           >
             <img
-              src="/assets/heikneuters-66-jaar.webp"
+              src={withBase("/assets/heikneuters-66-jaar.webp")}
               width="1414"
               height="2000"
               alt="Poster jubileumfeest C.V. de Heikneuters: 66 jaar, zaterdag 21 november 2026 bij De Beckart in Nijnsel. First Class Flamingos en afterparty met DeejayMikee. Zaal open vanaf 19:30, gratis entree."

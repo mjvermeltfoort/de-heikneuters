@@ -4,6 +4,7 @@ import Favicons from '../components/Favicons.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import GoogleAnalytics from '../components/GoogleAnalytics.astro';
+import { withBase } from '../lib/site';
 
 interface Props {
   title: string;
@@ -21,9 +22,12 @@ const {
   socialImage = '/assets/banner-heikneuters.jpg',
 } = Astro.props;
 
-const site = Astro.site ?? new URL('https://www.de-heikneuters.nl');
-const canonicalUrl = new URL(Astro.url.pathname, site);
-const socialImageUrl = new URL(socialImage, site);
+const site = Astro.site ?? new URL('https://de-heikneuters.nl');
+const canonicalPath = Astro.url.pathname.startsWith(import.meta.env.BASE_URL)
+  ? Astro.url.pathname
+  : withBase(Astro.url.pathname);
+const canonicalUrl = new URL(canonicalPath, site);
+const socialImageUrl = new URL(withBase(socialImage), site);
 ---
 
 <!doctype html>

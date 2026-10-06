@@ -1,3 +1,15 @@
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # Main domain serves this directory at /nieuw/, while the concept subdomain
+  # uses the same directory as its document root.
+  RewriteCond %{HTTP_HOST} ^concept\.de-heikneuters\.nl(:[0-9]+)?$ [NC]
+  RewriteRule ^nieuw/?$ index.html [L]
+
+  RewriteCond %{HTTP_HOST} ^concept\.de-heikneuters\.nl(:[0-9]+)?$ [NC]
+  RewriteRule ^nieuw/(.*)$ $1 [L]
+</IfModule>
+
 # Keep the concept environment out of search indexes without affecting the live domain.
 <IfModule mod_setenvif.c>
   SetEnvIf Host "^concept\.de-heikneuters\.nl(:[0-9]+)?$" IS_CONCEPT=1

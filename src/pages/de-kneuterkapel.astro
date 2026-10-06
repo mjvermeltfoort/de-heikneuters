@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SocialIcon from '../components/SocialIcon.astro';
+import { withBase } from '../lib/site';
 ---
 
 <BaseLayout
@@ -15,7 +16,7 @@ import SocialIcon from '../components/SocialIcon.astro';
 
     <figure class="page-visual">
       <img
-        src="/assets/kneuterkapel-banner.jpg"
+        src={withBase("/assets/kneuterkapel-banner.jpg")}
         width="893"
         height="502"
         alt="De Kneuterkapel uit Nijnsel"
