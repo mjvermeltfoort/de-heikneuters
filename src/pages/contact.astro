@@ -139,7 +139,14 @@ const logoUrl = '/assets/logo-heikneuters-2026.png';
         started.value = String(Math.floor(Date.now() / 1000));
       }
 
-      const status = new URLSearchParams(window.location.search).get('status');
+      const params = new URLSearchParams(window.location.search);
+      const subjectParam = params.get('onderwerp');
+      const subjectField = document.querySelector('#subject');
+      if (subjectParam && subjectField instanceof HTMLInputElement && !subjectField.value) {
+        subjectField.value = subjectParam;
+      }
+
+      const status = params.get('status');
       if (status === 'success' || status === 'error') {
         const message = document.querySelector(`[data-form-status="${status}"]`);
         if (message instanceof HTMLElement) {
