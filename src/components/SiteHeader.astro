@@ -24,24 +24,22 @@ const menuItems = [
 ];
 ---
 
-{home && (
-  <div class="topbar">
-    <div class="topbar__inner">
-      <span>Volg De Heikneuters:</span>
-      <div class="socials" aria-label="Social media">
-        <a class="social" href={facebookUrl} target="_blank" rel="noreferrer" aria-label="Facebook">
-          <SocialIcon name="facebook" size={15} />
-        </a>
-        <a class="social" href={instagramUrl} target="_blank" rel="noreferrer" aria-label="Instagram">
-          <SocialIcon name="instagram" size={15} />
-        </a>
-        <a class="social" href={youtubeUrl} target="_blank" rel="noreferrer" aria-label="YouTube">
-          <SocialIcon name="youtube" size={16} />
-        </a>
-      </div>
+<div class="topbar">
+  <div class="topbar__inner">
+    <span>Volg De Heikneuters:</span>
+    <div class="socials" aria-label="Social media">
+      <a class="social" href={facebookUrl} target="_blank" rel="noreferrer" aria-label="Facebook">
+        <SocialIcon name="facebook" size={15} />
+      </a>
+      <a class="social" href={instagramUrl} target="_blank" rel="noreferrer" aria-label="Instagram">
+        <SocialIcon name="instagram" size={15} />
+      </a>
+      <a class="social" href={youtubeUrl} target="_blank" rel="noreferrer" aria-label="YouTube">
+        <SocialIcon name="youtube" size={16} />
+      </a>
     </div>
   </div>
-)}
+</div>
 
 <header class:list={['nav', !home && 'nav--standalone']}>
   <div class="nav__inner">

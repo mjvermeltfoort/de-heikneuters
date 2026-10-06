@@ -3,6 +3,7 @@
   --red-dark: #c70f1a;
   --blue: #195aab;
   --blue-dark: #072f63;
+  --brand-stripe: linear-gradient(110deg, var(--red) 0 50%, var(--blue) 50% 100%);
   --ink: #10253f;
   --muted: #65758a;
   --surface: #ffffff;
@@ -67,7 +68,14 @@ button { font: inherit; }
   flex: 0 0 auto;
 }
 
-.nav { background: #fff; border-bottom: 1px solid #edf1f5; position: relative; z-index: 3; }
+.nav { background: #fff; position: relative; z-index: 3; }
+.nav::after {
+  content: "";
+  display: block;
+  height: 4px;
+  background: var(--brand-stripe);
+  pointer-events: none;
+}
 .nav__inner { min-height: 84px; display: flex; align-items: center; gap: 36px; }
 .logo {
   width: 94px;
@@ -171,6 +179,17 @@ button { font: inherit; }
 .section__grid { display:grid; grid-template-columns: 1.15fr .85fr; gap:60px; align-items:start; }
 h2,
 .page-title { margin:8px 0 16px; font-size:clamp(34px,5vw,52px); line-height:1; letter-spacing:-.035em; color:var(--blue-dark); }
+.page-title::after,
+.section h2::after {
+  content: "";
+  display: block;
+  width: 72px;
+  height: 4px;
+  margin-top: 18px;
+  border-radius: 999px;
+  background: var(--brand-stripe);
+  pointer-events: none;
+}
 .lead { font-size:18px; line-height:1.72; color:#344961; margin:0 0 24px; }
 
 .panel-title { display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:16px; }
@@ -226,7 +245,10 @@ h2,
   padding:36px;
   border-radius:18px;
   color:#fff;
-  background:linear-gradient(120deg, var(--blue-dark), #134d94);
+  border: 3px solid transparent;
+  background:
+    linear-gradient(120deg, var(--blue-dark), #134d94) padding-box,
+    var(--brand-stripe) border-box;
   position:relative;
   overflow:hidden;
 }
@@ -991,7 +1013,9 @@ h2,
 
 @media (max-width: 900px) {
   .site-shell { width:100%; margin:0; border-radius:0; }
-  .topbar { display:none; }
+  .topbar { min-height:48px; padding-block:4px; }
+  .topbar__inner { gap:12px; font-size:12px; }
+  .topbar .social { width:40px; height:40px; }
   .nav__inner {
     min-height: 88px;
     padding-block: 8px;
