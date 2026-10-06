@@ -1,0 +1,42 @@
+---
+import '../styles/global.css';
+import Favicons from '../components/Favicons.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  current?: string;
+  home?: boolean;
+}
+
+const {
+  title,
+  description,
+  current = '',
+  home = false,
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="nl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#072f63" />
+    <Favicons />
+    <title>{title}</title>
+  </head>
+  <body>
+    <div class="site-shell">
+      <SiteHeader current={current} home={home} />
+      <main>
+        <slot />
+      </main>
+      <SiteFooter />
+    </div>
+    <slot name="scripts" />
+  </body>
+</html>
