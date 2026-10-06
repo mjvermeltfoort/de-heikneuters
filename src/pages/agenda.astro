@@ -1,6 +1,5 @@
 ---
-import '../styles/global.css';
-import Favicons from '../components/Favicons.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
 import {
   formatDate,
   formatDay,
@@ -9,100 +8,47 @@ import {
   getUpcomingEvents,
 } from '../lib/calendar';
 
-const logoUrl = '/assets/logo-heikneuters-2026.png';
 const events = await getUpcomingEvents();
 ---
 
-<!doctype html>
-<html lang="nl">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
-    <meta name="description" content="Agenda van C.V. De Heikneuters uit Nijnsel." />
-    <meta name="theme-color" content="#072f63" />
-    <Favicons />
-    <title>Agenda | C.V. De Heikneuters</title>
-  </head>
-  <body>
-    <div class="site-shell">
-      <header class="nav nav--standalone">
-        <div class="nav__inner">
-          <a href="/" aria-label="Terug naar home">
-            <img class="logo" src={logoUrl} alt="Logo C.V. De Heikneuters Nijnsel" />
-          </a>
-          <nav class="nav__links" aria-label="Hoofdnavigatie">
-            <a href="/">Home</a>
-            <a href="/de-kneuterkapel/">Kneuterkapel</a>
-            <a href="/agenda/" aria-current="page">Agenda</a>
-            <a href="/door-de-jaren-heen/">Door de jaren heen</a>
-            <a href="/contact/">Contact</a>
-          </nav>
-          <button class="menu-button" aria-label="Menu openen" aria-expanded="false" aria-controls="mobile-nav">☰</button>
-        </div>
-      </header>
+<BaseLayout
+  title="Agenda | C.V. De Heikneuters"
+  description="Agenda van C.V. De Heikneuters uit Nijnsel."
+  current="agenda"
+>
+<section class="section section--soft">
+  <div class="section__inner">
+    <div class="eyebrow">Activiteiten</div>
+    <h1 class="page-title">Agenda</h1>
+    <p class="lead">
+      Bekijk de komende activiteiten van C.V. De Heikneuters in Nijnsel en daarbuiten.
+    </p>
 
-      <nav class="mobile-nav" id="mobile-nav" aria-label="Mobiele navigatie">
-        <a href="/">Home</a>
-        <a href="/de-kneuterkapel/">Kneuterkapel</a>
-        <a href="/agenda/">Agenda</a>
-        <a href="/ut-vurproefke/">Ut Vurproefke</a>
-        <a href="/vrienden-van-de-heikneuters/">Vrienden</a>
-        <a href="/door-de-jaren-heen/">Door de jaren heen</a>
-        <a href="/contact/">Contact</a>
-      </nav>
-
-      <main>
-        <section class="section section--soft">
-          <div class="section__inner">
-            <div class="eyebrow">Activiteiten</div>
-            <h2>Agenda</h2>
-            <p class="lead">
-              Bekijk de komende activiteiten van C.V. De Heikneuters in Nijnsel en daarbuiten.
-            </p>
-
-            {events.length > 0 ? (
-              <div class="events">
-                {events.map((event) => (
-                  <article class="event">
-                    <div class="event__date">
-                      <strong>{formatDay(event)}</strong>
-                      <span>{formatMonth(event)}</span>
-                    </div>
-                    <div class="event__body">
-                      <strong>{event.title}</strong>
-                      <div class="event__meta">
-                        {formatDate(event)} · {formatEventMeta(event)}
-                      </div>
-                    </div>
-                    <div class="event__arrow" aria-hidden="true">›</div>
-                  </article>
-                ))}
-              </div>
-            ) : (
-              <p class="lead">Er staan op dit moment geen komende activiteiten in de agenda.</p>
-            )}
-
-            <div class="actions" style="margin-top:28px;">
-              <a class="button button--outline" href="/">← Terug naar home</a>
+    {events.length > 0 ? (
+      <div class="events">
+        {events.map((event) => (
+          <article class="event">
+            <div class="event__date">
+              <strong>{formatDay(event)}</strong>
+              <span>{formatMonth(event)}</span>
             </div>
-          </div>
-        </section>
-      </main>
+            <div class="event__body">
+              <strong>{event.title}</strong>
+              <div class="event__meta">
+                {formatDate(event)} · {formatEventMeta(event)}
+              </div>
+            </div>
+            <div class="event__arrow" aria-hidden="true">›</div>
+          </article>
+        ))}
+      </div>
+    ) : (
+      <p class="lead">Er staan op dit moment geen komende activiteiten in de agenda.</p>
+    )}
 
-      <footer class="footer">
-        <div class="footer__inner">
-          <div class="footer__bottom">© 2026 C.V. De Heikneuters</div>
-        </div>
-      </footer>
+    <div class="actions" style="margin-top:28px;">
+      <a class="button button--outline" href="/">← Terug naar home</a>
     </div>
-
-    <script>
-      const menuButton = document.querySelector('.menu-button');
-      const mobileNav = document.querySelector('.mobile-nav');
-      menuButton?.addEventListener('click', () => {
-        const open = mobileNav?.classList.toggle('is-open') ?? false;
-        menuButton.setAttribute('aria-expanded', String(open));
-      });
-    </script>
-  </body>
-</html>
+  </div>
+</section>
+</BaseLayout>
