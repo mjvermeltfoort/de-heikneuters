@@ -638,6 +638,26 @@ h2,
   background: #fff;
 }
 
+
+.page-visual--logo {
+  background: #fff;
+}
+
+.page-visual--logo img {
+  aspect-ratio: 4 / 3;
+  object-fit: contain;
+  padding: 18px;
+  background: #fff;
+}
+
+.content-subtitle {
+  margin: 8px 0 18px;
+  font-size: clamp(24px, 3vw, 32px);
+  line-height: 1.15;
+  letter-spacing: -.02em;
+  color: var(--blue-dark);
+}
+
 .content-page {
   max-width: 900px;
 }
