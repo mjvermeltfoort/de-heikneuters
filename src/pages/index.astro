@@ -101,29 +101,30 @@ const youtubeUrl = 'https://www.youtube.com/channel/UCTRbf6GaQNeR43AiWMnprlg';
   </div>
 </section>
 
-<section class="section social-section" id="nieuws">
+<section class="section news-section" id="nieuws">
   <div class="section__inner">
-    <div class="news-head">
+    <div class="news-head news-head--dark">
       <div>
-        <div class="eyebrow">Laatste nieuws</div>
+        <div class="eyebrow eyebrow--light">Laatste nieuws</div>
+        <h2>Wat speelt er bij De Heikneuters?</h2>
       </div>
       <a href={facebookUrl} target="_blank" rel="noreferrer">Bekijk onze Facebookpagina →</a>
     </div>
 
     {facebookPosts.length > 0 ? (
-      <div class="facebook-grid">
-        {facebookPosts.map((post) => (
-          <article class="facebook-card">
-            {post.imageUrl && (
+      <div class="facebook-feature-layout">
+        {facebookPosts[0] && (
+          <article class="facebook-card facebook-card--featured">
+            {facebookPosts[0].imageUrl && (
               <a
                 class="facebook-card__image"
-                href={post.permalinkUrl}
+                href={facebookPosts[0].permalinkUrl}
                 target="_blank"
                 rel="noreferrer"
                 aria-label="Bekijk Facebookbericht"
               >
                 <img
-                  src={post.imageUrl}
+                  src={facebookPosts[0].imageUrl}
                   alt=""
                   width="1200"
                   height="675"
@@ -133,19 +134,53 @@ const youtubeUrl = 'https://www.youtube.com/channel/UCTRbf6GaQNeR43AiWMnprlg';
               </a>
             )}
             <div class="facebook-card__body">
-              <time datetime={post.createdTime.toISOString()}>
-                {formatFacebookDate(post.createdTime)}
+              <time datetime={facebookPosts[0].createdTime.toISOString()}>
+                {formatFacebookDate(facebookPosts[0].createdTime)}
               </time>
-              <p>{facebookExcerpt(post.message)}</p>
-              <a href={post.permalinkUrl} target="_blank" rel="noreferrer">
-                Bekijk bericht op Facebook →
+              <p>{facebookExcerpt(facebookPosts[0].message)}</p>
+              <a href={facebookPosts[0].permalinkUrl} target="_blank" rel="noreferrer">
+                Bekijk bericht →
               </a>
             </div>
           </article>
-        ))}
+        )}
+
+        <div class="facebook-side-stack">
+          {facebookPosts.slice(1).map((post) => (
+            <article class="facebook-card facebook-card--compact">
+              {post.imageUrl && (
+                <a
+                  class="facebook-card__image"
+                  href={post.permalinkUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label="Bekijk Facebookbericht"
+                >
+                  <img
+                    src={post.imageUrl}
+                    alt=""
+                    width="1200"
+                    height="675"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </a>
+              )}
+              <div class="facebook-card__body">
+                <time datetime={post.createdTime.toISOString()}>
+                  {formatFacebookDate(post.createdTime)}
+                </time>
+                <p>{facebookExcerpt(post.message)}</p>
+                <a href={post.permalinkUrl} target="_blank" rel="noreferrer">
+                  Bekijk bericht →
+                </a>
+              </div>
+            </article>
+          ))}
+        </div>
       </div>
     ) : (
-      <div class="social-panel">
+      <div class="social-panel social-panel--dark">
         <div>
           <h2>Volg ons op onze socials</h2>
           <p class="lead">
@@ -175,19 +210,19 @@ const youtubeUrl = 'https://www.youtube.com/channel/UCTRbf6GaQNeR43AiWMnprlg';
   </div>
 </section>
 
-<section class="section section--blue" id="kneuterkapel">
+<section class="section kneuterkapel-section" id="kneuterkapel">
   <div class="section__inner spotlight">
     <div>
-      <div class="eyebrow eyebrow--light">De Kneuterkapel</div>
+      <div class="eyebrow">De Kneuterkapel</div>
       <h2>Feest vanaf de eerste noot</h2>
-      <p class="lead lead--light">
+      <p class="lead">
         Wat ooit begon als een kleine groep muzikanten binnen De Heikneuters is
         uitgegroeid tot een kapel van 26 muzikanten. Van traditionele blaasmuziek
         tot moderne meezingers: plezier en samen muziek maken staan voorop.
       </p>
       <div class="actions">
         <a class="button button--red" href="/de-kneuterkapel/">Meer over de Kneuterkapel →</a>
-        <a class="button button--ghost" href="/agenda/">Bekijk agenda</a>
+        <a class="button button--outline" href="/agenda/">Bekijk agenda</a>
       </div>
     </div>
 
