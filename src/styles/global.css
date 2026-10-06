@@ -256,6 +256,7 @@ h2,
   content:"66";
   position:absolute; right:20px; bottom:-42px;
   font-size:180px; font-weight:1000; opacity:.08;
+  pointer-events:none;
 }
 .jubilee h3 { margin:0 0 10px; font-size:34px; }
 .jubilee p { max-width:700px; line-height:1.65; margin:0 0 20px; color:#dce8f7; }
