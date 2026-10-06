@@ -3,6 +3,8 @@ import '../styles/global.css';
 import Favicons from '../components/Favicons.astro';
 
 const logoUrl = '/assets/logo-heikneuters-2026.png';
+const googleFormAction =
+  'https://docs.google.com/forms/d/e/1FAIpQLSdQKqZbDT8ACClFDrf-zxwpt2mzrPb0CvkYVLAxvkibWUgn1A/formResponse';
 ---
 
 <!doctype html>
@@ -72,28 +74,105 @@ const logoUrl = '/assets/logo-heikneuters-2026.png';
 
             <div class="contact-form-card" id="contactformulier">
               <h3>Stuur een bericht</h3>
-              <div class="google-form-embed">
-                <iframe
-                  src="https://docs.google.com/forms/d/e/1FAIpQLSdQKqZbDT8ACClFDrf-zxwpt2mzrPb0CvkYVLAxvkibWUgn1A/viewform?embedded=true"
-                  title="Contactformulier C.V. De Heikneuters"
-                  loading="lazy"
-                  frameborder="0"
-                  marginheight="0"
-                  marginwidth="0"
-                >
-                  Laden…
-                </iframe>
-              </div>
-              <p class="form-note">
-                Werkt het formulier niet goed?
-                <a
-                  href="https://docs.google.com/forms/d/e/1FAIpQLSdQKqZbDT8ACClFDrf-zxwpt2mzrPb0CvkYVLAxvkibWUgn1A/viewform"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  Open het formulier in een nieuw venster.
-                </a>
+              <p class="form-intro">
+                Vul het formulier hieronder in. Je bericht wordt in hetzelfde Google Form
+                verwerkt als voorheen, maar je blijft gewoon op onze website.
               </p>
+
+              <div class="form-status form-status--success" data-form-success hidden>
+                <strong>Bedankt voor je bericht!</strong><br />
+                We proberen zo snel mogelijk op je vraag te reageren.
+              </div>
+
+              <div class="form-status form-status--error" data-form-error hidden>
+                Het verzenden is niet gelukt. Probeer het opnieuw of mail naar
+                <a href="mailto:info@de-heikneuters.nl">info@de-heikneuters.nl</a>.
+              </div>
+
+              <form
+                class="contact-form"
+                action={googleFormAction}
+                method="post"
+                data-google-form
+              >
+                <div class="form-field">
+                  <label for="contact-name">Naam *</label>
+                  <input
+                    id="contact-name"
+                    name="entry.88467631"
+                    type="text"
+                    autocomplete="name"
+                    maxlength="120"
+                    required
+                  />
+                </div>
+
+                <div class="form-field">
+                  <label for="contact-email">E-mailadres *</label>
+                  <input
+                    id="contact-email"
+                    name="entry.1710876788"
+                    type="email"
+                    autocomplete="email"
+                    maxlength="180"
+                    required
+                  />
+                </div>
+
+                <div class="form-field">
+                  <label for="contact-category">Vraag met betrekking tot *</label>
+                  <select
+                    id="contact-category"
+                    name="entry.1631100819"
+                    required
+                    data-category
+                  >
+                    <option value="">Kies een onderwerp</option>
+                    <option value="Algemeen">Algemeen</option>
+                    <option value="De Kneuterkapel">De Kneuterkapel</option>
+                    <option value="Lidmaatschap">Lidmaatschap</option>
+                    <option value="Vrienden van c.v. de Heikneuters">
+                      Vrienden van c.v. de Heikneuters
+                    </option>
+                    <option value="Carnaval proeven">Carnaval proeven</option>
+                    <option value="__other_option__">Anders</option>
+                  </select>
+                </div>
+
+                <div class="form-field" data-other-field hidden>
+                  <label for="contact-category-other">Anders, namelijk *</label>
+                  <input
+                    id="contact-category-other"
+                    name="entry.1631100819.other_option_response"
+                    type="text"
+                    maxlength="160"
+                    data-other-input
+                  />
+                </div>
+
+                <div class="form-field">
+                  <label for="contact-question">Vraag *</label>
+                  <textarea
+                    id="contact-question"
+                    name="entry.2137376407"
+                    rows="7"
+                    maxlength="5000"
+                    required
+                  ></textarea>
+                </div>
+
+                <input type="hidden" name="fvv" value="1" />
+                <input type="hidden" name="pageHistory" value="0" />
+                <input type="hidden" name="submissionTimestamp" value="-1" />
+
+                <button class="button button--red" type="submit" data-submit>
+                  Verstuur bericht →
+                </button>
+
+                <p class="form-note">
+                  We gebruiken je gegevens alleen om op je bericht te reageren.
+                </p>
+              </form>
             </div>
           </div>
         </section>
@@ -109,11 +188,90 @@ const logoUrl = '/assets/logo-heikneuters-2026.png';
     <script>
       const menuButton = document.querySelector('.menu-button');
       const mobileNav = document.querySelector('.mobile-nav');
+
       menuButton?.addEventListener('click', () => {
         const open = mobileNav?.classList.toggle('is-open') ?? false;
         menuButton.setAttribute('aria-expanded', String(open));
       });
 
+      const form = document.querySelector('[data-google-form]');
+      const category = document.querySelector('[data-category]');
+      const otherField = document.querySelector('[data-other-field]');
+      const otherInput = document.querySelector('[data-other-input]');
+      const successMessage = document.querySelector('[data-form-success]');
+      const errorMessage = document.querySelector('[data-form-error]');
+      const submitButton = document.querySelector('[data-submit]');
+
+      const updateOtherField = () => {
+        if (!(category instanceof HTMLSelectElement)) return;
+
+        const showOther = category.value === '__other_option__';
+
+        if (otherField instanceof HTMLElement) {
+          otherField.hidden = !showOther;
+        }
+
+        if (otherInput instanceof HTMLInputElement) {
+          otherInput.required = showOther;
+          if (!showOther) otherInput.value = '';
+        }
+      };
+
+      if (category instanceof HTMLSelectElement) {
+        const requestedCategory = new URLSearchParams(window.location.search).get('categorie');
+        if (
+          requestedCategory &&
+          Array.from(category.options).some((option) => option.value === requestedCategory)
+        ) {
+          category.value = requestedCategory;
+        }
+
+        category.addEventListener('change', updateOtherField);
+        updateOtherField();
+      }
+
+      form?.addEventListener('submit', async (event) => {
+        if (!(form instanceof HTMLFormElement)) return;
+
+        event.preventDefault();
+
+        successMessage?.setAttribute('hidden', '');
+        errorMessage?.setAttribute('hidden', '');
+
+        if (!form.reportValidity()) return;
+
+        if (submitButton instanceof HTMLButtonElement) {
+          submitButton.disabled = true;
+          submitButton.textContent = 'Bezig met versturen…';
+        }
+
+        try {
+          await fetch(form.action, {
+            method: 'POST',
+            mode: 'no-cors',
+            body: new FormData(form),
+          });
+
+          form.reset();
+          updateOtherField();
+
+          if (successMessage instanceof HTMLElement) {
+            successMessage.hidden = false;
+            successMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+        } catch (error) {
+          console.error('Contactformulier verzenden mislukt:', error);
+
+          if (errorMessage instanceof HTMLElement) {
+            errorMessage.hidden = false;
+          }
+        } finally {
+          if (submitButton instanceof HTMLButtonElement) {
+            submitButton.disabled = false;
+            submitButton.textContent = 'Verstuur bericht →';
+          }
+        }
+      });
     </script>
   </body>
 </html>
