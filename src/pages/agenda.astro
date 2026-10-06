@@ -37,8 +37,19 @@ const events = await getUpcomingEvents();
             <a href="/door-de-jaren-heen/">Door de jaren heen</a>
             <a href="/contact/">Contact</a>
           </nav>
+          <button class="menu-button" aria-label="Menu openen" aria-expanded="false" aria-controls="mobile-nav">☰</button>
         </div>
       </header>
+
+      <nav class="mobile-nav" id="mobile-nav" aria-label="Mobiele navigatie">
+        <a href="/">Home</a>
+        <a href="/de-kneuterkapel/">Kneuterkapel</a>
+        <a href="/agenda/">Agenda</a>
+        <a href="/ut-vurproefke/">Ut Vurproefke</a>
+        <a href="/vrienden-van-de-heikneuters/">Vrienden</a>
+        <a href="/door-de-jaren-heen/">Door de jaren heen</a>
+        <a href="/contact/">Contact</a>
+      </nav>
 
       <main>
         <section class="section section--soft">
@@ -84,5 +95,14 @@ const events = await getUpcomingEvents();
         </div>
       </footer>
     </div>
+
+    <script>
+      const menuButton = document.querySelector('.menu-button');
+      const mobileNav = document.querySelector('.mobile-nav');
+      menuButton?.addEventListener('click', () => {
+        const open = mobileNav?.classList.toggle('is-open') ?? false;
+        menuButton.setAttribute('aria-expanded', String(open));
+      });
+    </script>
   </body>
 </html>
