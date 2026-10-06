@@ -72,48 +72,28 @@ const logoUrl = '/assets/logo-heikneuters-2026.png';
 
             <div class="contact-form-card" id="contactformulier">
               <h3>Stuur een bericht</h3>
-
-              <div class="form-status form-status--success" data-form-status="success" hidden>
-                Bedankt! Je bericht is verzonden. We nemen zo snel mogelijk contact met je op.
+              <div class="google-form-embed">
+                <iframe
+                  src="https://docs.google.com/forms/d/e/1FAIpQLSdQKqZbDT8ACClFDrf-zxwpt2mzrPb0CvkYVLAxvkibWUgn1A/viewform?embedded=true"
+                  title="Contactformulier C.V. De Heikneuters"
+                  loading="lazy"
+                  frameborder="0"
+                  marginheight="0"
+                  marginwidth="0"
+                >
+                  Laden…
+                </iframe>
               </div>
-              <div class="form-status form-status--error" data-form-status="error" hidden>
-                Het verzenden is niet gelukt. Probeer het opnieuw of mail naar
-                <a href="mailto:info@de-heikneuters.nl">info@de-heikneuters.nl</a>.
-              </div>
-
-              <form class="contact-form" action="../contact.php" method="post" accept-charset="UTF-8">
-                <div class="form-field">
-                  <label for="name">Naam *</label>
-                  <input id="name" name="name" type="text" autocomplete="name" maxlength="120" required />
-                </div>
-
-                <div class="form-field">
-                  <label for="email">E-mailadres *</label>
-                  <input id="email" name="email" type="email" autocomplete="email" maxlength="180" required />
-                </div>
-
-                <div class="form-field">
-                  <label for="subject">Onderwerp *</label>
-                  <input id="subject" name="subject" type="text" maxlength="160" required />
-                </div>
-
-                <div class="form-field">
-                  <label for="message">Bericht *</label>
-                  <textarea id="message" name="message" rows="7" maxlength="5000" required></textarea>
-                </div>
-
-                <div class="form-honeypot" aria-hidden="true">
-                  <label for="website">Website</label>
-                  <input id="website" name="website" type="text" tabindex="-1" autocomplete="off" />
-                </div>
-
-                <input type="hidden" name="form_started" id="form-started" value="" />
-
-                <button class="button button--red" type="submit">Verstuur bericht →</button>
-                <p class="form-note">
-                  We gebruiken je gegevens alleen om op je bericht te reageren.
-                </p>
-              </form>
+              <p class="form-note">
+                Werkt het formulier niet goed?
+                <a
+                  href="https://docs.google.com/forms/d/e/1FAIpQLSdQKqZbDT8ACClFDrf-zxwpt2mzrPb0CvkYVLAxvkibWUgn1A/viewform"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Open het formulier in een nieuw venster.
+                </a>
+              </p>
             </div>
           </div>
         </section>
@@ -134,25 +114,6 @@ const logoUrl = '/assets/logo-heikneuters-2026.png';
         menuButton.setAttribute('aria-expanded', String(open));
       });
 
-      const started = document.querySelector('#form-started');
-      if (started instanceof HTMLInputElement) {
-        started.value = String(Math.floor(Date.now() / 1000));
-      }
-
-      const params = new URLSearchParams(window.location.search);
-      const subjectParam = params.get('onderwerp');
-      const subjectField = document.querySelector('#subject');
-      if (subjectParam && subjectField instanceof HTMLInputElement && !subjectField.value) {
-        subjectField.value = subjectParam;
-      }
-
-      const status = params.get('status');
-      if (status === 'success' || status === 'error') {
-        const message = document.querySelector(`[data-form-status="${status}"]`);
-        if (message instanceof HTMLElement) {
-          message.hidden = false;
-        }
-      }
     </script>
   </body>
 </html>
