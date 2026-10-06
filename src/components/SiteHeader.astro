@@ -1,4 +1,6 @@
 ---
+import SocialIcon from './SocialIcon.astro';
+
 interface Props {
   current?: string;
   home?: boolean;
@@ -9,6 +11,7 @@ const { current = '', home = false } = Astro.props;
 const logoUrl = '/assets/logo-heikneuters-2026.png';
 const instagramUrl = 'https://www.instagram.com/c.v.de.heikneuters.nijnsel/';
 const facebookUrl = 'https://www.facebook.com/share/19JosouTXi/';
+const youtubeUrl = 'https://www.youtube.com/channel/UCTRbf6GaQNeR43AiWMnprlg';
 
 const menuItems = [
   { key: 'home', label: 'Home', href: '/' },
@@ -26,8 +29,15 @@ const menuItems = [
     <div class="topbar__inner">
       <span>Volg De Heikneuters:</span>
       <div class="socials" aria-label="Social media">
-        <a class="social" href={facebookUrl} target="_blank" rel="noreferrer" aria-label="Facebook">f</a>
-        <a class="social" href={instagramUrl} target="_blank" rel="noreferrer" aria-label="Instagram">◎</a>
+        <a class="social" href={facebookUrl} target="_blank" rel="noreferrer" aria-label="Facebook">
+          <SocialIcon name="facebook" size={15} />
+        </a>
+        <a class="social" href={instagramUrl} target="_blank" rel="noreferrer" aria-label="Instagram">
+          <SocialIcon name="instagram" size={15} />
+        </a>
+        <a class="social" href={youtubeUrl} target="_blank" rel="noreferrer" aria-label="YouTube">
+          <SocialIcon name="youtube" size={16} />
+        </a>
       </div>
     </div>
   </div>
