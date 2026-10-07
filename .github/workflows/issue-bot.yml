@@ -65,8 +65,8 @@ jobs:
           npm i -g @continuedev/cli@latest
 
           # Best-effort caveman skill install
-          if command -v continue >/dev/null 2>&1; then
-            continue skills install caveman --config .continue/config.yaml || true
+          if command -v cn >/dev/null 2>&1; then
+            cn skills install caveman --config .continue/config.yaml || true
           elif command -v continue-cli >/dev/null 2>&1; then
             continue-cli skills install caveman --config .continue/config.yaml || true
           else
@@ -136,16 +136,16 @@ jobs:
             echo "Running npm script: continue:ci"
             npm run -s continue:ci -- .github/issue-bot/prompt.txt | tee .github/issue-bot/continue.log || true
             RAN=true
-          elif command -v continue >/dev/null 2>&1; then
-            echo "Running continue"
-            continue run --repo . --config .continue/config.yaml --prompt-file .github/issue-bot/prompt.txt | tee .github/issue-bot/continue.log || true
+          elif command -v cn >/dev/null 2>&1; then
+            echo "Running cn"
+            cn run --repo . --config .continue/config.yaml --prompt-file .github/issue-bot/prompt.txt | tee .github/issue-bot/continue.log || true
             RAN=true
           elif command -v continue-cli >/dev/null 2>&1; then
             echo "Running continue-cli"
             continue-cli run --repo . --config .continue/config.yaml --prompt-file .github/issue-bot/prompt.txt | tee .github/issue-bot/continue.log || true
             RAN=true
           else
-            echo "No Continue runner found (no .github/continue-ci.sh, no npm script 'continue:ci', no continue nor continue-cli)." >&2
+            echo "No Continue runner found (no .github/continue-ci.sh, no npm script 'continue:ci', no cn nor continue-cli)." >&2
             echo "Please provide a runner (e.g., .github/continue-ci.sh) that reads PROMPT_FILE and uses .continue/config.yaml." >&2
           fi
 
