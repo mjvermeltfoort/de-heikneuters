@@ -64,8 +64,13 @@ jobs:
           rtk --version
           rtk gain
 
-          npx -y skills add JuliusBrussee/caveman -g -y
-          CAVEMAN_SKILL="$HOME/.agents/skills/caveman/SKILL.md"
+          CAVEMAN_INSTALL_DIR="${RUNNER_TEMP}/caveman-skill"
+          mkdir -p "$CAVEMAN_INSTALL_DIR"
+          (
+            cd "$CAVEMAN_INSTALL_DIR"
+            npx -y skills add JuliusBrussee/caveman --skill caveman --copy -y
+          )
+          CAVEMAN_SKILL="$CAVEMAN_INSTALL_DIR/.agents/skills/caveman/SKILL.md"
           if [ ! -f "$CAVEMAN_SKILL" ]; then
             echo "Caveman skill not found at $CAVEMAN_SKILL" >&2
             exit 1
@@ -130,7 +135,8 @@ jobs:
           } > "${BOT_TMP}/prompt.txt"
 
           echo "Running Continue CLI in headless mode"
-          CAVEMAN_SKILL="$HOME/.agents/skills/caveman/SKILL.md"
+          CAVEMAN_SKILL="${RUNNER_TEMP}/caveman-skill/.agents/skills/caveman/SKILL.md"
+          test -f "$CAVEMAN_SKILL"
           cn \
             --config .continue/config.yaml \
             --rule .continue/rules/rtk.md \
