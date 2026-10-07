@@ -75,7 +75,8 @@ jobs:
           TOGETHER_API_KEY: ${{ secrets.TOGETHER_API_KEY }}
         run: |
           set -euo pipefail
-          mkdir -p .github/issue-bot
+          mkdir -p "${RUNNER_TEMP}/issue-bot"
+          BOT_TMP="${RUNNER_TEMP}/issue-bot"
           # Extract prompt text after '/solve' (trim leading '/solve' and optional ':' and spaces)
           PROMPT="$(printf "%s" "${COMMENT_BODY}" | sed -E 's#^/solve[[:space:]]*:?[[:space:]]*##')"
 
@@ -90,7 +91,7 @@ jobs:
                 | reverse 
                 | .[] 
                 | "Author: \(.user.login) (\(.author_association))\nComment:\n\(.body)\n---\n"' \
-            > .github/issue-bot/comments.txt || true
+            > "${BOT_TMP}/comments.txt" || true
 
           # Compose a rich prompt for Continue
           {
@@ -103,13 +104,13 @@ jobs:
             printf "%s\n" "${PROMPT}"
             echo
             echo "Recent issue comments (latest first, max 10, excluding this command):"
-            if [ -s .github/issue-bot/comments.txt ]; then cat .github/issue-bot/comments.txt; else echo "(none)"; fi
+            if [ -s "${BOT_TMP}/comments.txt" ]; then cat "${BOT_TMP}/comments.txt"; else echo "(none)"; fi
             echo
             echo "Instructions:"
             echo "- Make minimal, correct code changes directly in the working tree."
             echo "- Include tests or config updates if needed."
             echo "- Do not stage or commit; just modify files."
-          } > .github/issue-bot/prompt.txt
+          } > "${BOT_TMP}/prompt.txt"
 
           echo "Running Continue CLI in headless mode"
           cn \
@@ -118,12 +119,12 @@ jobs:
             --allow Write \
             --allow Edit \
             --allow Bash \
-            -p "$(cat .github/issue-bot/prompt.txt)" \
-            2>&1 | tee .github/issue-bot/continue.log
+            -p "$(cat "${BOT_TMP}/prompt.txt")" \
+            2>&1 | tee "${BOT_TMP}/continue.log"
 
-          # Ignore generated prompt and log files when detecting source changes.
-          if ! git diff --quiet -- . ':(exclude).github/issue-bot/**' || \
-             [ -n "$(git ls-files --others --exclude-standard -- . ':(exclude).github/issue-bot/**')" ]; then
+          # Detect source changes without including runner-local scratch files.
+          if ! git diff --quiet -- || \
+             [ -n "$(git ls-files --others --exclude-standard)" ]; then
             echo "has_changes=true" >> "$GITHUB_OUTPUT"
             echo "pr_title=fix: Resolve #${ISSUE_NUMBER} - ${ISSUE_TITLE} (bot via Continue)" >> "$GITHUB_OUTPUT"
             # Build PR body
@@ -135,10 +136,10 @@ jobs:
               echo
               echo "Execution log (truncated):"
               echo '```'
-              tail -n 400 .github/issue-bot/continue.log || true
+              tail -n 400 "${BOT_TMP}/continue.log" || true
               echo '```'
-            } > .github/issue-bot/pr-body.md
-            echo "pr_body_file=.github/issue-bot/pr-body.md" >> "$GITHUB_OUTPUT"
+            } > "${BOT_TMP}/pr-body.md"
+            echo "pr_body_file=${BOT_TMP}/pr-body.md" >> "$GITHUB_OUTPUT"
           else
             echo "No changes produced by Continue runner."
             echo "has_changes=false" >> "$GITHUB_OUTPUT"
@@ -152,7 +153,7 @@ jobs:
           branch: issue-bot/issue-${{ github.event.issue.number }}-continue
           commit-message: ${{ steps.solve.outputs.pr_title }}
           title: ${{ steps.solve.outputs.pr_title }}
-          body-path: .github/issue-bot/pr-body.md
+          body-path: ${{ steps.cont.outputs.pr_body_file }}
           labels: bot, automated, issue-bot, continue
 
       - name: Comment with PR link (Continue)
@@ -168,5 +169,4 @@ jobs:
             -X POST \
             -d "${BODY}" \
             "https://api.github.com/repos/${REPO}/issues/${ISSUE_NUMBER}/comments"
-
 
