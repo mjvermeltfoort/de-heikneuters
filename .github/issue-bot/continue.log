@@ -1,0 +1,41 @@
+Made targeted performance improvements and minor security hardening.
+
+Key changes
+- src/layouts/BaseLayout.astro
+  - Add initial-scale to viewport for better mobile rendering.
+  - Add <slot name="head" /> to allow per-page head hints (e.g., preloads).
+
+- src/pages/index.astro
+  - Preload hero banner image via head slot to improve LCP.
+  - Add rel="noopener noreferrer" to all external links for security.
+  
+- src/pages/de-kneuterkapel.astro
+  - Switch main visual from JPG to existing optimized WebP.
+
+- src/components/SiteHeader.astro
+  - Add decoding="async" to logo image.
+  - Inline menu script with is:inline to avoid extra request.
+  - Add rel="noopener noreferrer" to social links.
+
+- src/components/SiteFooter.astro
+  - Add rel="noopener noreferrer" to social links.
+
+- src/components/Favicons.astro
+  - Preload apple-touch icon (small, used on install/pwa contexts).
+
+- src/pages/door-de-jaren-heen.astro
+  - Add referrerpolicy="no-referrer" to YouTube iframes (privacy; no perf regress).
+
+- src/pages/contact.astro and src/pages/vrienden-van-de-heikneuters.astro
+  - Mark inline scripts with is:inline to prevent separate JS chunks.
+
+- src/components/GoogleAnalytics.astro
+  - Add prefers-reduced-motion CSS to reduce motion/transitions for users who request it.
+
+Why this helps
+- Faster LCP: Preloading the hero image and async-decoding the logo reduce above-the-fold image latency.
+- Lower bytes: Using WebP for the Kneuterkapel banner significantly cuts image size.
+- Fewer requests: Marking small page scripts as is:inline avoids additional JS files.
+- Security/UX: noopener on external links, proper viewport scaling, and reduced motion preferences without feature regressions.
+
+No breaking changes; all updates are additive and minimal.
