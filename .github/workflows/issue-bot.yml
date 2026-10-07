@@ -46,34 +46,19 @@ jobs:
         run: |
           node .github/scripts/issue-bot.cjs
 
-      - name: Install Continue CLI and caveman skills (solve)
+      - name: Install Continue CLI (solve)
         if: startsWith(github.event.comment.body, '/solve')
         run: |
           set -e
-          # Ensure repo config exists; do not rely on ~/.continue
           if [ ! -f .continue/config.yaml ]; then
             echo ".continue/config.yaml not found in repo. Please add it." >&2
             exit 1
           fi
 
-          # Optional: if a local runner script exists, make it executable
-          if [ -f .github/continue-ci.sh ]; then
-            chmod +x .github/continue-ci.sh || true
-          fi
-
-          # Install official Continue CLI package
           npm i -g @continuedev/cli@latest
+          cn --version
 
-          # Best-effort caveman skill install
-          if command -v cn >/dev/null 2>&1; then
-            cn skills install caveman --config .continue/config.yaml || true
-          elif command -v continue-cli >/dev/null 2>&1; then
-            continue-cli skills install caveman --config .continue/config.yaml || true
-          else
-            echo "Continue CLI not in PATH after install; continuing anyway."
-          fi
-
-      - name: Run Continue (or project runner) to solve and modify code
+      - name: Run Continue CLI to solve and modify code
         id: cont
         if: startsWith(github.event.comment.body, '/solve')
         env:
@@ -89,7 +74,7 @@ jobs:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           TOGETHER_API_KEY: ${{ secrets.TOGETHER_API_KEY }}
         run: |
-          set -e
+          set -euo pipefail
           mkdir -p .github/issue-bot
           # Extract prompt text after '/solve' (trim leading '/solve' and optional ':' and spaces)
           PROMPT="$(printf "%s" "${COMMENT_BODY}" | sed -E 's#^/solve[[:space:]]*:?[[:space:]]*##')"
@@ -126,54 +111,19 @@ jobs:
             echo "- Do not stage or commit; just modify files."
           } > .github/issue-bot/prompt.txt
 
-          # Prefer a project-provided runner
-          RAN=false
-          if [ -x .github/continue-ci.sh ]; then
-            echo "Running project runner: .github/continue-ci.sh"
-            PROMPT_FILE=.github/issue-bot/prompt.txt bash .github/continue-ci.sh | tee .github/issue-bot/continue.log || true
-            RAN=true
-          elif [ -f package.json ] && command -v jq >/dev/null 2>&1 && jq -e '.scripts["continue:ci"]' package.json >/dev/null; then
-            echo "Running npm script: continue:ci"
-            npm run -s continue:ci -- .github/issue-bot/prompt.txt | tee .github/issue-bot/continue.log || true
-            RAN=true
-          elif command -v cn >/dev/null 2>&1; then
-            echo "Running cn"
-            set +e
-            set -o pipefail
-            for CMD in \
-              "cn run --config .continue/config.yaml --prompt-file .github/issue-bot/prompt.txt" \
-              "cn run --prompt-file .github/issue-bot/prompt.txt" \
-              "cn run -f .github/issue-bot/prompt.txt" \
-              "cn --config .continue/config.yaml run -f .github/issue-bot/prompt.txt"; do
-              echo "Trying: $CMD"
-              eval "$CMD" 2>&1 | tee -a .github/issue-bot/continue.log
-              RC=${PIPESTATUS[0]}
-              if [ "$RC" -eq 0 ]; then RAN=true; break; fi
-            done
-            set +o pipefail
-            set -e
-          elif command -v continue-cli >/dev/null 2>&1; then
-            echo "Running continue-cli"
-            set +e
-            set -o pipefail
-            for CMD in \
-              "continue-cli run --config .continue/config.yaml --prompt-file .github/issue-bot/prompt.txt" \
-              "continue-cli run --prompt-file .github/issue-bot/prompt.txt" \
-              "continue-cli run -f .github/issue-bot/prompt.txt"; do
-              echo "Trying: $CMD"
-              eval "$CMD" 2>&1 | tee -a .github/issue-bot/continue.log
-              RC=${PIPESTATUS[0]}
-              if [ "$RC" -eq 0 ]; then RAN=true; break; fi
-            done
-            set +o pipefail
-            set -e
-          else
-            echo "No Continue runner found (no .github/continue-ci.sh, no npm script 'continue:ci', no cn nor continue-cli)." >&2
-            echo "Please provide a runner (e.g., .github/continue-ci.sh) that reads PROMPT_FILE and uses .continue/config.yaml." >&2
-          fi
+          echo "Running Continue CLI in headless mode"
+          cn \
+            --config .continue/config.yaml \
+            --auto \
+            --allow Write \
+            --allow Edit \
+            --allow Bash \
+            -p "$(cat .github/issue-bot/prompt.txt)" \
+            2>&1 | tee .github/issue-bot/continue.log
 
-          # Detect changes
-          if [ -n "$(git status --porcelain)" ]; then
+          # Ignore generated prompt and log files when detecting source changes.
+          if ! git diff --quiet -- . ':(exclude).github/issue-bot/**' || \
+             [ -n "$(git ls-files --others --exclude-standard -- . ':(exclude).github/issue-bot/**')" ]; then
             echo "has_changes=true" >> "$GITHUB_OUTPUT"
             echo "pr_title=fix: Resolve #${ISSUE_NUMBER} - ${ISSUE_TITLE} (bot via Continue)" >> "$GITHUB_OUTPUT"
             # Build PR body
@@ -193,48 +143,6 @@ jobs:
             echo "No changes produced by Continue runner."
             echo "has_changes=false" >> "$GITHUB_OUTPUT"
           fi
-
-      - name: Apply patch (if provided)
-        if: steps.solve.outputs.has_patch == 'true'
-        run: |
-          set -e
-          echo "Applying patch..."
-          if git apply --index -p1 .github/issue-bot/patch.diff; then
-            echo "Applied with -p1"
-          elif git apply --index -p0 .github/issue-bot/patch.diff; then
-            echo "Applied with -p0"
-          else
-            echo "Failed to apply patch" >&2
-            exit 1
-          fi
-          echo "Patch applied. Changed files:"
-          git status --porcelain
-
-      - name: Create PR from AI patch
-        id: cpr
-        if: steps.solve.outputs.has_patch == 'true'
-        uses: peter-evans/create-pull-request@v6
-        with:
-          branch: issue-bot/issue-${{ github.event.issue.number }}-solve
-          commit-message: ${{ steps.solve.outputs.pr_title }}
-          title: ${{ steps.solve.outputs.pr_title }}
-          body-path: ${{ steps.solve.outputs.pr_body_file }}
-          labels: bot, automated, issue-bot
-
-      - name: Comment with PR link (AI patch)
-        if: steps.solve.outputs.has_patch == 'true' && steps.cpr.outputs.pull-request-url
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          REPO: ${{ github.repository }}
-          ISSUE_NUMBER: ${{ github.event.issue.number }}
-          PR_URL: ${{ steps.cpr.outputs.pull-request-url }}
-        run: |
-          BODY=$(jq -nc --arg body "Opened PR: ${PR_URL}" '{body: $body}')
-          curl -sS -H "Authorization: Bearer ${GITHUB_TOKEN}" -H "Accept: application/vnd.github+json" \
-            -X POST \
-            -d "${BODY}" \
-            "https://api.github.com/repos/${REPO}/issues/${ISSUE_NUMBER}/comments"
-
 
       - name: Create PR from Continue changes
         id: cpr_continue
@@ -260,6 +168,5 @@ jobs:
             -X POST \
             -d "${BODY}" \
             "https://api.github.com/repos/${REPO}/issues/${ISSUE_NUMBER}/comments"
-
 
 
