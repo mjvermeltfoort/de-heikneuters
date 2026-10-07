@@ -6,6 +6,7 @@ on:
 
 permissions:
   contents: write
+  workflows: write
   pull-requests: write
   issues: write
 
@@ -131,6 +132,7 @@ jobs:
             echo "- Make minimal, correct code changes directly in the working tree."
             echo "- Include tests or config updates if needed."
             echo "- Do not stage or commit; just modify files."
+            echo "- Workflow files under .github/workflows are in scope when the issue requires them."
             echo "- Follow loaded RTK and Caveman rules."
           } > "${BOT_TMP}/prompt.txt"
 
