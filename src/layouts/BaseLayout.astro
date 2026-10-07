@@ -34,7 +34,7 @@ const socialImageUrl = new URL(withBase(socialImage), site);
 <html lang="nl">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
     <meta name="theme-color" content="#072f63" />
 
@@ -56,6 +56,7 @@ const socialImageUrl = new URL(withBase(socialImage), site);
 
     <Favicons />
     <title>{title}</title>
+    <slot name="head" />
   </head>
   <body>
     <div class="site-shell">
