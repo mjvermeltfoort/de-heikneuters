@@ -64,7 +64,7 @@ jobs:
           rtk --version
           rtk gain
 
-          npx -y skills add JuliusBrussee/caveman -g
+          npx -y skills add JuliusBrussee/caveman -g -y
           CAVEMAN_SKILL="$HOME/.agents/skills/caveman/SKILL.md"
           if [ ! -f "$CAVEMAN_SKILL" ]; then
             echo "Caveman skill not found at $CAVEMAN_SKILL" >&2
