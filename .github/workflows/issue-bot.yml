@@ -44,7 +44,7 @@ jobs:
           AUTHOR_ASSOCIATION: ${{ github.event.comment.author_association }}
           COMMENT_URL: ${{ github.event.comment.html_url }}
         run: |
-          node .github/scripts/issue-bot.js
+          node .github/scripts/issue-bot.cjs
 
       - name: Setup Continue CLI and caveman skills (solve)
         if: startsWith(github.event.comment.body, '/solve')
