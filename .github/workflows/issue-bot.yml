@@ -187,9 +187,10 @@ jobs:
           ISSUE_NUMBER: ${{ github.event.issue.number }}
           PR_URL: ${{ steps.cpr.outputs.pull-request-url }}
         run: |
+          BODY=$(jq -nc --arg body "Opened PR: ${PR_URL}" '{body: $body}')
           curl -sS -H "Authorization: Bearer ${GITHUB_TOKEN}" -H "Accept: application/vnd.github+json" \
             -X POST \
-            -d "$(jq -nc --arg body \"Opened PR (AI patch): ${PR_URL}\" '{body: $body}')" \
+            -d "${BODY}" \
             "https://api.github.com/repos/${REPO}/issues/${ISSUE_NUMBER}/comments"
 
       - name: Create PR from Continue changes
@@ -210,8 +211,10 @@ jobs:
           REPO: ${{ github.repository }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
           PR_URL: ${{ steps.cpr_continue.outputs.pull-request-url }}
-        run: |
+                run: |
+          BODY=$(jq -nc --arg body "Opened PR: ${PR_URL}" '{body: $body}')
           curl -sS -H "Authorization: Bearer ${GITHUB_TOKEN}" -H "Accept: application/vnd.github+json" \
             -X POST \
-            -d "$(jq -nc --arg body \"Opened PR (Continue): ${PR_URL}\" '{body: $body}')" \
+            -d "${BODY}" \
             "https://api.github.com/repos/${REPO}/issues/${ISSUE_NUMBER}/comments"
+
