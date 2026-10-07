@@ -15,14 +15,17 @@ import { withBase } from '../lib/site';
     <h1 class="page-title">De Kneuterkapel</h1>
 
     <figure class="page-visual">
-      <img
-        src={withBase("/assets/kneuterkapel-banner.webp")}
-        width="893"
-        height="502"
-        alt="De Kneuterkapel uit Nijnsel"
-        loading="eager"
-        decoding="async"
-      />
+      <picture>
+        <source srcset={withBase("/assets/kneuterkapel-banner.webp")} type="image/webp" />
+        <img
+          src={withBase("/assets/kneuterkapel-banner.jpg")}
+          width="893"
+          height="502"
+          alt="De Kneuterkapel uit Nijnsel"
+          loading="eager"
+          decoding="async"
+        />
+      </picture>
     </figure>
 
     <p class="body-copy">
