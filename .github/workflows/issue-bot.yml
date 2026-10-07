@@ -46,7 +46,7 @@ jobs:
         run: |
           node .github/scripts/issue-bot.cjs
 
-      - name: Setup Continue config (solve)
+      - name: Install Continue CLI and caveman skills (solve)
         if: startsWith(github.event.comment.body, '/solve')
         run: |
           set -e
@@ -61,13 +61,16 @@ jobs:
             chmod +x .github/continue-ci.sh || true
           fi
 
-          # Best-effort caveman skill install if a Continue CLI is already available
-          if command -v continue-cli >/dev/null 2>&1; then
-            continue-cli skills install caveman --config .continue/config.yaml || true
-          elif command -v continue >/dev/null 2>&1; then
+          # Install official Continue CLI package
+          npm i -g @continuedev/cli@latest
+
+          # Best-effort caveman skill install
+          if command -v continue >/dev/null 2>&1; then
             continue skills install caveman --config .continue/config.yaml || true
+          elif command -v continue-cli >/dev/null 2>&1; then
+            continue-cli skills install caveman --config .continue/config.yaml || true
           else
-            echo "No continue CLI found in PATH; will attempt other runners in next step."
+            echo "Continue CLI not in PATH after install; continuing anyway."
           fi
 
       - name: Run Continue (or project runner) to solve and modify code
@@ -114,16 +117,16 @@ jobs:
             echo "Running npm script: continue:ci"
             npm run -s continue:ci -- .github/issue-bot/prompt.txt | tee .github/issue-bot/continue.log || true
             RAN=true
-          elif command -v continue-cli >/dev/null 2>&1; then
-            echo "Running continue-cli"
-            continue-cli run --repo . --config .continue/config.yaml --prompt-file .github/issue-bot/prompt.txt | tee .github/issue-bot/continue.log || true
-            RAN=true
           elif command -v continue >/dev/null 2>&1; then
             echo "Running continue"
             continue run --repo . --config .continue/config.yaml --prompt-file .github/issue-bot/prompt.txt | tee .github/issue-bot/continue.log || true
             RAN=true
+          elif command -v continue-cli >/dev/null 2>&1; then
+            echo "Running continue-cli"
+            continue-cli run --repo . --config .continue/config.yaml --prompt-file .github/issue-bot/prompt.txt | tee .github/issue-bot/continue.log || true
+            RAN=true
           else
-            echo "No Continue runner found (no .github/continue-ci.sh, no npm script 'continue:ci', no continue-cli)." >&2
+            echo "No Continue runner found (no .github/continue-ci.sh, no npm script 'continue:ci', no continue nor continue-cli)." >&2
             echo "Please provide a runner (e.g., .github/continue-ci.sh) that reads PROMPT_FILE and uses .continue/config.yaml." >&2
           fi
 
