@@ -81,6 +81,9 @@ jobs:
           ISSUE_TITLE: ${{ github.event.issue.title }}
           ISSUE_BODY: ${{ github.event.issue.body }}
           COMMENT_BODY: ${{ github.event.comment.body }}
+          COMMENT_ID: ${{ github.event.comment.id }}
+          REPO: ${{ github.repository }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
@@ -91,6 +94,19 @@ jobs:
           # Extract prompt text after '/solve' (trim leading '/solve' and optional ':' and spaces)
           PROMPT="$(printf "%s" "${COMMENT_BODY}" | sed -E 's#^/solve[[:space:]]*:?[[:space:]]*##')"
 
+          # Fetch recent issue comments (exclude this command), latest first, cap 10
+          COMMENTS_URL="https://api.github.com/repos/${REPO}/issues/${ISSUE_NUMBER}/comments?per_page=100"
+          curl -sS -H "Authorization: Bearer ${GITHUB_TOKEN}" -H "Accept: application/vnd.github+json" \
+            "${COMMENTS_URL}" \
+            | jq -r --argjson excludeId "${COMMENT_ID}" '
+                sort_by(.created_at) 
+                | map(select(.id != $excludeId)) 
+                | (if length > 10 then .[-10:] else . end) 
+                | reverse 
+                | .[] 
+                | "Author: \(.user.login) (\(.author_association))\nComment:\n\(.body)\n---\n"' \
+            > .github/issue-bot/comments.txt || true
+
           # Compose a rich prompt for Continue
           {
             echo "Repository wants a fix PR for Issue #${ISSUE_NUMBER}: ${ISSUE_TITLE}"
@@ -100,6 +116,9 @@ jobs:
             echo
             echo "User prompt:"
             printf "%s\n" "${PROMPT}"
+            echo
+            echo "Recent issue comments (latest first, max 10, excluding this command):"
+            if [ -s .github/issue-bot/comments.txt ]; then cat .github/issue-bot/comments.txt; else echo "(none)"; fi
             echo
             echo "Instructions:"
             echo "- Make minimal, correct code changes directly in the working tree."
@@ -193,20 +212,6 @@ jobs:
             -d "${BODY}" \
             "https://api.github.com/repos/${REPO}/issues/${ISSUE_NUMBER}/comments"
 
-      - name: Also comment inside PR (AI patch)
-        if: steps.solve.outputs.has_patch == 'true' && steps.cpr.outputs.pull-request-number
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          REPO: ${{ github.repository }}
-          ISSUE_NUMBER: ${{ github.event.issue.number }}
-          PR_NUMBER: ${{ steps.cpr.outputs.pull-request-number }}
-        run: |
-          BODY=$(jq -nc --arg body "Automated fix proposed for issue #${ISSUE_NUMBER}. Triggered by /solve."
-                     '{body: $body}')
-          curl -sS -H "Authorization: Bearer ${GITHUB_TOKEN}" -H "Accept: application/vnd.github+json" \
-            -X POST \
-            -d "${BODY}" \
-            "https://api.github.com/repos/${REPO}/issues/${PR_NUMBER}/comments"
 
       - name: Create PR from Continue changes
         id: cpr_continue
@@ -233,26 +238,5 @@ jobs:
             -d "${BODY}" \
             "https://api.github.com/repos/${REPO}/issues/${ISSUE_NUMBER}/comments"
 
-      - name: Also comment inside PR (Continue)
-        if: steps.cont.outputs.has_changes == 'true' && steps.cpr_continue.outputs.pull-request-number
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          REPO: ${{ github.repository }}
-          ISSUE_NUMBER: ${{ github.event.issue.number }}
-          PR_NUMBER: ${{ steps.cpr_continue.outputs.pull-request-number }}
-        run: |
-          {
-            echo "Automated fix proposed for issue #${ISSUE_NUMBER}. Triggered by /solve."
-            echo
-            echo "Summary of run (last 50 lines):"
-            echo '```'
-            tail -n 50 .github/issue-bot/continue.log || true
-            echo '```'
-          } > .github/issue-bot/pr-comment.txt
-          BODY=$(jq -nc --rawfile body .github/issue-bot/pr-comment.txt '{body: $body}')
-          curl -sS -H "Authorization: Bearer ${GITHUB_TOKEN}" -H "Accept: application/vnd.github+json" \
-            -X POST \
-            -d "${BODY}" \
-            "https://api.github.com/repos/${REPO}/issues/${PR_NUMBER}/comments"
 
 
