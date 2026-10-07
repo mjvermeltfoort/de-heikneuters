@@ -138,12 +138,35 @@ jobs:
             RAN=true
           elif command -v cn >/dev/null 2>&1; then
             echo "Running cn"
-            cn run --repo . --config .continue/config.yaml --prompt-file .github/issue-bot/prompt.txt | tee .github/issue-bot/continue.log || true
-            RAN=true
+            set +e
+            set -o pipefail
+            for CMD in \
+              "cn run --config .continue/config.yaml --prompt-file .github/issue-bot/prompt.txt" \
+              "cn run --prompt-file .github/issue-bot/prompt.txt" \
+              "cn run -f .github/issue-bot/prompt.txt" \
+              "cn --config .continue/config.yaml run -f .github/issue-bot/prompt.txt"; do
+              echo "Trying: $CMD"
+              eval "$CMD" 2>&1 | tee -a .github/issue-bot/continue.log
+              RC=${PIPESTATUS[0]}
+              if [ "$RC" -eq 0 ]; then RAN=true; break; fi
+            done
+            set +o pipefail
+            set -e
           elif command -v continue-cli >/dev/null 2>&1; then
             echo "Running continue-cli"
-            continue-cli run --repo . --config .continue/config.yaml --prompt-file .github/issue-bot/prompt.txt | tee .github/issue-bot/continue.log || true
-            RAN=true
+            set +e
+            set -o pipefail
+            for CMD in \
+              "continue-cli run --config .continue/config.yaml --prompt-file .github/issue-bot/prompt.txt" \
+              "continue-cli run --prompt-file .github/issue-bot/prompt.txt" \
+              "continue-cli run -f .github/issue-bot/prompt.txt"; do
+              echo "Trying: $CMD"
+              eval "$CMD" 2>&1 | tee -a .github/issue-bot/continue.log
+              RC=${PIPESTATUS[0]}
+              if [ "$RC" -eq 0 ]; then RAN=true; break; fi
+            done
+            set +o pipefail
+            set -e
           else
             echo "No Continue runner found (no .github/continue-ci.sh, no npm script 'continue:ci', no cn nor continue-cli)." >&2
             echo "Please provide a runner (e.g., .github/continue-ci.sh) that reads PROMPT_FILE and uses .continue/config.yaml." >&2
