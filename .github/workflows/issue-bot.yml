@@ -224,7 +224,7 @@ jobs:
           body-path: .github/issue-bot/pr-body.md
           labels: bot, automated, issue-bot, continue
 
-            - name: Comment with PR link (Continue)
+      - name: Comment with PR link (Continue)
         if: steps.cont.outputs.has_changes == 'true' && steps.cpr_continue.outputs.pull-request-url
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
