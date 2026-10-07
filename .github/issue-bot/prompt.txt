@@ -1,0 +1,12 @@
+Repository wants a fix PR for Issue #1: Review this website
+
+Issue body:
+
+
+User prompt:
+fix these issues and create a PR
+
+Instructions:
+- Make minimal, correct code changes directly in the working tree.
+- Include tests or config updates if needed.
+- Do not stage or commit; just modify files.
