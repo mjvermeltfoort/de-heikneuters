@@ -1,0 +1,334 @@
+name: Issue Command Bot
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  run:
+    name: Run Issue Bot
+    runs-on: ubuntu-latest
+    # Only react to commands by maintainers/collaborators and when a supported slash-command is present
+    if: >
+      (github.event.comment.author_association == 'OWNER' ||
+       github.event.comment.author_association == 'MEMBER' ||
+       github.event.comment.author_association == 'COLLABORATOR') &&
+      (startsWith(github.event.comment.body, '/think') ||
+       startsWith(github.event.comment.body, '/solve') ||
+       startsWith(github.event.comment.body, '/review'))
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Run bot and extract patch (if any)
+        id: solve
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          COMMENT_BODY: ${{ github.event.comment.body }}
+          COMMENT_AUTHOR: ${{ github.event.comment.user.login }}
+          AUTHOR_ASSOCIATION: ${{ github.event.comment.author_association }}
+          COMMENT_URL: ${{ github.event.comment.html_url }}
+        run: |
+          node - <<'NODE'
+          const fs = require('fs');
+          const path = require('path');
+          const fetch = global.fetch;
+
+          const {
+            OPENAI_API_KEY,
+            GITHUB_TOKEN,
+            REPO,
+            ISSUE_NUMBER,
+            ISSUE_TITLE,
+            ISSUE_BODY,
+            COMMENT_BODY,
+            COMMENT_AUTHOR,
+            AUTHOR_ASSOCIATION,
+            COMMENT_URL,
+            GITHUB_OUTPUT
+          } = process.env;
+
+          const body = (COMMENT_BODY || '').trim();
+          const match = body.match(/^\/(think|solve|review)\b[:\s]*([\s\S]*)$/i);
+          if (!match) {
+            console.log('No supported command found.');
+            process.exit(0);
+          }
+
+          const mode = match[1].toLowerCase();
+          const userPrompt = (match[2] || '').trim();
+
+          async function postComment(body) {
+            const url = `https://api.github.com/repos/${REPO}/issues/${ISSUE_NUMBER}/comments`;
+            const resp = await fetch(url, {
+              method: 'POST',
+              headers: {
+                'Authorization': `Bearer ${GITHUB_TOKEN}`,
+                'Content-Type': 'application/json',
+                'Accept': 'application/vnd.github+json'
+              },
+              body: JSON.stringify({ body })
+            });
+            if (!resp.ok) {
+              const text = await resp.text();
+              throw new Error(`GitHub comment error: ${resp.status} ${text}`);
+            }
+          }
+
+          // For /solve, delegate to Continue CLI later; just acknowledge and prep PR metadata
+          if (mode === 'solve') {
+            const dir = path.join('.github', 'issue-bot');
+            fs.mkdirSync(dir, { recursive: true });
+            const ack = `Mode: solve — acknowledged. Running Continue CLI with ~/.continue/config.yaml.\n\nPrompt:\n${userPrompt || '(none)'}\n\nI will open a PR if changes are produced.`;
+            await postComment(ack);
+
+            const prTitle = `fix: Resolve #${ISSUE_NUMBER} - ${ISSUE_TITLE} (bot via Continue)`;
+            if (GITHUB_OUTPUT) {
+              fs.appendFileSync(GITHUB_OUTPUT, `has_patch=false\n`);
+              fs.appendFileSync(GITHUB_OUTPUT, `pr_title=${prTitle}\n`);
+              fs.appendFileSync(GITHUB_OUTPUT, `pr_body_file=.github/issue-bot/pr-body.md\n`);
+              fs.appendFileSync(GITHUB_OUTPUT, `solve_prompt=${userPrompt.replace(/\n/g, ' ')}\n`);
+            }
+            process.exit(0);
+          }
+
+          if (!OPENAI_API_KEY) {
+            console.error('Missing OPENAI_API_KEY secret for think/review.');
+            // Still proceed to post a minimal error comment
+          }
+
+          const systemBase = `You are a GitHub Issue Assistant. Be concise and practical. Use clear steps and bullet points when helpful. Do not reveal chain-of-thought; provide final reasoning, plans, or checklists only. If information is missing, state assumptions and ask for specifics.`;
+
+          const modeGuidance = {
+            think: `Objective: Think through the issue and provide a plan.
+- Summarize the problem and constraints.
+- Identify likely root causes and missing info.
+- Propose a short, prioritized investigation plan.
+- End with next actions for the reporter or maintainer.`,
+            solve: `n/a`,
+            review: `Objective: Review the described approach or issue.
+- Assess correctness, risks, and performance/security concerns.
+- List specific checklist items to verify.
+- Suggest improvements and validation steps.`
+          };
+
+          const messages = [
+            { role: 'system', content: systemBase + '\n\n' + modeGuidance[mode] },
+            { role: 'user', content: [
+                `Repository: ${REPO}`,
+                `Issue #${ISSUE_NUMBER}: ${ISSUE_TITLE}`,
+                `Issue body:\n${ISSUE_BODY || '(empty)'}\n`,
+                `Command: /${mode}`,
+                `Comment author: ${COMMENT_AUTHOR} (${AUTHOR_ASSOCIATION})`,
+                `Prompt:\n${userPrompt || '(none)'}`
+              ].join('\n') }
+          ];
+
+          async function callOpenAI(messages) {
+            if (!OPENAI_API_KEY) return 'OPENAI_API_KEY not configured.';
+            const resp = await fetch('https://api.openai.com/v1/chat/completions', {
+              method: 'POST',
+              headers: {
+                'Authorization': `Bearer ${OPENAI_API_KEY}`,
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                model: process.env.MODEL || 'gpt-4o-mini',
+                temperature: 0.2,
+                messages
+              })
+            });
+            if (!resp.ok) {
+              const text = await resp.text();
+              throw new Error(`OpenAI API error: ${resp.status} ${text}`);
+            }
+            const data = await resp.json();
+            return data.choices?.[0]?.message?.content?.trim() || 'No response generated.';
+          }
+
+          (async () => {
+            try {
+              const ai = await callOpenAI(messages);
+              const header = `Mode: ${mode} — responding to ${COMMENT_AUTHOR}`;
+              const content = `${header}\n\n${ai}`;
+              await postComment(content);
+
+              // think/review produce no patch
+              if (GITHUB_OUTPUT) {
+                const prTitle = `chore: analysis for #${ISSUE_NUMBER} - ${ISSUE_TITLE} (bot)`;
+                fs.appendFileSync(GITHUB_OUTPUT, `has_patch=false\n`);
+                fs.appendFileSync(GITHUB_OUTPUT, `pr_title=${prTitle}\n`);
+              }
+            } catch (err) {
+              console.error(String(err));
+              try {
+                const fallback = `Mode: ${match?.[1] || 'unknown'}\n\nSorry, the bot failed with: ${String(err).slice(0, 1800)}\n\nPlease check the workflow logs.`;
+                await postComment(fallback);
+              } catch (_) {}
+              process.exit(1);
+            }
+          })();
+          NODE
+
+      - name: Setup Continue CLI and caveman skills (solve)
+        if: startsWith(github.event.comment.body, '/solve')
+        run: |
+          set -e
+          # Ensure repo config exists; do not rely on ~/.continue
+          if [ ! -f .continue/config.yaml ]; then
+            echo ".continue/config.yaml not found in repo. Please add it." >&2
+            exit 1
+          fi
+
+          # Install Continue CLI
+          npm i -g @continuedev/continue-cli@latest
+
+          # Attempt to install caveman skills using repo config (non-fatal if syntax differs)
+          if command -v continue-cli >/dev/null 2>&1; then
+            continue-cli skills install caveman --config .continue/config.yaml || true
+          elif command -v continue >/dev/null 2>&1; then
+            continue skills install caveman --config .continue/config.yaml || true
+          fi
+
+      - name: Run Continue CLI to solve and modify code
+        id: cont
+        if: startsWith(github.event.comment.body, '/solve')
+        env:
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          COMMENT_BODY: ${{ github.event.comment.body }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          TOGETHER_API_KEY: ${{ secrets.TOGETHER_API_KEY }}
+        run: |
+          set -e
+          mkdir -p .github/issue-bot
+          # Extract prompt text after '/solve' (trim leading '/solve' and optional ':' and spaces)
+          PROMPT="$(printf "%s" "${COMMENT_BODY}" | sed -E 's#^/solve[[:space:]]*:?[[:space:]]*##')"
+
+          # Compose a rich prompt for Continue
+          {
+            echo "Repository wants a fix PR for Issue #${ISSUE_NUMBER}: ${ISSUE_TITLE}"
+            echo
+            echo "Issue body:"
+            printf "%s\n" "${ISSUE_BODY}"
+            echo
+            echo "User prompt:"
+            printf "%s\n" "${PROMPT}"
+            echo
+            echo "Instructions:"
+            echo "- Make minimal, correct code changes directly in the working tree."
+            echo "- Include tests or config updates if needed."
+            echo "- Do not stage or commit; just modify files."
+          } > .github/issue-bot/prompt.txt
+
+          # Run Continue CLI headless; capture output for PR body
+          if command -v continue-cli >/dev/null 2>&1; then
+            continue-cli run --repo . --config .continue/config.yaml --prompt-file .github/issue-bot/prompt.txt | tee .github/issue-bot/continue.log || true
+          else
+            continue run --repo . --config .continue/config.yaml --prompt-file .github/issue-bot/prompt.txt | tee .github/issue-bot/continue.log || true
+          fi
+
+          # Detect changes
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "has_changes=true" >> "$GITHUB_OUTPUT"
+            echo "pr_title=fix: Resolve #${ISSUE_NUMBER} - ${ISSUE_TITLE} (bot via Continue)" >> "$GITHUB_OUTPUT"
+            # Build PR body
+            {
+              echo "This PR was generated by Continue CLI using ~/.continue/config.yaml."
+              echo
+              echo "- Issue: #${ISSUE_NUMBER}"
+              echo "- Command: /solve"
+              echo
+              echo "Execution log (truncated):"
+              echo '```'
+              tail -n 400 .github/issue-bot/continue.log
+              echo '```'
+            } > .github/issue-bot/pr-body.md
+            echo "pr_body_file=.github/issue-bot/pr-body.md" >> "$GITHUB_OUTPUT"
+          else
+            echo "No changes produced by Continue."
+            echo "has_changes=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Apply patch (if provided)
+        if: steps.solve.outputs.has_patch == 'true'
+        run: |
+          set -e
+          echo "Applying patch..."
+          if git apply --index -p1 .github/issue-bot/patch.diff; then
+            echo "Applied with -p1"
+          elif git apply --index -p0 .github/issue-bot/patch.diff; then
+            echo "Applied with -p0"
+          else
+            echo "Failed to apply patch" >&2
+            exit 1
+          fi
+          echo "Patch applied. Changed files:"
+          git status --porcelain
+
+      - name: Create PR from AI patch
+        id: cpr
+        if: steps.solve.outputs.has_patch == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: issue-bot/issue-${{ github.event.issue.number }}-solve
+          commit-message: ${{ steps.solve.outputs.pr_title }}
+          title: ${{ steps.solve.outputs.pr_title }}
+          body-path: ${{ steps.solve.outputs.pr_body_file }}
+          labels: bot, automated, issue-bot
+
+      - name: Comment with PR link (AI patch)
+        if: steps.solve.outputs.has_patch == 'true' && steps.cpr.outputs.pull-request-url
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          PR_URL: ${{ steps.cpr.outputs.pull-request-url }}
+        run: |
+          curl -sS -H "Authorization: Bearer ${GITHUB_TOKEN}" -H "Accept: application/vnd.github+json" \
+            -X POST \
+            -d "$(jq -nc --arg body \"Opened PR (AI patch): ${PR_URL}\" '{body: $body}')" \
+            "https://api.github.com/repos/${REPO}/issues/${ISSUE_NUMBER}/comments"
+
+      - name: Create PR from Continue changes
+        id: cpr_continue
+        if: steps.cont.outputs.has_changes == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: issue-bot/issue-${{ github.event.issue.number }}-continue
+          commit-message: ${{ steps.solve.outputs.pr_title }}
+          title: ${{ steps.solve.outputs.pr_title }}
+          body-path: .github/issue-bot/pr-body.md
+          labels: bot, automated, issue-bot, continue
+
+      - name: Comment with PR link (Continue)
+        if: steps.cont.outputs.has_changes == 'true' && steps.cpr_continue.outputs.pull-request-url
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          PR_URL: ${{ steps.cpr_continue.outputs.pull-request-url }}
+        run: |
+          curl -sS -H "Authorization: Bearer ${GITHUB_TOKEN}" -H "Accept: application/vnd.github+json" \
+            -X POST \
+            -d "$(jq -nc --arg body \"Opened PR (Continue): ${PR_URL}\" '{body: $body}')" \
+            "https://api.github.com/repos/${REPO}/issues/${ISSUE_NUMBER}/comments"
