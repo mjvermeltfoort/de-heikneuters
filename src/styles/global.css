@@ -133,7 +133,7 @@ button { font: inherit; }
   content:"";
   position:absolute; inset:auto -5% -34px -5%; height:72px;
   background:#fff;
-  transform: rotate(-1.4deg);
+  transform: none;
   z-index:2;
 }
 .hero__content {
