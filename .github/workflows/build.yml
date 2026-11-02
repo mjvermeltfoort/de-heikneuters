@@ -100,6 +100,11 @@ jobs:
           set net:max-retries 2
           set net:timeout 20
           set net:reconnect-interval-base 5
+          # Production: publish the static site at https://de-heikneuters.nl/
+          mirror --reverse --verbose --only-newer dist/ .
+
+          # Keep concept.de-heikneuters.nl in sync. The main domain redirects
+          # /nieuw/* to the equivalent root URL, so this remains preview-only.
           mkdir -p "${STRATO_SFTP_PATH}"
           mirror --reverse --verbose --only-newer dist/ "${STRATO_SFTP_PATH}"
           bye

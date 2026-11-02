@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://www.de-heikneuters.nl/sitemap.xml
+Sitemap: https://de-heikneuters.nl/sitemap.xml
