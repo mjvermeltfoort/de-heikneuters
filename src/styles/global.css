@@ -548,19 +548,44 @@ h2,
 
 .facebook-feature-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1.35fr) minmax(320px, .85fr);
+  grid-template-columns: minmax(0, 1.25fr) minmax(320px, .9fr);
   gap: 20px;
-  align-items: stretch;
+  align-items: start;
 }
 
 @media (min-width: 1100px) {
   .facebook-feature-layout {
-    grid-template-columns: minmax(0, 640px) minmax(320px, 1fr);
+    grid-template-columns: minmax(0, 560px) minmax(340px, 1fr);
+    max-width: 1080px;
   }
 
   .facebook-card--featured {
     width: 100%;
-    max-width: 640px;
+    max-width: 560px;
+  }
+
+  .facebook-card--featured .facebook-card__image {
+    flex: none;
+    min-height: 0;
+    aspect-ratio: 16 / 9;
+  }
+
+  .facebook-side-stack {
+    grid-template-rows: repeat(2, auto);
+  }
+
+  .facebook-card--compact {
+    min-height: 210px;
+    max-height: 230px;
+  }
+
+  .facebook-card--compact .facebook-card__image {
+    min-height: 0;
+    height: 100%;
+  }
+
+  .facebook-card--compact .facebook-card__image img {
+    transform: scale(1.08);
   }
 }
 
@@ -583,12 +608,13 @@ h2,
 .facebook-card--featured {
   display: flex;
   flex-direction: column;
-  min-height: 520px;
+  min-height: 0;
 }
 
 .facebook-card--featured .facebook-card__image {
-  flex: 1 1 auto;
-  min-height: 280px;
+  flex: 0 0 auto;
+  min-height: 0;
+  aspect-ratio: 16 / 9;
 }
 
 .facebook-card--compact {
@@ -608,6 +634,7 @@ h2,
   height: 100%;
   min-height: 100%;
   object-fit: cover;
+  object-position: center;
 }
 
 .facebook-card--compact .facebook-card__image {
