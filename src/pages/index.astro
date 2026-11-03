@@ -1,6 +1,8 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SocialIcon from '../components/SocialIcon.astro';
+import { Image } from 'astro:assets';
+import kneuterkapelLogo from '../assets/kneuterkapel-logo-2026.png';
 import FacebookMessage from '../components/FacebookMessage.astro';
 import { withBase } from '../lib/site';
 import {
@@ -23,8 +25,8 @@ const youtubeUrl = 'https://www.youtube.com/channel/UCTRbf6GaQNeR43AiWMnprlg';
 ---
 
 <BaseLayout
-  title="C.V. De Heikneuters | Carnaval in Nijnsel sinds 1960"
-  description="C.V. De Heikneuters uit Nijnsel. Sinds 1960 leverancier van carnavalsplezier, met de Kneuterkapel, activiteiten, optochten en feest."
+  title="C.V. de Heikneuters | Carnaval in Nijnsel sinds 1960"
+  description="C.V. de Heikneuters uit Nijnsel. Sinds 1960 leverancier van carnavalsplezier, met de Kneuterkapel, activiteiten, optochten en feest."
   current="home"
   home
 >
@@ -43,7 +45,7 @@ const youtubeUrl = 'https://www.youtube.com/channel/UCTRbf6GaQNeR43AiWMnprlg';
   />
   <div class="hero__content">
     <div class="eyebrow">Sinds 1960 · Nijnsel</div>
-    <h1>C.V. De Heikneuters</h1>
+    <h1>C.V. de Heikneuters</h1>
     <p>Leverancier van carnavalsplezier!</p>
     <div class="actions">
       <a class="button button--red" href={withBase("/agenda/")}>Bekijk de agenda →</a>
@@ -55,10 +57,10 @@ const youtubeUrl = 'https://www.youtube.com/channel/UCTRbf6GaQNeR43AiWMnprlg';
 <section class="section" id="vereniging">
   <div class="section__inner section__grid">
     <div>
-      <div class="eyebrow">C.V. De Heikneuters</div>
+      <div class="eyebrow">C.V. de Heikneuters</div>
       <h2>Sinds 1960 een begrip in onze regio</h2>
       <p class="lead">
-        CV de Heikneuters is sinds 1960 een begrip in onze regio! Wat begon met een
+        C.V. de Heikneuters is sinds 1960 een begrip in onze regio! Wat begon met een
         paar feestvierders uit Nijnsel is uitgegroeid tot een actieve carnavalsvereniging
         met een rijk verleden en een sprankelende toekomst. Met hart en ziel zetten wij
         ons in om carnaval ieder jaar weer onvergetelijk te maken – voor jong en oud.
@@ -72,7 +74,7 @@ const youtubeUrl = 'https://www.youtube.com/channel/UCTRbf6GaQNeR43AiWMnprlg';
         jaar door.
       </p>
       <p class="home-signoff">
-        CV de Heikneuters: waar carnaval leeft, groeit en verbindt!
+        C.V. de Heikneuters: waar carnaval leeft, groeit en verbindt!
       </p>
 
     </div>
@@ -196,7 +198,7 @@ const youtubeUrl = 'https://www.youtube.com/channel/UCTRbf6GaQNeR43AiWMnprlg';
           <a class="social-button" href={facebookUrl} target="_blank" rel="noopener noreferrer">
             <span class="social-button__icon"><SocialIcon name="facebook" size={20} /></span>
             <strong>Facebook</strong>
-            <small>C.V. De Heikneuters Nijnsel</small>
+            <small>C.V. de Heikneuters Nijnsel</small>
           </a>
           <a class="social-button" href={instagramUrl} target="_blank" rel="noopener noreferrer">
             <span class="social-button__icon"><SocialIcon name="instagram" size={20} /></span>
@@ -217,7 +219,11 @@ const youtubeUrl = 'https://www.youtube.com/channel/UCTRbf6GaQNeR43AiWMnprlg';
 <section class="section kneuterkapel-section" id="kneuterkapel">
   <div class="section__inner spotlight">
     <div>
-      <div class="eyebrow">De Kneuterkapel</div>
+      <div class="kneuterkapel-brand">
+        <div class="eyebrow">De Kneuterkapel</div>
+        <Image src={kneuterkapelLogo} width={86} height={86} format="webp"
+          class="kneuterkapel-brand__logo" alt="Logo van de Kneuterkapel" loading="lazy" />
+      </div>
       <h2>Feest vanaf de eerste noot</h2>
       <p class="lead">
         Wat ooit begon als een kleine groep muzikanten binnen De Heikneuters is
