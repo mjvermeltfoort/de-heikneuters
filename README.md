@@ -1,6 +1,6 @@
-# C.V. De Heikneuters
+# C.V. de Heikneuters
 
-Eerste versie van de nieuwe website van C.V. De Heikneuters uit Nijnsel.
+Eerste versie van de nieuwe website van C.V. de Heikneuters uit Nijnsel.
 
 ## Stack
 
@@ -32,7 +32,7 @@ Pushes naar `main` worden na een geslaagde Astro-build via SFTP naar STRATO gede
 
 ## Agenda
 
-De agenda gebruikt de openbare Google Calendar van C.V. De Heikneuters. De homepage toont de eerstvolgende drie activiteiten en `/agenda/` toont de komende activiteiten. Dagelijks wordt de site automatisch opnieuw gebouwd en naar STRATO gedeployed.
+De agenda gebruikt de openbare Google Calendar van C.V. de Heikneuters. De homepage toont de eerstvolgende drie activiteiten en `/agenda/` toont de komende activiteiten. Dagelijks wordt de site automatisch opnieuw gebouwd en naar STRATO gedeployed.
 
 ## Statistieken
 
