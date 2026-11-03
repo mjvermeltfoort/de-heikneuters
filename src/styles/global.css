@@ -677,6 +677,104 @@ h2,
   line-height: 1.5;
 }
 
+/* Keep the full Facebook text on this page, with a native keyboard-accessible toggle. */
+.facebook-message {
+  margin-bottom: 18px;
+}
+
+.facebook-message summary {
+  display: block;
+  list-style: none;
+  cursor: pointer;
+}
+
+.facebook-message summary::-webkit-details-marker {
+  display: none;
+}
+
+.facebook-message summary:focus-visible {
+  outline: 2px solid var(--red-dark);
+  outline-offset: 4px;
+  border-radius: 3px;
+}
+
+.facebook-message__preview {
+  display: block;
+  color: #40556d;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.facebook-card--featured .facebook-message__preview {
+  font-size: 17px;
+}
+
+.facebook-card--compact .facebook-message__preview {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.facebook-message__toggle {
+  display: inline-block;
+  margin-top: 6px;
+  color: var(--red-dark);
+  font-size: 14px;
+  font-weight: 900;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.facebook-message__less,
+.facebook-message[open] .facebook-message__preview,
+.facebook-message[open] .facebook-message__more {
+  display: none;
+}
+
+.facebook-message[open] .facebook-message__less {
+  display: inline-block;
+}
+
+.facebook-card .facebook-message__full {
+  display: block;
+  margin: 12px 0 0;
+  overflow: visible;
+  -webkit-line-clamp: unset;
+  -webkit-box-orient: initial;
+  color: #40556d;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.facebook-card--compact .facebook-message__full {
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.facebook-card .facebook-message__full--short {
+  margin: 0 0 18px;
+}
+
+/* Compact cards normally have a fixed preview height; allow expansion. */
+.facebook-card--compact:has(.facebook-message[open]) {
+  max-height: none;
+}
+
+.facebook-card--compact:has(.facebook-message[open]) .facebook-card__image {
+  align-self: start;
+  height: auto;
+  min-height: 0;
+  aspect-ratio: 16 / 10;
+}
+
+.facebook-card--compact:has(.facebook-message[open]) .facebook-card__image img {
+  min-height: 0;
+  transform: none;
+}
+
 .facebook-card__body > a {
   color: var(--red-dark);
   font-size: 14px;
