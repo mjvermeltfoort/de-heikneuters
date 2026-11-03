@@ -1,0 +1,24 @@
+---
+import { facebookExcerpt } from '../lib/facebook';
+
+interface Props {
+  message: string;
+  previewLength?: number;
+}
+
+const { message, previewLength = 220 } = Astro.props;
+const isLong = message.replace(/\s+/g, ' ').trim().length > previewLength;
+---
+
+{isLong ? (
+  <details class="facebook-message">
+    <summary>
+      <span class="facebook-message__preview">{facebookExcerpt(message, previewLength)}</span>
+      <span class="facebook-message__toggle facebook-message__more">Lees verder</span>
+      <span class="facebook-message__toggle facebook-message__less">Minder tonen</span>
+    </summary>
+    <p class="facebook-message__full">{message}</p>
+  </details>
+) : (
+  <p class="facebook-message__full facebook-message__full--short">{message}</p>
+)}
