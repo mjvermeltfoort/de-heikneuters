@@ -1,18 +1,24 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SocialIcon from '../components/SocialIcon.astro';
+import { Image } from 'astro:assets';
+import kneuterkapelLogo from '../assets/kneuterkapel-logo-2026.png';
 import { withBase } from '../lib/site';
 ---
 
 <BaseLayout
-  title="De Kneuterkapel | C.V. De Heikneuters"
-  description="Lees meer over De Kneuterkapel van C.V. De Heikneuters uit Nijnsel."
+  title="De Kneuterkapel | C.V. de Heikneuters"
+  description="Lees meer over De Kneuterkapel van C.V. de Heikneuters uit Nijnsel."
   current="kneuterkapel"
 >
 <section class="section">
   <div class="section__inner content-page">
     <div class="eyebrow">Muziek binnen De Heikneuters</div>
-    <h1 class="page-title">De Kneuterkapel</h1>
+    <div class="kneuterkapel-page-heading">
+      <h1 class="page-title">De Kneuterkapel</h1>
+      <Image src={kneuterkapelLogo} width={112} height={112} format="webp"
+        class="kneuterkapel-page-logo" alt="Logo van de Kneuterkapel" loading="eager" />
+    </div>
 
     <figure class="page-visual">
       <img
@@ -26,7 +32,7 @@ import { withBase } from '../lib/site';
     </figure>
 
     <p class="body-copy">
-      Wat ooit begon als een kleine groep muzikanten binnen carnavals club CV – De Heikneuters
+      Wat ooit begon als een kleine groep muzikanten binnen carnavals club C.V. de Heikneuters
       is inmiddels uitgegroeid tot een bruisende kapel van maar liefst 26 muzikanten. Van jong
       tot oud, met een diversiteit aan instrumenten vormen ze een kleurrijk gezelschap met één
       gedeelde passie: feest maken met muziek!
@@ -52,8 +58,8 @@ import { withBase } from '../lib/site';
     <aside class="highlight-card">
       <span class="feature-card__kicker">Leutbokaal</span>
       <p>
-        Op Hemelvaartdag namen ze de Leutbokaal mee naar huis met hun 1ste plek in de Leutklasse
-        Op Dweilorkestendag in Groenlo.
+        In 2025 won de Kneuterkapel op Hemelvaartsdag tijdens de Dweilorkestendag in Groenlo
+        de Leutbokaal, dankzij een eerste plaats in de Leutklasse.
       </p>
     </aside>
 

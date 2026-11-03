@@ -781,6 +781,45 @@ h2,
   font-weight: 900;
 }
 
+.kneuterkapel-brand {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+
+.kneuterkapel-brand__logo {
+  display: block;
+  width: 86px;
+  height: 86px;
+  object-fit: contain;
+}
+
+.kneuterkapel-page-heading {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.kneuterkapel-page-heading .page-title {
+  margin-bottom: 8px;
+}
+
+.kneuterkapel-page-logo {
+  display: block;
+  width: 112px;
+  height: 112px;
+  object-fit: contain;
+}
+
+@media (max-width: 600px) {
+  .kneuterkapel-brand__logo { width: 70px; height: 70px; }
+  .kneuterkapel-page-heading { gap: 12px; }
+  .kneuterkapel-page-logo { width: 86px; height: 86px; }
+}
+
 .kneuterkapel-section {
   background: #fff;
 }
