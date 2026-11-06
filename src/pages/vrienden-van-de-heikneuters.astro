@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { withBase } from '../lib/site';
 
 const googleFormAction =
   'https://docs.google.com/forms/d/e/1FAIpQLSeu1iuHXbT969Nlc_ps89rSt-Oyu6kRawdWi3rthSfAMGbXJw/formResponse';
@@ -17,10 +18,10 @@ const googleFormAction =
 
     <figure class="page-visual page-visual--group">
       <img
-        src="https://de-heikneuters.nl/wp-content/uploads/2025/06/Groepsfoto-Heikneuters-1024x399.jpeg"
-        width="1024"
-        height="399"
-        alt="Groepsfoto van C.V. de Heikneuters"
+        src={withBase("/assets/groepsfoto-heikneuters-2026.webp")}
+        width="1280"
+        height="853"
+        alt="Groepsfoto van C.V. de Heikneuters voor de kerk"
         loading="eager"
         decoding="async"
       />
