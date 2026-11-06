@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import FormSpamProtection from '../components/FormSpamProtection.astro';
 import { withBase } from '../lib/site';
 
 const googleFormAction =
@@ -70,6 +71,8 @@ const googleFormAction =
         <a href="mailto:info@de-heikneuters.nl">info@de-heikneuters.nl</a>.
       </div>
 
+      <div class="form-status form-status--error" data-spam-warning role="alert" hidden></div>
+
       <form
         class="contact-form"
         action={googleFormAction}
@@ -125,6 +128,8 @@ const googleFormAction =
           ></textarea>
         </div>
 
+        <FormSpamProtection inputId="friend-website" />
+
         <input type="hidden" name="fvv" value="1" />
         <input type="hidden" name="pageHistory" value="0" />
         <input type="hidden" name="submissionTimestamp" value="-1" />
@@ -146,6 +151,10 @@ const googleFormAction =
   const friendSuccess = document.querySelector('[data-friend-success]');
   const friendError = document.querySelector('[data-friend-error]');
   const friendSubmit = document.querySelector('[data-friend-submit]');
+  const spamWarning = document.querySelector('[data-spam-warning]');
+  const spamGuard = friendForm instanceof HTMLFormElement
+    ? window.HeikneutersFormSpam?.forForm(friendForm)
+    : null;
 
   friendForm?.addEventListener('submit', async (event) => {
     if (!(friendForm instanceof HTMLFormElement)) return;
@@ -153,8 +162,19 @@ const googleFormAction =
     event.preventDefault();
     friendSuccess?.setAttribute('hidden', '');
     friendError?.setAttribute('hidden', '');
+    spamWarning?.setAttribute('hidden', '');
 
     if (!friendForm.reportValidity()) return;
+
+    const spamCheck = spamGuard?.check();
+    if (spamCheck && !spamCheck.allowed) {
+      if (spamWarning instanceof HTMLElement) {
+        spamWarning.textContent = spamCheck.message;
+        spamWarning.hidden = false;
+        spamWarning.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      return;
+    }
 
     if (friendSubmit instanceof HTMLButtonElement) {
       friendSubmit.disabled = true;
@@ -162,12 +182,16 @@ const googleFormAction =
     }
 
     try {
+      const formData = new FormData(friendForm);
+      formData.delete('website_url');
+
       await fetch(friendForm.action, {
         method: 'POST',
         mode: 'no-cors',
-        body: new FormData(friendForm),
+        body: formData,
       });
 
+      spamGuard?.recordSubmission();
       friendForm.reset();
 
       if (friendSuccess instanceof HTMLElement) {

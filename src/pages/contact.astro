@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import FormSpamProtection from '../components/FormSpamProtection.astro';
 
 const googleFormAction =
   'https://docs.google.com/forms/d/e/1FAIpQLSdQKqZbDT8ACClFDrf-zxwpt2mzrPb0CvkYVLAxvkibWUgn1A/formResponse';
@@ -49,6 +50,8 @@ const googleFormAction =
         Het verzenden is niet gelukt. Probeer het opnieuw of mail naar
         <a href="mailto:info@de-heikneuters.nl">info@de-heikneuters.nl</a>.
       </div>
+
+      <div class="form-status form-status--error" data-spam-warning role="alert" hidden></div>
 
       <form
         class="contact-form"
@@ -122,6 +125,8 @@ const googleFormAction =
           ></textarea>
         </div>
 
+        <FormSpamProtection inputId="contact-website" />
+
         <input type="hidden" name="fvv" value="1" />
         <input type="hidden" name="pageHistory" value="0" />
         <input type="hidden" name="submissionTimestamp" value="-1" />
@@ -146,6 +151,10 @@ const form = document.querySelector('[data-google-form]');
       const successMessage = document.querySelector('[data-form-success]');
       const errorMessage = document.querySelector('[data-form-error]');
       const submitButton = document.querySelector('[data-submit]');
+      const spamWarning = document.querySelector('[data-spam-warning]');
+      const spamGuard = form instanceof HTMLFormElement
+        ? window.HeikneutersFormSpam?.forForm(form)
+        : null;
 
       const updateOtherField = () => {
         if (!(category instanceof HTMLSelectElement)) return;
@@ -182,8 +191,19 @@ const form = document.querySelector('[data-google-form]');
 
         successMessage?.setAttribute('hidden', '');
         errorMessage?.setAttribute('hidden', '');
+        spamWarning?.setAttribute('hidden', '');
 
         if (!form.reportValidity()) return;
+
+        const spamCheck = spamGuard?.check();
+        if (spamCheck && !spamCheck.allowed) {
+          if (spamWarning instanceof HTMLElement) {
+            spamWarning.textContent = spamCheck.message;
+            spamWarning.hidden = false;
+            spamWarning.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+          return;
+        }
 
         if (submitButton instanceof HTMLButtonElement) {
           submitButton.disabled = true;
@@ -191,12 +211,16 @@ const form = document.querySelector('[data-google-form]');
         }
 
         try {
+          const formData = new FormData(form);
+          formData.delete('website_url');
+
           await fetch(form.action, {
             method: 'POST',
             mode: 'no-cors',
-            body: new FormData(form),
+            body: formData,
           });
 
+          spamGuard?.recordSubmission();
           form.reset();
           updateOtherField();
 

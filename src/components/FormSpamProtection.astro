@@ -1,0 +1,129 @@
+---
+interface Props {
+  inputId: string;
+}
+
+const { inputId } = Astro.props;
+---
+
+<!-- Eenvoudige browsercontrole; de Google Forms-koppeling blijft intact. -->
+<div class="form-spam-trap" aria-hidden="true">
+  <label for={inputId}>Website (laat dit veld leeg)</label>
+  <input
+    id={inputId}
+    name="website_url"
+    type="text"
+    tabindex="-1"
+    autocomplete="off"
+    data-spam-honeypot
+  />
+</div>
+
+<style>
+  .form-spam-trap {
+    position: absolute;
+    left: -10000px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
+  }
+</style>
+
+<script is:inline>
+  (() => {
+    if (window.HeikneutersFormSpam) return;
+
+    const storageKey = 'heikneuters-form-submissions-v1';
+    const minimumFillTime = 2000;
+    const minimumInterval = 45000;
+    const windowDuration = 15 * 60 * 1000;
+    const maximumSubmissions = 3;
+
+    // Bewaar alleen tijdstippen, geen persoonsgegevens.
+    const recentSubmissions = (now) => {
+      try {
+        const stored = JSON.parse(sessionStorage.getItem(storageKey) || '[]');
+        return Array.isArray(stored)
+          ? stored.filter(
+              (timestamp) =>
+                typeof timestamp === 'number' &&
+                timestamp <= now &&
+                now - timestamp < windowDuration,
+            )
+          : [];
+      } catch {
+        // Geblokkeerde opslag mag een echte bezoeker niet uitsluiten.
+        return [];
+      }
+    };
+
+    window.HeikneutersFormSpam = {
+      forForm(form) {
+        const openedAt = Date.now();
+
+        return {
+          check() {
+            const honeypot = form.querySelector('[data-spam-honeypot]');
+            if (honeypot instanceof HTMLInputElement && honeypot.value.trim()) {
+              return {
+                allowed: false,
+                message: 'Het formulier kon niet worden verzonden. Probeer het opnieuw.',
+              };
+            }
+
+            const now = Date.now();
+            if (now - openedAt < minimumFillTime) {
+              return {
+                allowed: false,
+                message: 'Het formulier is erg snel ingevuld. Probeer het over enkele seconden opnieuw.',
+              };
+            }
+
+            // Alleen duidelijke patronen blokkeren om geldige vragen niet te hinderen.
+            const message = Array.from(form.querySelectorAll('textarea'))
+              .map((field) => field.value)
+              .join('\n');
+            const links = message.match(/(?:https?:\/\/|www\.)\S+/gi) || [];
+            if (links.length > 2 || /<\s*(?:script|iframe|a)\b/i.test(message)) {
+              return {
+                allowed: false,
+                message: 'Het bericht bevat te veel links of ongebruikelijke opmaak. Pas het aan en probeer opnieuw.',
+              };
+            }
+
+            const recent = recentSubmissions(now);
+            if (recent.length >= maximumSubmissions) {
+              return {
+                allowed: false,
+                message: 'Er zijn meerdere berichten verstuurd. Probeer het over een kwartier opnieuw.',
+              };
+            }
+
+            if (recent.length && now - recent[recent.length - 1] < minimumInterval) {
+              return {
+                allowed: false,
+                message: 'Er is zojuist een bericht verstuurd. Probeer het over een minuut opnieuw.',
+              };
+            }
+
+            return { allowed: true };
+          },
+
+          recordSubmission() {
+            const now = Date.now();
+            try {
+              sessionStorage.setItem(
+                storageKey,
+                JSON.stringify([...recentSubmissions(now), now]),
+              );
+            } catch {
+              // Opslag is optioneel; de verzending naar Google blijft werken.
+            }
+          },
+        };
+      },
+    };
+  })();
+</script>
