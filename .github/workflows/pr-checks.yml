@@ -1,0 +1,33 @@
+name: Controle voor pull requests
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  controleren:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Code ophalen
+        uses: actions/checkout@v4
+
+      - name: Node.js instellen
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Dependencies installeren
+        run: npm install
+
+      - name: PHP-syntax controleren
+        run: php -l public/api/form-submit.php
+
+      - name: Astro-site bouwen
+        run: npm run build
+
+      - name: PHP-script in publicatie controleren
+        run: test -f dist/api/form-submit.php
