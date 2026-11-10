@@ -102,7 +102,8 @@ if (!is_string($_POST['website_url'] ?? null) || trim($_POST['website_url']) !==
 
 function field(string $name, int $maximum, bool $required = true): ?string
 {
-    $value = $_POST[$name] ?? null;
+    // PHP vervangt punten in POST-veldnamen door underscores.
+    $value = $_POST[str_replace('.', '_', $name)] ?? null;
     if (!is_string($value)) {
         return null;
     }
