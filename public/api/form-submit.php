@@ -228,25 +228,53 @@ if ($json === false || $written !== strlen($json)) {
 }
 
 // Stuur uitsluitend gecontroleerde velden naar Google Forms; nooit blind $_POST.
-if (!function_exists('curl_init')) {
+$body = http_build_query($payload, '', '&', PHP_QUERY_RFC1738);
+$result = false;
+$status = 0;
+
+if (function_exists('curl_init')) {
+    $curl = curl_init($googleUrl);
+    if ($curl === false) {
+        reject(503, 'Het formulier is tijdelijk niet beschikbaar.');
+    }
+    curl_setopt_array($curl, [
+        CURLOPT_POST => true,
+        CURLOPT_POSTFIELDS => $body,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_FOLLOWLOCATION => false,
+        CURLOPT_CONNECTTIMEOUT => 5,
+        CURLOPT_TIMEOUT => 12,
+        CURLOPT_SSL_VERIFYPEER => true,
+        CURLOPT_HTTPHEADER => ['Content-Type: application/x-www-form-urlencoded'],
+    ]);
+    $result = curl_exec($curl);
+    $status = (int) curl_getinfo($curl, CURLINFO_HTTP_CODE);
+    curl_close($curl);
+} elseif (filter_var(ini_get('allow_url_fopen'), FILTER_VALIDATE_BOOLEAN)) {
+    // Fallback voor PHP-hosting zonder cURL-extensie.
+    $context = stream_context_create([
+        'http' => [
+            'method' => 'POST',
+            'header' => "Content-Type: application/x-www-form-urlencoded\r\n",
+            'content' => $body,
+            'timeout' => 12,
+            'ignore_errors' => true,
+            'follow_location' => 0,
+        ],
+        'ssl' => [
+            'verify_peer' => true,
+            'verify_peer_name' => true,
+        ],
+    ]);
+    $result = @file_get_contents($googleUrl, false, $context);
+    foreach (($http_response_header ?? []) as $header) {
+        if (preg_match('~^HTTP/\S+\s+(\d{3})~', $header, $match) === 1) {
+            $status = (int) $match[1];
+        }
+    }
+} else {
     reject(503, 'Het formulier is tijdelijk niet beschikbaar.');
 }
-$curl = curl_init($googleUrl);
-if ($curl === false) {
-    reject(503, 'Het formulier is tijdelijk niet beschikbaar.');
-}
-curl_setopt_array($curl, [
-    CURLOPT_POST => true,
-    CURLOPT_POSTFIELDS => http_build_query($payload, '', '&', PHP_QUERY_RFC1738),
-    CURLOPT_RETURNTRANSFER => true,
-    CURLOPT_FOLLOWLOCATION => false,
-    CURLOPT_CONNECTTIMEOUT => 5,
-    CURLOPT_TIMEOUT => 12,
-    CURLOPT_HTTPHEADER => ['Content-Type: application/x-www-form-urlencoded'],
-]);
-$result = curl_exec($curl);
-$status = (int) curl_getinfo($curl, CURLINFO_HTTP_CODE);
-curl_close($curl);
 
 if ($result === false || $status < 200 || $status >= 400) {
     reject(502, 'Verzenden is niet gelukt. Probeer het later opnieuw of neem contact op via e-mail.');
