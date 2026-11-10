@@ -6,7 +6,7 @@ interface Props {
 const { inputId } = Astro.props;
 ---
 
-<!-- Eenvoudige browsercontrole; de Google Forms-koppeling blijft intact. -->
+<!-- Aanvullende browserfilter; rechtstreeks posten naar Google Forms blijft mogelijk. -->
 <div class="form-spam-trap" aria-hidden="true">
   <label for={inputId}>Website (laat dit veld leeg)</label>
   <input
@@ -36,10 +36,11 @@ const { inputId } = Astro.props;
     if (window.HeikneutersFormSpam) return;
 
     const storageKey = 'heikneuters-form-submissions-v1';
-    const minimumFillTime = 2000;
+    const minimumFillTime = 3500;
     const minimumInterval = 45000;
     const windowDuration = 15 * 60 * 1000;
     const maximumSubmissions = 3;
+    const genericError = 'Het formulier kon niet worden verzonden. Controleer je invoer en probeer opnieuw.';
 
     // Bewaar alleen tijdstippen, geen persoonsgegevens.
     const recentSubmissions = (now) => {
@@ -59,6 +60,56 @@ const { inputId } = Astro.props;
       }
     };
 
+    // Willekeurige hoofdletterreeksen komen in de recente spamberichten
+    // zowel in de naam als het bericht voor. Controleer beide samen.
+    const looksGenerated = (value) => {
+      const text = value.trim();
+      return /^[a-z]{18,}$/i.test(text) &&
+        (text.match(/[A-Z]/g) || []).length >= 4 &&
+        (text.match(/[a-z]/g) || []).length >= 4;
+    };
+
+    const hasSuspiciousContent = (form) => {
+      const textFields = Array.from(
+        form.querySelectorAll('input[type="text"]:not([data-spam-honeypot]), textarea'),
+      ).filter((field) => !field.disabled && !field.closest('[hidden]'));
+
+      const entries = textFields.map((field) => field.value.trim());
+      const name = form.querySelector('input[autocomplete="name"]')?.value || '';
+      const messages = Array.from(form.querySelectorAll('textarea'))
+        .map((field) => field.value.trim())
+        .join('\n');
+
+      // Google Forms accepteert soms rechtstreeks geposte afwijkende waarden.
+      // Deze controle beschermt gebruikers van de website zelf.
+      const invalidChoice = Array.from(form.querySelectorAll('select')).some(
+        (select) => select.value &&
+          !Array.from(select.options).some((option) => option.value === select.value),
+      );
+      if (invalidChoice) return true;
+
+      // Links en HTML horen niet thuis in een naam of onderwerp.
+      const nonMessageFields = textFields.filter((field) => !(field instanceof HTMLTextAreaElement));
+      if (nonMessageFields.some((field) => /(?:https?:\/\/|www\.)/i.test(field.value))) {
+        return true;
+      }
+
+      if (entries.some((value) => /<\s*\/?\s*[a-z][^>]*>/i.test(value))) {
+        return true;
+      }
+
+      // Een paar gewone links in een vraag zijn toegestaan; linkspam niet.
+      const links = entries.join('\n').match(/(?:https?:\/\/|www\.)\S+/gi) || [];
+      if (links.length > 2) return true;
+
+      const promotionalText = /\b(?:claim your|promo(?:code)?|grab now|scam service|casino bonus)\b/i;
+      if (links.length > 0 && promotionalText.test(entries.join(' '))) {
+        return true;
+      }
+
+      return looksGenerated(name) && looksGenerated(messages);
+    };
+
     window.HeikneutersFormSpam = {
       forForm(form) {
         const openedAt = Date.now();
@@ -67,10 +118,7 @@ const { inputId } = Astro.props;
           check() {
             const honeypot = form.querySelector('[data-spam-honeypot]');
             if (honeypot instanceof HTMLInputElement && honeypot.value.trim()) {
-              return {
-                allowed: false,
-                message: 'Het formulier kon niet worden verzonden. Probeer het opnieuw.',
-              };
+              return { allowed: false, message: genericError };
             }
 
             const now = Date.now();
@@ -81,15 +129,10 @@ const { inputId } = Astro.props;
               };
             }
 
-            // Alleen duidelijke patronen blokkeren om geldige vragen niet te hinderen.
-            const message = Array.from(form.querySelectorAll('textarea'))
-              .map((field) => field.value)
-              .join('\n');
-            const links = message.match(/(?:https?:\/\/|www\.)\S+/gi) || [];
-            if (links.length > 2 || /<\s*(?:script|iframe|a)\b/i.test(message)) {
+            if (hasSuspiciousContent(form)) {
               return {
                 allowed: false,
-                message: 'Het bericht bevat te veel links of ongebruikelijke opmaak. Pas het aan en probeer opnieuw.',
+                message: 'Het bericht bevat ongebruikelijke inhoud of links. Pas het aan en probeer opnieuw.',
               };
             }
 
