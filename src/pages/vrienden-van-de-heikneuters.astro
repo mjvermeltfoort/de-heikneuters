@@ -3,8 +3,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import FormSpamProtection from '../components/FormSpamProtection.astro';
 import { withBase } from '../lib/site';
 
-const googleFormAction =
-  'https://docs.google.com/forms/d/e/1FAIpQLSeu1iuHXbT969Nlc_ps89rSt-Oyu6kRawdWi3rthSfAMGbXJw/formResponse';
 ---
 
 <BaseLayout
@@ -75,7 +73,7 @@ const googleFormAction =
 
       <form
         class="contact-form"
-        action={googleFormAction}
+        action={withBase('/api/form-submit.php')}
         method="post"
         data-friend-form
       >
@@ -129,6 +127,7 @@ const googleFormAction =
         </div>
 
         <FormSpamProtection inputId="friend-website" />
+        <input type="hidden" name="form_type" value="vrienden" />
 
         <input type="hidden" name="fvv" value="1" />
         <input type="hidden" name="pageHistory" value="0" />
@@ -141,6 +140,11 @@ const googleFormAction =
         <p class="form-note">
           We gebruiken je gegevens alleen voor je aanmelding als vriend van De Heikneuters.
         </p>
+        <noscript>
+          <p class="form-note">
+            Voor aanmelden is JavaScript nodig. Mail anders naar info@de-heikneuters.nl.
+          </p>
+        </noscript>
       </form>
     </div>
   </div>
@@ -166,13 +170,8 @@ const googleFormAction =
 
     if (!friendForm.reportValidity()) return;
 
-    const spamCheck = spamGuard?.check();
-    if (spamCheck && !spamCheck.allowed) {
-      if (spamWarning instanceof HTMLElement) {
-        spamWarning.textContent = spamCheck.message;
-        spamWarning.hidden = false;
-        spamWarning.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }
+    if (!spamGuard) {
+      friendError?.removeAttribute('hidden');
       return;
     }
 
@@ -182,16 +181,7 @@ const googleFormAction =
     }
 
     try {
-      const formData = new FormData(friendForm);
-      formData.delete('website_url');
-
-      await fetch(friendForm.action, {
-        method: 'POST',
-        mode: 'no-cors',
-        body: formData,
-      });
-
-      spamGuard?.recordSubmission();
+      await spamGuard.submit();
       friendForm.reset();
 
       if (friendSuccess instanceof HTMLElement) {
@@ -199,12 +189,15 @@ const googleFormAction =
         friendSuccess.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
     } catch (error) {
-      console.error('Vriendenformulier verzenden mislukt:', error);
-
-      if (friendError instanceof HTMLElement) {
+      if (error?.userMessage && spamWarning instanceof HTMLElement) {
+        spamWarning.textContent = error.userMessage;
+        spamWarning.hidden = false;
+        spamWarning.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } else if (friendError instanceof HTMLElement) {
         friendError.hidden = false;
       }
     } finally {
+      spamGuard.refresh();
       if (friendSubmit instanceof HTMLButtonElement) {
         friendSubmit.disabled = false;
         friendSubmit.textContent = 'Aanmelden als vriend →';
