@@ -1,9 +1,8 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import FormSpamProtection from '../components/FormSpamProtection.astro';
+import { withBase } from '../lib/site';
 
-const googleFormAction =
-  'https://docs.google.com/forms/d/e/1FAIpQLSdQKqZbDT8ACClFDrf-zxwpt2mzrPb0CvkYVLAxvkibWUgn1A/formResponse';
 ---
 
 <BaseLayout
@@ -55,7 +54,7 @@ const googleFormAction =
 
       <form
         class="contact-form"
-        action={googleFormAction}
+        action={withBase('/api/form-submit.php')}
         method="post"
         data-google-form
       >
@@ -126,6 +125,7 @@ const googleFormAction =
         </div>
 
         <FormSpamProtection inputId="contact-website" />
+        <input type="hidden" name="form_type" value="contact" />
 
         <input type="hidden" name="fvv" value="1" />
         <input type="hidden" name="pageHistory" value="0" />
@@ -138,6 +138,11 @@ const googleFormAction =
         <p class="form-note">
           We gebruiken je gegevens alleen om op je bericht te reageren.
         </p>
+        <noscript>
+          <p class="form-note">
+            Voor verzenden is JavaScript nodig. Mail anders naar info@de-heikneuters.nl.
+          </p>
+        </noscript>
       </form>
     </div>
   </div>
@@ -195,13 +200,8 @@ const form = document.querySelector('[data-google-form]');
 
         if (!form.reportValidity()) return;
 
-        const spamCheck = spamGuard?.check();
-        if (spamCheck && !spamCheck.allowed) {
-          if (spamWarning instanceof HTMLElement) {
-            spamWarning.textContent = spamCheck.message;
-            spamWarning.hidden = false;
-            spamWarning.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          }
+        if (!spamGuard) {
+          errorMessage?.removeAttribute('hidden');
           return;
         }
 
@@ -211,16 +211,7 @@ const form = document.querySelector('[data-google-form]');
         }
 
         try {
-          const formData = new FormData(form);
-          formData.delete('website_url');
-
-          await fetch(form.action, {
-            method: 'POST',
-            mode: 'no-cors',
-            body: formData,
-          });
-
-          spamGuard?.recordSubmission();
+          await spamGuard.submit();
           form.reset();
           updateOtherField();
 
@@ -229,12 +220,15 @@ const form = document.querySelector('[data-google-form]');
             successMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
           }
         } catch (error) {
-          console.error('Contactformulier verzenden mislukt:', error);
-
-          if (errorMessage instanceof HTMLElement) {
+          if (error?.userMessage && spamWarning instanceof HTMLElement) {
+            spamWarning.textContent = error.userMessage;
+            spamWarning.hidden = false;
+            spamWarning.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          } else if (errorMessage instanceof HTMLElement) {
             errorMessage.hidden = false;
           }
         } finally {
+          spamGuard.refresh();
           if (submitButton instanceof HTMLButtonElement) {
             submitButton.disabled = false;
             submitButton.textContent = 'Verstuur bericht →';
