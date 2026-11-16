@@ -11,10 +11,76 @@ import { withBase } from '../lib/site';
 >
   <section class="section">
     <div class="section__inner content-page">
-      <div class="eyebrow">Vooraankondiging</div>
       <h1 class="page-title">Heikneuters 66 jaar</h1>
 
       <div class="jubilee-page">
+        <div class="jubilee-page__copy">
+          <p class="lead"><strong>Alaaf!</strong></p>
+          <p class="body-copy">
+            C.V. de Heikneuters bestaan 66 jaar… en dat laten we natuurlijk niet ongemerkt voorbijgaan!
+            Graag nodigen wij jullie uit om samen met ons dit bijzondere jubileum te vieren.
+          </p>
+          <ul class="jubilee-page__details" role="list">
+            <li><strong>Datum</strong> <time datetime="2026-11-21">Zaterdag 21 november 2026</time></li>
+            <li><strong>Aanvang</strong> <time datetime="19:30">19.30 uur</time></li>
+            <li><strong>Locatie</strong> De Beckart in Nijnsel</li>
+          </ul>
+          <p class="body-copy">
+            Verwacht geen traditionele receptie waarbij wij de hele avond handjes staan te schudden.
+            Dit jubileum vieren we op z’n Heikneuters: ontspannen, gezellig en vooral met veel ruimte om samen feest te maken.
+          </p>
+
+          <h2 class="content-subtitle">Hoe ziet de avond eruit?</h2>
+          <p class="body-copy">
+            Tijdens het eerste deel van de avond tonen we videoboodschappen van bevriende carnavalsvierders,
+            oud-leden en andere betrokkenen die C.V. de Heikneuters een warm hart toedragen.
+          </p>
+          <p class="body-copy">
+            Daarnaast heffen we samen het glas op 66 jaar C.V. de Heikneuters met onze speciaal voor dit jubileum
+            gemaakte bessenjenever: Heineutje 66.
+          </p>
+          <p class="body-copy">
+            Daarna gaat het gas erop en zorgt de band voor een avond vol feest, gezelligheid en muziek.
+          </p>
+
+          <h2 class="content-subtitle">Kleding</h2>
+          <p class="body-copy">
+            Carnavalskleding mag, maar is zeker geen must. Kom vooral zoals jij je prettig voelt.
+            Een kleuraccent of herkenbaar attribuut van jullie vereniging waarderen we enorm.
+            Verschijn je liever in vol ornaat? Dan vinden we dat natuurlijk ook prachtig.
+          </p>
+
+          <h2 class="content-subtitle">Ballon op tafel = wij komen buurten <span aria-hidden="true">🎈</span></h2>
+          <p class="body-copy">
+            Geen receptierij, geen verplichte handjes en geen stijve toestanden. Willen jullie toch graag dat we
+            persoonlijk langskomen om jullie te bedanken voor jullie komst en de felicitaties in ontvangst te nemen?
+            Vraag dan vooraf een jubileumballon aan.
+          </p>
+          <p class="body-copy">
+            Deze ballon ontvangen jullie bij binnenkomst. Zolang de ballon bij jullie tafel staat, weten wij dat een
+            bezoekje van ons bestuur op prijs wordt gesteld. Na de felicitaties laten we het officiële moment achter ons
+            en gaan we samen verder met waar we voor gekomen zijn: het vieren van 66 jaar C.V. de Heikneuters!
+          </p>
+          <p class="body-copy">
+            Een jubileumballon aanvragen kan tot <strong><time datetime="2026-11-18T11:11">18 november 2026 om 11.11 uur</time></strong>
+            via <a href="mailto:feestavond@de-heikneuters.nl">feestavond@de-heikneuters.nl</a>.
+          </p>
+
+          <h2 class="content-subtitle">Wil je nog iets bijdragen?</h2>
+          <p class="body-copy">
+            Heb je een mooie herinnering, een leuke anekdote of wil je graag kort het woord nemen tijdens de avond?
+            Laat het ons weten. We denken graag mee over een passend moment.
+          </p>
+          <p class="body-copy">
+            Voor vragen, ideeën, podiumtijd of andere feestelijke ingevingen kun je contact opnemen via
+            <a href="mailto:feestavond@de-heikneuters.nl">feestavond@de-heikneuters.nl</a>.
+          </p>
+          <p class="body-copy">
+            We kijken ernaar uit om samen met jullie te proosten op 66 jaar C.V. de Heikneuters en er een
+            onvergetelijke avond van te maken.
+          </p>
+        </div>
+
         <figure class="jubilee-page__poster">
           <a
             href={withBase("/assets/heikneuters-66-jaar.webp")}
@@ -32,23 +98,6 @@ import { withBase } from '../lib/site';
             />
           </a>
         </figure>
-
-        <div class="jubilee-page__copy">
-          <p class="lead"><strong>De Heikneuters zijn 66 jaar jong – en dà witte!</strong></p>
-          <p class="body-copy">
-            Op zaterdag 21 november 2026 gooien we bij de Heikneuters alle remmen los voor
-            ons 66-jarig bestaan. En omdat we niet van dat stijve gedoe zijn en de traditie
-            een beetje over boord willen gooien, doen we het deze keer lekker op z’n
-            Heikneuters: minder handjes schudden, carnavalskleding mag maar is zeker geen
-            must en nog meer lol trappen!
-          </p>
-          <p class="body-copy">
-            We kijken ernaar uit om er samen een vrolijke, losse en gezellige avond van te maken.
-          </p>
-          <p class="body-copy">
-            <strong>Zet dus alvast 21 november 2026 met stift in jullie agenda’s!</strong>
-          </p>
-        </div>
       </div>
     </div>
   </section>
@@ -57,7 +106,7 @@ import { withBase } from '../lib/site';
 <style>
   .jubilee-page {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
     gap: 36px;
     align-items: start;
     margin-top: 30px;
@@ -90,6 +139,35 @@ import { withBase } from '../lib/site';
 
   .jubilee-page__copy .lead {
     color: var(--blue-dark);
+  }
+
+  .jubilee-page__copy .content-subtitle::after {
+    content: none;
+  }
+
+  .jubilee-page__copy .body-copy:last-child {
+    margin-bottom: 0;
+  }
+
+  .jubilee-page__copy a {
+    color: var(--blue-dark);
+    text-decoration: underline;
+    overflow-wrap: anywhere;
+  }
+
+  .jubilee-page__details {
+    margin: 0 0 24px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    background: var(--soft);
+    line-height: 1.72;
+    list-style: none;
+  }
+
+  .jubilee-page__details li {
+    display: grid;
+    grid-template-columns: 4.5em 1fr;
+    gap: 8px;
   }
 
   @media (max-width: 760px) {
