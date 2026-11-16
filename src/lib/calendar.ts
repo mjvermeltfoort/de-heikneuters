@@ -46,18 +46,21 @@ export async function getUpcomingEvents(): Promise<CalendarEvent[]> {
   const to = new Date(now);
   to.setFullYear(to.getFullYear() + 2);
 
-  const data = await ical.async.fromURL(CALENDAR_URL, {
+  const response = await fetch(CALENDAR_URL, {
     headers: {
       'User-Agent': 'de-heikneuters.nl calendar build',
     },
     signal: AbortSignal.timeout(10_000),
   });
 
+  if (!response.ok) {
+    throw new Error(`${response.status} ${response.statusText}`);
+  }
+
+  const data = await ical.async.parseICS(await response.text());
   const events: CalendarEvent[] = [];
 
-  for (const [key, item] of Object.entries(data)) {
-    const event: any = item;
-
+  for (const [key, event] of Object.entries(data)) {
     if (event?.type !== 'VEVENT') continue;
 
     // Recurrence overrides are applied by expandRecurringEvent on the parent event.
@@ -72,7 +75,7 @@ export async function getUpcomingEvents(): Promise<CalendarEvent[]> {
         expandOngoing: true,
       });
 
-      instances.forEach((instance: any, index: number) => {
+      instances.forEach((instance, index) => {
         const parsed = toCalendarEvent(instance, `${key}-${index}`);
         if (parsed && parsed.end >= now) {
           events.push(parsed);
